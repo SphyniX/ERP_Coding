@@ -1,0 +1,8 @@
+关于Unity5 新AssetBundle系统。
+
+1. 预设上的组件引用的可序列化变量问题：
+	1）如果该变量类型是GameObject，那么本预设和这个GameObject可以放在不同的AssetBundle里面。
+	2）如果该变量类型是另外的组件，那么这个引用的资源必须和本预设在一个AssetBundle内，不然不能使用！！
+	   比如，新UI系统中Text应用的Font，和Image引用的Sprite，都不能放到其他AssetBundle中。
+
+	   
