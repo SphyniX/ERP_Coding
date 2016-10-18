@@ -27,6 +27,7 @@ end
 local function on_subtop_btnsave_click(btn)
 	-- local SubmitList = UI_DATA.WNDSubmitSchedule.CompeteProductList
 	local SubmitList = {}
+	local isNil = true
 	for i,v in ipairs(CompeteProductList) do
 		local Ent = Ref.SubMain.Grp.Ents[i]
 		local ComPro = CompeteProductList[i]
@@ -45,8 +46,15 @@ local function on_subtop_btnsave_click(btn)
 			-- 	_G.UI.Toast:make(nil, "有数据未填写"):show()
 			-- 	return
 			-- end
-			table.insert(SubmitList, {id = w.id, value = value} )
+			if value ~= "" then 
+				isNil = false 
+				table.insert(SubmitList, {id = w.id, value = value} )
+			end
 		end
+	end
+	if isNil then 
+		_G.UI.Toast:make(nil, "数据不能全为空"):show()
+		return
 	end
 	if callback then UIMGR.close_window(Ref.root) callback(SubmitList) return end
 	UI_DATA.WNDSubmitSchedule.CompeteProductList = SubmitList
@@ -85,7 +93,7 @@ local function init_logic()
 	libunity.SetActive(Ref.SubMain.SubHard.spRed, type == 1)
 	libunity.SetActive(Ref.SubMain.SubHard.spBlue, type == 2)
 	local projectId = UI_DATA.WNDSubmitSchedule.projectId
-	Project = DY_DATA.ProjectList[projectId]
+	Project = DY_DATA.SchProjectList[projectId]
 	if Project == nil then return end
 
 	if Project.CompeteProductList == nil then

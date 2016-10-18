@@ -83,7 +83,7 @@ end
 
 function table.has(Array, value)
     for i,v in ipairs(Array) do
-        if v == value then return i, v end
+        if v.id == value then return i, v end
     end
 end
 

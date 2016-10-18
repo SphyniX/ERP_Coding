@@ -17,7 +17,8 @@ local phone = ""
 
 local function on_bind_phoned(Ret)
 	if Ret.ret == 1 then
-		UIMGR.create_window("UI/WNDSetUserInfo")
+		local on_changed = UI_DATA.WNDBindPhone.on_changed
+		if on_changed then on_changed() end
 	end
 end
 
