@@ -17,6 +17,7 @@ local NW = MERequire "network/networkmgr"
 local Ref
 
 local reason, reasonIndex, photoIndex
+local state, stateIndex
 local MaterList
 local Imagelist = {}
 local InfoList = {}
@@ -56,144 +57,87 @@ local function set_photo(index)
    	UIMGR.create_window("UI/WNDSubmitPhoto")
 end
 
-on_photo_init = function ()
-	for i,v in ipairs(Ref.SubMain.GrpContent.Ents) do
-		local Ent = v
-		local m = MaterList[i]
-		libunity.SetActive(Ent.btnShow, Imagelist[m.id])
-		libunity.SetActive(Ent.btnSubmit, Imagelist[m.id])
+local function on_set_state_callback(state)
+	if reasonIndex == nil then return end
+	local Ent = Ref.SubMain.GrpContent.Ents[stateIndex]
+	if Ent then
+		Ent.lbState.text = state
+
+		-- local id = MaterList[reasonIndex].id
+		-- InfoList[id] = {state = state}
 	end
 end
 
 --!*以下：自动生成的回调函数*--
+local function on_submain_grp_ent_btnstate_click(btn)
+	local index = tonumber(btn.transform.parent.name:sub(4))
+	libunity.SetActive(Ref.SubState.root, true)
+end
+
+local function on_submain_grp_ent_btnphoto_click(btn)
+	-- 上传图片
+end
+
+local function on_submain_grp_btnsave_click(btn)
+	UIMGR.close_window(Ref.root)
+end
+
+local function on_subtop_btnclear_click(btn)
+	
+end
 
 local function on_subtop_btnback_click(btn)
 	UIMGR.close_window(Ref.root)
 end
 
-local function on_subtop_btnsave_click(btn)
-	local SubmitProductList = UI_DATA.WNDSubmitSchedule.MaterList 
-	if SubmitProductList == nil then SubmitProductList = {} end
-	
-	for i,v in ipairs(MaterList) do
-		local Ent = Ref.SubMain.GrpContent.Ents[i]
-		
-		local id = MaterList[i].id
-		if id == nil or id == "" then 
-			_G.UI.Toast:make(nil, "有数据未填写"):show()
-			return
-		end
-		local state = InfoList[id].reason
-		if state == nil or state == "" then 
-			_G.UI.Toast:make(nil, "有数据未填写"):show()
-			return
-		end
-		local context = InfoList[id].context
-		if context == nil or context == "" then 
-			_G.UI.Toast:make(nil, "有数据未填写"):show()
-			return
-		end
-		local image = Imagelist[id]
-		if image == nil then 
-			_G.UI.Toast:make(nil, "有图片未上传"):show()
-			return
-		end
-		
-		if SubmitProductList[id] == nil then SubmitProductList[id] = {} end
-		SubmitProductList[i].id = id
-		SubmitProductList[i].state = state
-		SubmitProductList[i].context = context
-		SubmitProductList[i].image = image
-	end
-	UI_DATA.WNDSubmitSchedule.MaterList = SubmitProductList
-	UIMGR.close_window(Ref.root)
+local function on_substate_tglgood_change(tgl)
+	on_set_state_callback("完好")
+	libunity.SetActive(Ref.SubState.root, false)
 end
 
-local function on_submain_grpcontent_enthard_spstate_click(btn)
-	local index = tonumber(btn.transform.parent.name:sub(8))
-	set_reason(index)
+local function on_substate_tglbad_change(tgl)
+	on_set_state_callback("反馈问题")
+	libunity.SetActive(Ref.SubState.root, false)	
 end
 
-local function on_submain_grpcontent_enthard_spphoto_click(btn)
-	local index = tonumber(btn.transform.parent.name:sub(8))
-	set_photo(index)
-end
-
-local function on_subreason_btnback_click(btn)
-	libunity.SetActive(Ref.SubReason.root, false)
-end
-
-local function on_subreason_sub1_tgltoggle_change(tgl)
-	if tgl.value then
-		-- reason = Ref.SubReason.sub1.lbName.text
-		reason = 1
-	end
-end
-
-local function on_subreason_sub2_tgltoggle_change(tgl)
-	if tgl.value then
-		-- reason = Ref.SubReason.sub2.lbName.text
-		reason = 2
-	end
-end
-
-local function on_subreason_sub3_tgltoggle_change(tgl)
-	if tgl.value then
-		-- reason = Ref.SubReason.sub3.lbName.text
-		reason = 3
-	end
-end
-
-local function on_subreason_sub4_tgltoggle_change(tgl)
-	if tgl.value then
-		-- reason = Ref.SubReason.sub4.lbName.text
-		reason = 4
-	end
-end
-
-local function on_subreason_sub5_tgltoggle_change(tgl)
-	if tgl.value then
-		-- reason = Ref.SubReason.sub5.lbName.text
-		reason = 5
-	end
-end
-
-local function on_subreason_btnsubmit_click(btn)
-	local context = Ref.SubReason.SubInput.inpInput.text
-	on_set_reason_callback(reason, context)
-	libunity.SetActive(Ref.SubReason.root, false)
+local function on_substate_btnback_click(btn)
+	libunity.SetActive(Ref.SubState.root, false)
 end
 
 local function on_ui_init()
-	local projectId = UI_DATA.WNDSelectStore.projectId
-	local Project = DY_DATA.ProjectList[projectId]
-	
-	MaterList = Project.MaterList
-	if MaterList == nil then return end
-	Ref.SubMain.GrpContent:dup(#MaterList, function ( i, Ent, isNew)
-		local Mater = MaterList[i]
-		Ent.lbName.text = Mater.name
+	local projectId = UI_DATA.WNDSubmitSchedule.projectId
+	local storeId = UI_DATA.WNDSubmitSchedule.storeId
+	MaterList = DY_DATA.SchProjectList[projectId].MaterList
+	Ref.SubMain.Grp:dup(#MaterList, function (i, Ent, isNew)
+		Ent.lbName.text = MaterList[i]
 	end)
 end
 
 local function init_view()
+	Ref.SubMain.Grp.Ent.btnState.onAction = on_submain_grp_ent_btnstate_click
+	Ref.SubMain.Grp.Ent.btnPhoto.onAction = on_submain_grp_ent_btnphoto_click
+	Ref.SubMain.Grp.btnSave.onAction = on_submain_grp_btnsave_click
+	Ref.SubTop.btnClear.onAction = on_subtop_btnclear_click
 	Ref.SubTop.btnBack.onAction = on_subtop_btnback_click
-	Ref.SubTop.btnSave.onAction = on_subtop_btnsave_click
-	Ref.SubMain.GrpContent.Ent.spState.onAction = on_submain_grpcontent_enthard_spstate_click
-	Ref.SubMain.GrpContent.Ent.spPhoto.onAction = on_submain_grpcontent_enthard_spphoto_click
-	UIMGR.make_group(Ref.SubMain.GrpContent, function (New, Ent)
-		New.spState.onAction = Ent.spState.onAction
-		New.spPhoto.onAction = Ent.spPhoto.onAction
+	Ref.SubState.tglGood.onAction = on_substate_tglgood_change
+	Ref.SubState.tglBad.onAction = on_substate_tglbad_change
+	Ref.SubState.btnBack.onAction = on_substate_btnback_click
+	UIMGR.make_group(Ref.SubMain.Grp, function (New, Ent)
+		New.btn.onAction = Ent.btn.onAction
+		New.btnState.onAction = Ent.btnState.onAction
+		New.btnPhoto.onAction = Ent.btnPhoto.onAction
 	end)
 	--!*以上：自动注册的回调函数*--
 end
 
 local function init_logic()
 	NW.subscribe("WORK.SC.GETMATER", on_ui_init)
-	libunity.SetActive(Ref.SubReason.root, false)
+	libunity.SetActive(Ref.SubState.root, false)
 
-	local projectId = UI_DATA.WNDSelectStore.projectId
-	local Project = DY_DATA.ProjectList[projectId]
+	local projectId = UI_DATA.WNDSubmitSchedule.projectId
+	local storeId = UI_DATA.WNDSubmitSchedule.storeId
+
+	local Project = DY_DATA.SchProjectList[projectId]
 	if Project.MaterList == nil then
 		local nm = NW.msg("WORK.CS.GETMATER")
 		nm:writeU32(projectId)

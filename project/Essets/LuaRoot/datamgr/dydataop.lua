@@ -102,6 +102,10 @@ NW.regist("REPORTED.SC.COM", common_op_ret_suc)
 
 NW.regist("WORK.SC.ISSUED", common_op_ret_suc)
 
+NW.regist("WORK.SC.UPDATEASS", common_op_ret_suc)
+
+NW.regist("WORK.SC.DELETEASS", common_op_ret_suc)
+
 NW.regist("MESSAGE.SC.SENDMESSAGE", common_op_ret_suc)
 
 NW.regist("MESSAGE.SC.UPSTATU", common_op_ret_suc)
@@ -109,7 +113,7 @@ NW.regist("MESSAGE.SC.UPSTATU", common_op_ret_suc)
 NW.regist("MESSAGE.SC.DELETE", function (nm)
 	local Ret = common_op_ret(nm)
 	if Ret.ret == 1 then
-		_G.UI.Toast:make(nil, NW.get_error(ret)):show()
+		_G.UI.Toast:make(nil, NW.get_error(Ret.ret)):show()
 		local DY_DATA = MERequire "datamgr/dydata.lua"
 		local NW = MERequire "network/networkmgr"
 		local nm = NW.msg("MESSAGE.CS.GETMESSAGELIST")

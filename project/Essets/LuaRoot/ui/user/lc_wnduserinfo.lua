@@ -15,13 +15,10 @@ local TEXT = _G.ENV.TEXT
 local NW = MERequire "network/networkmgr"
 local UI_DATA = MERequire "datamgr/uidata.lua"
 local Ref
+
 --!*以下：自动生成的回调函数*--
 
-local function on_subtop_btnback_click(btn)
-	UIMGR.close_window(Ref.root)
-end
-
-local function on_subtop_btnsave_click(btn)
+local function on_submain_btnsave_click(btn)
 	local height = Ref.SubMain.SubHeight.inpInput.text
 	local weight = Ref.SubMain.SubWeight.inpInput.text
 	local User = DY_DATA.User
@@ -37,19 +34,27 @@ local function on_subtop_btnsave_click(btn)
 	UIMGR.close_window(Ref.root)
 end
 
+local function on_subtop_btnback_click(btn)
+	UIMGR.close_window(Ref.root)
+end
+
+local function on_ui_init()
+	local User = DY_DATA.User
+	Ref.SubMain.SubSex.lbText.text = TEXT.Sex[User.sex]
+	Ref.SubMain.SubAge.lbText.text = User.age
+	Ref.SubMain.SubHeight.inpInput.text = User.height.."cm"
+	Ref.SubMain.SubWeight.inpInput.text = User.weight.."kg"
+end
+
 local function init_view()
+	Ref.SubMain.btnSave.onAction = on_submain_btnsave_click
 	Ref.SubTop.btnBack.onAction = on_subtop_btnback_click
-	Ref.SubTop.btnSave.onAction = on_subtop_btnsave_click
 	--!*以上：自动注册的回调函数*--
 end
 
 local function init_logic()
-	local User = DY_DATA.User
-	Ref.SubMain.SubSex.lbText.text = TEXT.Sex[User.sex]
-	Ref.SubMain.SubAge.lbText.text = User.age
-	Ref.SubMain.SubHeight.inpInput.text = User.height
-	Ref.SubMain.SubWeight.inpInput.text = User.weight
-
+	NW.subscribe("USER.SC.GETUSERINFOR", on_ui_init)
+	on_ui_init()
 end
 
 local function start(self)
@@ -65,7 +70,7 @@ local function update_view()
 end
 
 local function on_recycle()
-	
+	NW.unsubscribe("USER.SC.GETUSERINFOR", on_ui_init)
 end
 
 local P = {

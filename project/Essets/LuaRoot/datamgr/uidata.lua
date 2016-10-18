@@ -25,11 +25,15 @@ local P = {
     WNDChangePassword = {},
     WNDSupTask = {},
     WNDSupTaskList = {},
+    WNDSupChangeTask = {},
+    WNDSupNewTask = {},
     WNDSelectStore = {},
     WNDSupWorkProject = {},
     WNDSetCompeteProduct = {},
     WNDMsgLower = {},
     WNDBindPhone = {},
+    WNDSelectPerson = {},
+    WNDSupChangeTask = {},
 }
 
 local LocalDB = {}

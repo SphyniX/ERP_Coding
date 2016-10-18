@@ -18,57 +18,36 @@ local Ref
 local MechanismList
 --!*以下：自动生成的回调函数*--
 
+local function on_submain_grp_btnsave_click(btn)
+	
+	UIMGR.close_window(Ref.root)
+end
+
+local function on_subtop_btnclear_click(btn)
+	
+end
+
 local function on_subtop_btnback_click(btn)
 	UIMGR.close_window(Ref.root)
 end
 
-local function on_subtop_btnsave_click(btn)
-	local SubmitList = UI_DATA.WNDSubmitSchedule.MechanismList
-	if SubmitList == nil then SubmitList = {} end
-	
-	for i,v in ipairs(MechanismList) do
-		local Ent = Ref.SubMain.GrpContent.Ents[i]
-		local id = v.id
-		local value = Ent.inpValue.text
-		-- if value == nil or value == "" then 
-		-- 	_G.UI.Toast:make(nil, "有数据未填写"):show()
-		-- 	return
-		-- end
-		table.insert(SubmitList, {id = id, value = value})
-	end
-	UI_DATA.WNDSubmitSchedule.MechanismList = SubmitList
-	UIMGR.close_window(Ref.root)
-end
-
 local function on_ui_init()
-	local projectId = UI_DATA.WNDSubmitSchedule.projectId
-	local Project = DY_DATA.ProjectList[projectId]
-	if Project == nil then print("Project 为空"..projectId) return end
-	MechanismList = Project.MechanismList
-	if MechanismList == nil then
-		return
-	end
-
-	Ref.SubMain.GrpContent:dup(#MechanismList, function ( i, Ent, isNew)
-		local Mechanism = MechanismList[i]
-		Ent.lbName.text = Mechanism.name
-	end)
+	
 end
 
 
 local function init_view()
+	Ref.SubMain.Grp.btnSave.onAction = on_submain_grp_btnsave_click
+	Ref.SubTop.btnClear.onAction = on_subtop_btnclear_click
 	Ref.SubTop.btnBack.onAction = on_subtop_btnback_click
-	Ref.SubTop.btnSave.onAction = on_subtop_btnsave_click
-	UIMGR.make_group(Ref.SubMain.GrpContent)
+	UIMGR.make_group(Ref.SubMain.Grp)
 	--!*以上：自动注册的回调函数*--
 end
 
 local function init_logic()
-
 	NW.subscribe("WORK.SC.GETMECHANISM", on_ui_init)
-
 	local projectId = UI_DATA.WNDSubmitSchedule.projectId
-	local Project = DY_DATA.ProjectList[projectId]
+	local Project = DY_DATA.SchProjectList[projectId]
 	if Project == nil then print("Project 为空"..projectId) return end
 	if Project.MechanismList == nil then
 		local nm = NW.msg("WORK.CS.GETMECHANISM")
@@ -92,7 +71,7 @@ local function update_view()
 end
 
 local function on_recycle()
-	NW.unsubscribe("WORK.SC.GETMECHANISM", on_ui_init)
+	-- NW.unsubscribe("WORK.SC.GETMECHANISM", on_ui_init)
 end
 
 local P = {

@@ -39,6 +39,9 @@ return {
 	{OP="Default",ID=3001,Info="已分配工作",},
 	{OP="Default",ID=3003,Info=" 没有上传产品进度",},
 	{OP="Default",ID=3004,Info=" 没有上传竞品分析",},
+	{OP="Default",ID=3005,Info=" 没有该任务",},
+	{OP="Default",ID=3006,Info=" 已过上班时间",},
+	{OP="Default",ID=3007,Info=" 促销员时间重叠",},
 	
 	{OP="Default",ID=10000,Info="大量错误",},
 }

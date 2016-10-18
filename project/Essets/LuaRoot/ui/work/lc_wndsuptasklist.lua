@@ -10,15 +10,22 @@ local ipairs, pairs
 local libugui = require "libugui.cs"
 local libunity = require "libunity.cs"
 local UIMGR = MERequire "ui/uimgr"
+local DY_DATA = MERequire "datamgr/dydata.lua"
 local UI_DATA = MERequire "datamgr/uidata.lua"
+local NW = MERequire "network/networkmgr"
 local Ref
 
-local storeId
+local projectId, storeId
 local TaskList
 --!*以下：自动生成的回调函数*--
 
 local function on_subtask_grp_enttask_click(btn)
 	local index = tonumber(btn.name:sub(8))
+	local Task = TaskList[index]
+	UI_DATA.WNDSupChangeTask.Task = Task
+	UI_DATA.WNDSupChangeTask.AddList = nil
+	UI_DATA.WNDSupChangeTask.RemoveList = nil
+	
 	UIMGR.create_window("UI/WNDSupChangeTask")
 end
 
@@ -27,18 +34,26 @@ local function on_subtop_btnback_click(btn)
 end
 
 local function on_subtop_btnnew_click(btn)
+	UI_DATA.WNDSupNewTask.TimeList = {}
+	UI_DATA.WNDSupNewTask.PersonList = {}
 	UIMGR.create_window("UI/WNDSupNewTask")
 end
 
 local function on_ui_init()
-	TaskList = {
-		{starttime = "2016/9/1 8:00", endtime = "2016/9/1 18:00",  PersonList = {{id = 1, name = "asdf",}, {id = 2, name = "zxcv",}, {id = 3, name = "qwer",},}},
-		{starttime = "2016/9/2 8:00", endtime = "2016/9/2 18:00",  PersonList = {{id = 1, name = "asdf",}, {id = 2, name = "zxcv",}, {id = 3, name = "qwer",},}},
-		{starttime = "2016/9/1 18:00", endtime = "2016/9/2 8:00",  PersonList = {{id = 1, name = "asdf",}, {id = 2, name = "zxcv",}, {id = 3, name = "qwer",},}},
-		{starttime = "2016/9/3 8:00", endtime = "2016/9/3 18:00",  PersonList = {{id = 1, name = "asdf",}, {id = 2, name = "zxcv",}, {id = 3, name = "qwer",},}},
-		{starttime = "2016/9/4 8:00", endtime = "2016/9/4 18:00",  PersonList = {{id = 1, name = "asdf",}, {id = 2, name = "zxcv",}, {id = 3, name = "qwer",},}},
-	}
-
+	if DY_DATA.ProjectList[projectId] == nil or DY_DATA.ProjectList[projectId].StoreList == nil then 
+		libunity.LogW("UI Error: Project 或 StoreList 不存在: {0}", projectId)
+		return 
+	end
+	local StoreList = DY_DATA.ProjectList[projectId].StoreList
+	local Store = DY_DATA.get_store(StoreList, storeId)
+	print(JSON:encode(Store))
+	if Store == nil or Store.TaskList == nil then 
+		libunity.LogW("UI Error: Store or TaskList 不存在: {0}", storeId)
+		return
+	end
+	
+	TaskList = Store.TaskList
+	libunity.LogI("TaskList : {0}", JSON:encode(TaskList))
 	Ref.SubTask.Grp:dup(#TaskList, function (i, Ent, isNew)
 		local Task = TaskList[i]
 		Ent.lbStart.text = Task.starttime
@@ -57,8 +72,22 @@ local function init_view()
 end
 
 local function init_logic()
+	NW.subscribe("WORK.SC.GETASSIGNMENT", on_ui_init)
+
+	projectId = UI_DATA.WNDSelectStore.projectId
 	storeId = UI_DATA.WNDSupTaskList.storeId
 
+	if DY_DATA.ProjectList[projectId] == nil or DY_DATA.ProjectList[projectId].StoreList == nil then return end
+	local StoreList = DY_DATA.ProjectList[projectId].StoreList
+	local Store = DY_DATA.get_store(StoreList, storeId)
+	if Store == nil then return end
+	if Store.TaskList == nil then
+		local nm = NW.msg("WORK.CS.GETASSIGNMENT")
+		libunity.LogI("WORK.CS.GETASSIGNMENT: storeId = {0}", storeId)
+		nm:writeU32(storeId)
+		NW.send(nm)
+		return
+	end
 	on_ui_init()
 end
 
@@ -75,7 +104,7 @@ local function update_view()
 end
 
 local function on_recycle()
-	
+	NW.unsubscribe("WORK.SC.GETASSIGNMENT", on_ui_init)
 end
 
 local P = {

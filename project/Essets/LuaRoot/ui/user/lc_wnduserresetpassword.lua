@@ -90,6 +90,11 @@ local function on_subtop_btnback_click(btn)
 	UIMGR.close_window(Ref.root)
 end
 
+local function on_recycle()
+	NW.unsubscribe("USER.SC.VALPWD", on_val_pass)
+	NW.unsubscribe("USER.SC.UPDATE", on_reset_pass)
+end
+
 local function init_view()
 	Ref.SubMain.tglShow.onAction = on_submain_tglshow_change
 	Ref.SubMain.btnEnter.onAction = on_submain_btnenter_click
@@ -117,15 +122,9 @@ end
 local function update_view()
 end
 
-local function on_recycle()
-	NW.unsubscribe("USER.SC.VALPWD", on_val_pass)
-	NW.unsubscribe("USER.SC.UPDATE", on_reset_pass)
-end
-
 local P = {
 	start = start,
 	update_view = update_view,
-	on_recycle = on_recycle,
 }
 return P
 

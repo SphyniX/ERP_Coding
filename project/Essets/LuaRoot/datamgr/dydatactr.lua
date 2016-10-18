@@ -22,7 +22,6 @@ local P = {}
 
 local function sc_attence_gettask(nm)
     local n = tonumber(nm:readString())
-    print("sc_attence_gettask "..n)
     local AttendanceList = {}
     for i=1,n do
         local id = tonumber(nm:readString())
@@ -37,7 +36,6 @@ local function sc_attence_gettask(nm)
         Attendance.icon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
         -- table.insert(AttendanceList, Attendance)
         AttendanceList[id] = Attendance
-        print(JSON:encode(Attendance))
     end
     DY_DATA.AttendanceList = AttendanceList
     -- DY_DATA.get_attendance_list(true)
@@ -63,8 +61,15 @@ end
 NW.regist("ATTENCE.SC.GETLEAVELIST", sc_attence_getleavelist)
 
 local function sc_attence_gettime(nm)
-    local time = nm:readString()
-    DY_DATA.Work.nowTime = time
+    local stime = nm:readString()
+    print(stime)
+    local st = stime:splitn(' ')
+    local day = st[1]
+    local time = st[2]
+    local week = tonumber(nm:readString())
+    print(day, time, week)
+    local TEXT = _G.ENV.TEXT
+    DY_DATA.Work.NowTime = {day = day, time = time, week = TEXT.Week[week]}
 end
 NW.regist("ATTENCE.SC.GETTIME", sc_attence_gettime)
 
@@ -107,7 +112,6 @@ NW.regist("USER.SC.GETINFOR", sc_user_getinfor)
 local function sc_user_get_user_infor(nm)
     local User = DY_DATA.User
     local ret = tonumber(nm:readString()) -- 1 成功
-    print(ret)
 
     User.limit = tonumber(nm:readString())  -- 1 促销员， 2 督导， 3 区域负责人， 4 项目负责人
     if User.limit == 1 then 
@@ -131,7 +135,6 @@ local function sc_user_get_user_infor(nm)
         local idcard_all = nm:readString()
         local cardNo_front = nm:readString()
         local cardNo_back = nm:readString()
-        print(User.cardNo_back)
         User.icon = icon == "nil" and nil or icon..".png"
         User.idcard_front = idcard_front == "nil" and nil or idcard_front..".png"
         User.idcard_back = idcard_back == "nil" and nil or idcard_back..".png"
@@ -147,12 +150,9 @@ local function sc_user_get_user_infor(nm)
         local cityid = nm:readString()
         -- User.cityid = tonumber(nm:readString())
         User.cityid = tonumber(cityid)
-        print("cityid"..cityid )
         local icon = nm:readString()
         User.icon = icon == "nil" and icon == nil and "test.png" or icon..".png"
-        print(JSON:encode(User))
     end
-    print("User Info:"..JSON:encode(User))
 end
 NW.regist("USER.SC.GETUSERINFOR", sc_user_get_user_infor)
 
@@ -161,7 +161,6 @@ local function sc_user_getsuperlist(nm)
     local List = DY_DATA.SuperList
     if List == nil then List = {} DY_DATA.SuperList = List end
     local n = tonumber(nm:readString())
-    print(n)
     for i=1,n do
         -- 废弃
         local something = tonumber(nm:readString())
@@ -192,7 +191,7 @@ local function sc_reported_getrep(nm)
         local volume = tonumber(nm:readString())
         local price = tonumber(nm:readString())
         local average_price = tonumber(nm:readString())
-        if LocalList[productId] == nil then List[productId] = { id = productId, name = productName, PersonList = {} } end
+        if LocalList[productId] == nil then LocalList[productId] = { id = productId, name = productName, PersonList = {} } end
         local Info = {name = personName, sales = sales, volume = volume, price = price, average_price = average_price}
         table.insert(LocalList[productId].PersonList, Info)
     end
@@ -260,15 +259,14 @@ local function sc_reported_getmechanre(nm)
 
     local LocalList = {}
     local n = tonumber(nm:readString())
-    print(n)
     for i=1,n do
         local personId = tonumber(nm:readString())
         local personName = nm:readString()
         local tid = tonumber(nm:readString())
         local name = nm:readString()
         local context = nm:readString()
-        if LocalList[tid] == nil then LocalList[tId] = { id = tid, name = name, PersonList = {}} end
-        local PersonList = LocalList[tId].PersonList
+        if LocalList[tid] == nil then LocalList[tid] = { id = tid, name = name, PersonList = {}} end
+        local PersonList = LocalList[tid].PersonList
         table.insert(PersonList, {id = personId, name = personName, context = context})
     end
     local List = {}
@@ -278,7 +276,6 @@ local function sc_reported_getmechanre(nm)
 
     if DY_DATA.MechanismList == nil then DY_DATA.MechanismList = {} end
     if DY_DATA.MechanismList[storeId] == nil then DY_DATA.MechanismList[storeId] = {} end
-    print(day, JSON:encode(List))
     DY_DATA.MechanismList[storeId][day] = List
 end
 NW.regist("REPORTED.SC.GETMECHANRE", sc_reported_getmechanre)
@@ -341,23 +338,138 @@ local function sc_reported_getattinfor(nm)
 end
 NW.regist("REPORTED.SC.GETATTINFOR", sc_reported_getattinfor)
 
+local function sc_reported_getproject(nm)
+    local n = tonumber(nm:readString())
+    if DY_DATA.SchProjectList == nil then DY_DATA.SchProjectList = {} end
+    local List = DY_DATA.SchProjectList
+    for i=1,n do
+        local id = tonumber(nm:readString())
+        local name = nm:readString()
+        local type = nm:readString()
+        local icon = nm:readString()
+        icon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
+        List[id] = {id = id, name = name, type = type, icon = icon}
+    end
+    DY_DATA.SchProjectList = List
+    DY_DATA.get_schproject_list(true)
+end
+NW.regist("REPORTED.SC.GETPROJECT", sc_reported_getproject)
+
+local function sc_reported_getstore(nm)
+    local n = tonumber(nm:readString())
+    for i=1,n do
+        local projectId = tonumber(nm:readString())
+        local Project = DY_DATA.SchProjectList[projectId]
+        if Project == nil then return end
+        if Project.StoreList == nil then Project.StoreList = {} end
+        local StoreList = Project.StoreList
+        local id = tonumber(nm:readString())
+        local name = nm:readString()
+        local icon = nm:readString()
+        icon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
+        table.insert(StoreList,{id = id, projectId = projectId, name = name, icon = icon,})
+    end
+end
+NW.regist("REPORTED.SC.GETSTORE", sc_reported_getstore)
+
+local function sc_reported_getstoreinfor(nm)
+    local projectId = tonumber(nm:readString())
+    local Project = DY_DATA.SchProjectList[projectId]
+    if Project == nil then return end
+    if Project.StoreList == nil then Project.StoreList = {} end
+    local StoreList = Project.StoreList
+    local id = tonumber(nm:readString())
+    local name = nm:readString()
+    local address = nm:readString()
+    local superId = nm:readString()
+    local day = nm:readString()
+    local week = nm:readString()
+    local time = nm:readString()
+    local str = time:splitn('-')
+    local starttime = str[1]
+    local endtime = str[2]
+    local Store
+    for _,v in ipairs(StoreList) do
+        if v.id == id then Store = v end
+    end
+    Store.Info = {
+        address = address,
+        superId = superId,
+        day = day,
+        week = week,
+        starttime = starttime,
+        endtime = endtime,
+    }
+end
+NW.regist("REPORTED.SC.GETSTOREINFOR", sc_reported_getstoreinfor)
+
+local function sc_reported_getproduct(nm)
+    local n = tonumber(nm:readString())
+    for i=1,n do
+        local projectId = tonumber(nm:readString())
+        local Project = DY_DATA.SchProjectList[projectId]
+        if Project ~= nil then
+            local ProductList = Project.ProductList
+            if ProductList == nil then
+                ProductList = {}
+                Project.ProductList = ProductList
+            end
+
+            local Info = {
+                id = tonumber(nm:readString()),
+                projectId = projectId,
+                name = nm:readString(),
+                unit = nm:readString(),
+            }
+            local icon = nm:readString()
+            Info.icon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
+            
+            table.insert(ProductList, Info)
+        end
+    end
+end
+NW.regist("REPORTED.SC.GETPRODUCT", sc_reported_getproduct)
+
+--     local act_form = nm:readString()
+--     local act_calendar = nm:readString()
+--     local act_goal = nm:readString()
+--     local goal_sale = nm:readString()
+--     local goal_exppeople = nm:readString()
+--     local goal_expvolume = nm:readString()
+--     local goal_people = nm:readString()
+--     local product_info = nm:readString()
+--     local selling_point = nm:readString()
+--     local words = nm:readString()
+--     local sales_technique = nm:readString()
+--     local rule_att = nm:readString()
+--     local rule_face = nm:readString()
+--     local rule_sch = nm:readString()
+--     local rule_photo = nm:readString()
+--     local rule_data = nm:readString()
+--     local rule_leave = nm:readString()
+--     local rule_sale = nm:readString()
+--     local rule_plan = nm:readString()
+--     local info_wages = nm:readString()
+--     local info_reward = nm:readString()
+--     local info_supcontact = nm:readString()
+--     local info_salecontact = nm:readString()
+--     local info_procontact = nm:readString()
+--     local icon = nm:readString()
+
+
 local function  sc_project_getproinfor(nm)
     local id = tonumber(nm:readString())
     local name = nm:readString()
     local type = nm:readString()
-    print( id, name, type)
-    id = tonumber(id)
+    local brand = nm:readString()
+
     local n = tonumber(nm:readString())
-    print(n)
     local List = {}
     for i=1,n do
         name = nm:readString()
+        table.insert(List, name)
     end
-
-    local words = nm:readString()
-    local title = nm:readString()
-    local method = nm:readString()
-
+    
     local Project = DY_DATA.ProjectList[id]
     if Project == nil then
         Project = { id = id, name = name}
@@ -366,10 +478,33 @@ local function  sc_project_getproinfor(nm)
 
     Project.Info = {
         type = type,
-        words = words,
-        title = title,
-        method = method,
+        brand = brand,
+        ProductList = List,
+        act_form = nm:readString(),
+        act_calendar = nm:readString(),
+        act_goal = nm:readString(),
+        goal_sale = nm:readString(),
+        goal_exppeople = nm:readString(),
+        goal_expvolume = nm:readString(),
+        goal_people = nm:readString(),
+        product_info = nm:readString(),
+        selling_point = nm:readString(),
+        words = nm:readString(),
+        sales_technique = nm:readString(),
+        rule_att = nm:readString(),
+        rule_face = nm:readString(),
+        rule_sch = nm:readString(),
+        rule_photo = nm:readString(),
+        rule_data = nm:readString(),
+        rule_leave = nm:readString(),
+        rule_sale = nm:readString(),
+        rule_plan = nm:readString(),
+        info_wages = nm:readString(),
+        info_reward = nm:readString(),
+        info_procontact = nm:readString(),
+        icon = nm:readString(),
     }
+    
 end
 
 NW.regist("PROJECT.SC.GETPROINFOR", sc_project_getproinfor)
@@ -378,20 +513,20 @@ local function sc_project_getstoreinfor(nm)
     local projectId = tonumber(nm:readString())
 
     local Project = DY_DATA.ProjectList[projectId]
-    if Project == nil then print("Project 为空"..projectId) return end
     local StoreList = Project.StoreList
-    if StoreList == nil then print("StoreList 为空"..projectId) return end
     
     local id = tonumber(nm:readString())
     local Store
     for _,v in ipairs(StoreList) do
         if v.id == id then Store = v end
     end
-    if Store == nil then print("Store 为空"..id) return end
     
     local name = nm:readString()
     local address = nm:readString()
     local superId = tonumber(nm:readString())
+
+    local supcontact = nm:readString()
+    local salecontact = nm:readString()
     local n = tonumber(nm:readString())
     local WorkDays = {}
     for i=1,n do
@@ -399,7 +534,6 @@ local function sc_project_getstoreinfor(nm)
         local week = tonumber(nm:readString())
         week = week == 0 and 7 or week
         local time = nm:readString()
-        print(day, week, time)
         table.insert(WorkDays, { day = day, week = week, time = time })
     end
     Store.Info = {
@@ -412,7 +546,6 @@ NW.regist("PROJECT.SC.GETSTOREINFOR", sc_project_getstoreinfor)
 
 local function sc_work_getproject(nm)
     local n = tonumber(nm:readString())
-    print("sc_work_getproject "..n) 
     local List = DY_DATA.ProjectList
     for i=1,n do
         local id = tonumber(nm:readString())
@@ -422,20 +555,16 @@ local function sc_work_getproject(nm)
         local icon = nm:readString()
         List[id].icon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
     end
-    print(JSON:encode(List))
     DY_DATA.ProjectList = List
-    print(JSON:encode(List))
     DY_DATA.get_project_list(true)
 end
 NW.regist("WORK.SC.GETPROJECT", sc_work_getproject)
 
 local function sc_work_getstore(nm)
     local n = tonumber(nm:readString())
-    print("sc_work_getstore "..n)
     local List = {}
     for i=1,n do
         local projectId = tonumber(nm:readString())
-        print("projectId: "..projectId)
         local Project = DY_DATA.ProjectList[projectId]
         local StoreList = Project.StoreList
         if StoreList == nil then
@@ -452,7 +581,6 @@ local function sc_work_getstore(nm)
         Info.icon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
         Info.state = tonumber(nm:readString())
         table.insert(StoreList, Info)
-        print("Store : "..JSON:encode(Info))
     end
     
 end
@@ -462,7 +590,6 @@ local function sc_work_getstartdate(nm)
     local WorkDay = {}
     for i=1,7 do
         local str = nm:readString()
-        print(str)
         local ymd = str:splitn("-")
         table.insert(WorkDay, { year = ymd[1], month = ymd[2], day = ymd[3]})
     end
@@ -504,7 +631,7 @@ local function sc_work_getmater(nm)
     local n = tonumber(nm:readString())
     for i=1,n do
         local projectId = tonumber(nm:readString())
-        local Project = DY_DATA.ProjectList[projectId]
+        local Project = DY_DATA.SchProjectList[projectId]
         local MaterList = Project.MaterList
         if MaterList == nil then
             MaterList = {}
@@ -523,7 +650,7 @@ NW.regist("WORK.SC.GETMATER", sc_work_getmater)
 
 local function sc_work_getcomlist(nm)
     local n = tonumber(nm:readString())
-    local ProjectList = DY_DATA.ProjectList
+    local ProjectList = DY_DATA.SchProjectList
     for i=1,n do
         local projectId = tonumber(nm:readString())
         local id = tonumber(nm:readString())
@@ -551,21 +678,19 @@ local function sc_work_getsales(nm)
     local n = tonumber(nm:readString())
     local List = DY_DATA.PromoterList
     if List == nil then List = {} DY_DATA.PromoterList = List end
-    print("sc_work_getsales", n)
     for i=1,n do
         local id = tonumber(nm:readString())
         local name = nm:readString()
         local state = tonumber(nm:readString())
         List[id] = {id = id, name = name, state = state}
     end
-    print(JSON:encode(List))
     DY_DATA.get_promoter_List(true)
 end
 NW.regist("WORK.SC.GETSALES", sc_work_getsales)
 
 local function sc_work_getmechanism(nm)
     local projectId = tonumber(nm:readString())
-    local Project = DY_DATA.ProjectList[projectId]
+    local Project = DY_DATA.SchProjectList[projectId]
     if Project == nil then return end
 
     if Project.MechanismList == nil then Project.MechanismList = {} end
@@ -580,14 +705,54 @@ local function sc_work_getmechanism(nm)
 end
 NW.regist("WORK.SC.GETMECHANISM", sc_work_getmechanism)
 
+local function sc_work_getassignment(nm)
+    local projectId = tonumber(nm:readString())
+    local storeId = tonumber(nm:readString())
+    local n = tonumber(nm:readString())
+    local TaskList = {}
+    for i=1,n do
+        local id = tonumber(nm:readString())
+        local personId = tonumber(nm:readString())
+        local name = nm:readString()
+        local starttime = nm:readString()
+        local endtime = nm:readString()
+        if TaskList[starttime.."_"..endtime] == nil then 
+            TaskList[starttime.."_"..endtime] = {} 
+        end
+        
+        local Info = { 
+            taskId = id, 
+            id = personId,
+            name = name, 
+            projectId = projectId, 
+            storeId = storeId,
+            starttime = starttime,
+            endtime = endtime,
+        }
+        table.insert(TaskList[starttime.."_"..endtime], Info)
+    end
+    print(projectId, storeId, n, JSON:encode(TaskList))
+    local ProjectList = DY_DATA.ProjectList
+    if ProjectList[projectId] == nil or ProjectList[projectId].StoreList == nil then return end
+    local StoreList = ProjectList[projectId].StoreList
+    local Store = DY_DATA.get_store(StoreList, storeId)
+    if Store == nil then return end
+
+    local List = {}
+    for k,v in pairs(TaskList) do
+        local Time = k:split('_')
+        table.insert(List, { starttime = Time[1], endtime = Time[2], PersonList = v})
+    end
+    Store.TaskList = List
+end
+NW.regist("WORK.SC.GETASSIGNMENT",sc_work_getassignment)
+
 local function sc_message_getlower(nm)
     local n = tonumber(nm:readString())
-    print(n)
     local List = {}
     for i=1,n do
         local limit = tonumber(nm:readString())
         local id = tonumber(nm:readString())
-        print(id)
         local People = {
             id = id,
             limit = limit,
@@ -602,10 +767,7 @@ local function sc_message_getlower(nm)
         List[id] = People
     end
     DY_DATA.LowerList = List
-    print(JSON:encode(List))
     -- DY_DATA.get_lower_list(true)
-    print(JSON:encode(DY_DATA.get_lower_list(true)))
-    print(JSON:encode(DY_DATA.get_lower_list(false,1)))
 end
 NW.regist("MESSAGE.SC.GETLOWER", sc_message_getlower)
 

@@ -37,7 +37,6 @@ local function on_ui_init()
 	UIMGR.get_photo(Ref.SubMain.spIcon, Person.icon)
 	local Ref_SubMain_SubInfo = Ref.SubMain.SubInfo
 	Ref.SubMain.lbName.text = Person.name
-	Ref.SubMain.lbId.text = Person.id
 	Ref_SubMain_SubInfo.SubPhone.lbText.text = Person.phone
 	Ref_SubMain_SubInfo.SubWechat.lbText.text = Person.wechat
 	Ref_SubMain_SubInfo.SubQQ.lbText.text = Person.qq

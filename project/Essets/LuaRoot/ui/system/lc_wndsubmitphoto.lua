@@ -15,6 +15,7 @@ local Ref
 
 local callback, PhotoList
 local input,inputvalue
+
 --!*以下：自动生成的回调函数*--
 
 local function on_subphoto_grpphoto_entphoto_click(btn)
@@ -31,7 +32,7 @@ local function on_subtop_btnback_click(btn)
 	UIMGR.close_window()
 end
 
-local function on_subphoto_grpphoto_btnsubmit_click(btn)
+local function on_subtop_btnsave_click(btn)
 	local n = #PhotoList
 	for i,v in ipairs(PhotoList) do
 		if v.need and v.image == nil then 
@@ -48,13 +49,13 @@ local function on_subphoto_grpphoto_btnsubmit_click(btn)
 		end
 	end
 	callback(PhotoList, inp)
-	UIMGR.close_window()
+	UIMGR.close_window(Ref.root)
 end
 
 local function init_view()
 	Ref.SubPhoto.GrpPhoto.Ent.btn.onAction = on_subphoto_grpphoto_entphoto_click
 	Ref.SubTop.btnBack.onAction = on_subtop_btnback_click
-	Ref.SubPhoto.GrpPhoto.btnSubmit.onAction = on_subphoto_grpphoto_btnsubmit_click
+	Ref.SubTop.btnSave.onAction = on_subtop_btnsave_click
 	UIMGR.make_group(Ref.SubPhoto.GrpPhoto, function (New, Ent)
 		New.btn.onAction = Ent.btn.onAction
 	end)
@@ -66,7 +67,7 @@ local function init_logic()
 	UI_DATA.WNDShowPhoto.callback = nil
 	local title = UI_DATA.WNDShowPhoto.title
 	UI_DATA.WNDShowPhoto.title = nil
-	Ref.SubTop.lbTitle.text = title
+	Ref.SubTop.lbText.text = title
 	local tip = UI_DATA.WNDShowPhoto.tip
 	UI_DATA.WNDShowPhoto.tip = nil
 	Ref.SubPhoto.GrpPhoto.lbTip.text = tip

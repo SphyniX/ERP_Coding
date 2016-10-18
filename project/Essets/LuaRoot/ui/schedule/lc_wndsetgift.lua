@@ -18,57 +18,53 @@ local Ref
 local ProductList
 --!*以下：自动生成的回调函数*--
 
+local function on_submain_grp_ent_click(btn)
+	libunity.SetActive(Ref.SubSet.root, true)
+end
+
+local function on_submain_grp_btnsave_click(btn)
+	UIMGR.close_window(Ref.root)
+end
+
+local function on_subtop_btnclear_click(btn)
+	
+end
+
 local function on_subtop_btnback_click(btn)
 	UIMGR.close_window(Ref.root)
 end
 
-local function on_subtop_btnsave_click(btn)
-	local SubmitProductList = UI_DATA.WNDSubmitSchedule.ProductList
-	if SubmitProductList == nil then SubmitProductList = {} end
-	for i,v in ipairs(ProductList) do
-		local Ent = Ref.SubMain.GrpContent.Ents[i]
-		
-		local id = ProductList[i].id
-		if id == nil or id == "" then 
-			_G.UI.Toast:make(nil, "数据异常"):show()
-			return
-		end
-		
-		local sendout = Ent.inpSendout.text
-		if sendout == nil or sendout == "" then 
-			_G.UI.Toast:make(nil, "有数据未填写"):show()
-			return
-		end
-		if SubmitProductList[id] == nil then SubmitProductList[id] = {id = ProductList[i].id} end
-		SubmitProductList[id].sendout = sendout
-	end
-	UI_DATA.WNDSubmitSchedule.ProductList = SubmitProductList
-	UIMGR.close_window(Ref.root)
+local function on_subset_btnsubmit_click(btn)
+	
+	libunity.SetActive(Ref.SubSet.root, false)
 end
+
+local function on_subset_btnback_click(btn)
+	
+	libunity.SetActive(Ref.SubSet.root, false)
+end
+
 local function on_ui_init()
-	local projectId = UI_DATA.WNDSubmitSchedule.projectId
-	local Project = DY_DATA.ProjectList[projectId]
-	if Project == nil then print("Project 为空"..projectId) return end
-	ProductList = Project.ProductList
-	if ProductList == nil then
-		return
-	end
-	Ref.SubMain.GrpContent:dup(#ProductList, function ( i, Ent, isNew)
-		local Product = ProductList[i]
-		Ent.lbName.text = Product.name
-	end)
+	
 end
 
 local function init_view()
+	Ref.SubMain.Grp.Ent.btn.onAction = on_submain_grp_ent_click
+	Ref.SubMain.Grp.btnSave.onAction = on_submain_grp_btnsave_click
+	Ref.SubTop.btnClear.onAction = on_subtop_btnclear_click
 	Ref.SubTop.btnBack.onAction = on_subtop_btnback_click
-	Ref.SubTop.btnSave.onAction = on_subtop_btnsave_click
-	UIMGR.make_group(Ref.SubMain.GrpContent)
+	Ref.SubSet.btnSubmit.onAction = on_subset_btnsubmit_click
+	Ref.SubSet.btnBack.onAction = on_subset_btnback_click
+	UIMGR.make_group(Ref.SubMain.Grp, function (New, Ent)
+		New.btn.onAction = Ent.btn.onAction
+	end)
 	--!*以上：自动注册的回调函数*--
 end
 
 local function init_logic()
 	NW.subscribe("WORK.SC.GETPRODUCT", on_ui_init)
-
+	libunity.SetActive(Ref.SubSet.root, false)
+	
 	local projectId = UI_DATA.WNDSubmitSchedule.projectId
 	local Project = DY_DATA.ProjectList[projectId]
 	if Project == nil then print("Project 为空"..projectId) return end

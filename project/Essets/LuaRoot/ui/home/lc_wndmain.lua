@@ -64,8 +64,10 @@ local function on_get_data(Ret)
 	-- local nm = NW.msg("WORK.CS.GETPROJECT")
 	-- nm:writeU32(DY_DATA.User.id)
 	-- NW.send(nm)
-
-    local nm = NW.msg("USER.CS.GETUSERINFOR")
+	local nm = NW.msg("ATTENCE.CS.GETTIME")
+	NW.send(nm)
+	
+    nm = NW.msg("USER.CS.GETUSERINFOR")
     local id = UI_DATA.WNDLogin.id
     nm:writeU32(id)
     NW.send(nm)

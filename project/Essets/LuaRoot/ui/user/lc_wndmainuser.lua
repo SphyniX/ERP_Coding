@@ -81,65 +81,23 @@ local function on_submain_subicon_btnchange_click(btn)
    	UIMGR.create_window("UI/WNDSubmitPhoto")
 end
 
-local function on_submain_subaddress_click(btn)
-	-- 修改地址
-end
-
-local function on_submain_subboss_click(btn)
-	-- 修改督导
+local function on_submain_btnboss_click(btn)
 	UIMGR.create_window("UI/WNDUserSupervisorList")
 end
 
-local function on_submain_subphone_click(btn)
-	UIMGR.create_window("UI/WNDUserChangePhone")
+local function on_submain_btninfo_click(btn)
+	UIMGR.create_window("UI/WNDUserSetInfo")
 end
 
-local function on_submain_subotherphone_click(btn)
-	UIMGR.create_window("UI/WNDContact")
-end
-
-local function on_submain_subinfo_click(btn)
-	UIMGR.create_window("UI/WNDUserInfo")
-end
-
-local function on_submain_subpassword_click(btn)
-	UIMGR.create_window("UI/WNDUserResetPassword")
-end
-
-local function on_submain_subidcard_click(btn)
-	UI_DATA.WNDShowPhoto.title = "身份证"
-	UI_DATA.WNDShowPhoto.tip = "身份证照片"
-	UI_DATA.WNDShowPhoto.input = "身份证号码"
-	UI_DATA.WNDShowPhoto.inputvalue = DY_DATA.User.IDcard
-	local User = DY_DATA.User
-	UI_DATA.WNDShowPhoto.photolist = {
-		[1] = { title = "正面", name = User.idcard_front, typeId = 2, dl = true},
-		[2] = { title = "背面", name = User.idcard_back, typeId = 3, dl = true},
-		[3] = { title = "手持", name = User.idcard_all, typeId = 4, dl = true},
-	}
-	UI_DATA.WNDShowPhoto.callback = on_set_idcard
-   	UIMGR.create_window("UI/WNDSubmitPhoto")
-end
-
-local function on_submain_subbank_click(btn)
-	UI_DATA.WNDShowPhoto.title = "银行卡"
-	UI_DATA.WNDShowPhoto.tip = "银行卡照片"
-	UI_DATA.WNDShowPhoto.input = "银行卡号码"
-	UI_DATA.WNDShowPhoto.inputvalue = DY_DATA.User.bankcard
-	local User = DY_DATA.User
-	UI_DATA.WNDShowPhoto.photolist = {
-		[1] = { title = "正面", name = User.cardNo_front, typeId = 5, dl = true },
-		[2] = { title = "背面", name = User.cardNo_back, typeId = 6, dl = true },
-	}
-	UI_DATA.WNDShowPhoto.callback = on_set_cardno
-	UIMGR.create_window("UI/WNDSubmitPhoto")
-end
-
-local function on_submain_subsuggest_click(btn)
+local function on_submain_btnsuggest_click(btn)
 	UIMGR.create_window("UI/WNDSuggest")
 end
 
-local function on_subtop_btnback_click(btn)
+local function on_submain_btnabout_click(btn)
+	UIMGR.create_window("UI/WNDAbout")
+end
+
+local function on_submain_btnlogout_click(btn)
 	_G.PKG["libmgr/login"].do_logout()
 end
 
@@ -166,24 +124,20 @@ end
 local function on_ui_init()
 	local Ref_SubMain = Ref.SubMain
 	local User = DY_DATA.User
-	Ref_SubMain.SubID.lbText.text = User.id
-	Ref_SubMain.SubAddress.lbText.text =_G.CFG.CityLib.get_city(User.cityid).name
-	Ref_SubMain.SubPhone.lbText.text = User.phone
+	Ref_SubMain.SubIcon.lbName.text = User.name
+	-- Ref_SubMain.SubID.lbText.text = User.id
+	-- Ref_SubMain.SubAddress.lbText.text =_G.CFG.CityLib.get_city(User.cityid).name
+	-- Ref_SubMain.SubPhone.lbText.text = User.phone
 	UIMGR.get_photo(Ref_SubMain.SubIcon.spIcon, User.icon)
 end
 
 local function init_view()
 	Ref.SubMain.SubIcon.btnChange.onAction = on_submain_subicon_btnchange_click
-	Ref.SubMain.SubAddress.btn.onAction = on_submain_subaddress_click
-	Ref.SubMain.SubBoss.btn.onAction = on_submain_subboss_click
-	Ref.SubMain.SubPhone.btn.onAction = on_submain_subphone_click
-	Ref.SubMain.SubOtherPhone.btn.onAction = on_submain_subotherphone_click
-	Ref.SubMain.SubInfo.btn.onAction = on_submain_subinfo_click
-	Ref.SubMain.SubPassword.btn.onAction = on_submain_subpassword_click
-	Ref.SubMain.SubIDCard.btn.onAction = on_submain_subidcard_click
-	Ref.SubMain.SubBank.btn.onAction = on_submain_subbank_click
-	Ref.SubMain.SubSuggest.btn.onAction = on_submain_subsuggest_click
-	Ref.SubTop.btnBack.onAction = on_subtop_btnback_click
+	Ref.SubMain.btnBoss.onAction = on_submain_btnboss_click
+	Ref.SubMain.btnInfo.onAction = on_submain_btninfo_click
+	Ref.SubMain.btnSuggest.onAction = on_submain_btnsuggest_click
+	Ref.SubMain.btnAbout.onAction = on_submain_btnabout_click
+	Ref.SubMain.btnLogout.onAction = on_submain_btnlogout_click
 	Ref.SubBtm.btnAtt.onAction = on_subbtm_btnatt_click
 	Ref.SubBtm.btnWork.onAction = on_subbtm_btnwork_click
 	Ref.SubBtm.btnSch.onAction = on_subbtm_btnsch_click

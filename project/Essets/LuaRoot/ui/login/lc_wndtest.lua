@@ -78,7 +78,7 @@ end
 
 local function on_btnpromotions_click(btn)
 -- ##	UIMGR.WNDStack:pop()
-	UIMGR.create_window("UI/WNDMainAttendance")
+	UIMGR.create_window("UI/WNDTestAttendance")
 end
 
 local function on_btnsupervisor_click(btn)

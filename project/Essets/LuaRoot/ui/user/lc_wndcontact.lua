@@ -21,11 +21,7 @@ local function on_set_end(Ret)
 end
 --!*以下：自动生成的回调函数*--
 
-local function on_subtop_btnback_click(btn)
-	UIMGR.close_window(Ref.root)
-end
-
-local function on_subtop_btnsave_click(btn)
+local function on_submain_btnsave_click(btn)
 	local wechat = Ref.SubMain.SubWeChat.inpInput.text
 	local qq = Ref.SubMain.SubQQ.inpInput.text
 	local email = Ref.SubMain.SubEmail.inpInput.text
@@ -44,9 +40,13 @@ local function on_subtop_btnsave_click(btn)
 	NW.send(nm)
 end
 
+local function on_subtop_btnback_click(btn)
+	UIMGR.close_window(Ref.root)
+end
+
 local function init_view()
+	Ref.SubMain.btnSave.onAction = on_submain_btnsave_click
 	Ref.SubTop.btnBack.onAction = on_subtop_btnback_click
-	Ref.SubTop.btnSave.onAction = on_subtop_btnsave_click
 	--!*以上：自动注册的回调函数*--
 end
 

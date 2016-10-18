@@ -23,23 +23,6 @@ local function on_subtop_btnback_click(btn)
 	UIMGR.close_window(Ref.root)
 end
 
-local function on_subtop_btnsurpervisor_click(btn)
-	UI_DATA.WNDUserSupervisor.superId = Store.Info.superId
-	UIMGR.create_window("UI/WNDUserSupervisor")
-end
-
-local function on_product_init()
-	local Ref_SubMain_SubContent = Ref.SubMain.SubContent
-
-	local ProductList = Project.ProductList
-	if ProductList == nil then return end
-	local strProduct = ""
-	for k,v in pairs(ProductList) do
-		strProduct = strProduct..v.name.."\n"
-	end
-	Ref_SubMain_SubContent.SubProduct.lbText.text = strProduct
-end
-
 local function on_store_init()
 	local Ref_SubMain_SubContent = Ref.SubMain.SubContent
 
@@ -57,14 +40,15 @@ local function on_store_init()
 
 	if Store.Info == nil then return end
 
-	Ref_SubMain_SubContent.SubAddress.lbText.text = Store.Info.address
+	Ref_SubMain_SubContent.SubStore.lbAddress.text = Store.Info.address
 	local WorkDays = Store.Info.WorkDays
 	if WorkDays == nil then return end
 	Ref_SubMain_SubContent.SubWorkDay.Grp:dup( #WorkDays, function (i, Ent, isNew)
 		local WorkDay = WorkDays[i]
-		Ent.lbDay.text = WorkDay.day
+		-- Ent.lbDay.text = WorkDay.day
 		Ent.lbWeek.text = TEXT.Week[WorkDay.week]
-		Ent.lbTime.text = WorkDay.time
+		Ent.lbTime.text = WorkDay.day.." "..WorkDay.time
+
 	end)
 end
 
@@ -73,16 +57,23 @@ local function on_project_init()
 	local projectId = UI_DATA.WNDWorkProject.projectId
 	Project = DY_DATA.ProjectList[projectId]
 	if Project.Info == nil then return end
-
+	local Info = Project.Info
 	Ref_SubMain_SubContent.lbTip.text = Project.Info.type
-	Ref_SubMain_SubContent.SubWords.lbText.text = Project.Info.words
-	Ref_SubMain_SubContent.SubTitle.lbText.text = Project.Info.title
-	Ref_SubMain_SubContent.SubWay.lbText.text = Project.Info.method
+	local product = ""
+	for k,v in pairs(Info.ProductList) do
+		product = product.."、"..v
+	end
+	Ref_SubMain_SubContent.SubOne.lbText.text = string.format(TEXT.fmtInfo, Info.brand, product) -- 品牌， 产品 /projectinfo
+	Ref_SubMain_SubContent.SubTwo.lbText.text = string.format(TEXT.fmtType, Info.act_form, Info.act_calendar, Info.act_goal, Info.goal_sale, Info.goal_expvolume, Info.goal_exppeople) -- 活动形式， 
+	Ref_SubMain_SubContent.SubThree.lbText.text = string.format(TEXT.fmtProduct, Info.product_info, Info.selling_point) 
+	Ref_SubMain_SubContent.SubFour.lbText.text = string.format(TEXT.fmtWord, Info.words, Info.sales_technique)
+	Ref_SubMain_SubContent.SubFive.lbText.text = string.format(TEXT.fmtWork, Info.rule_att, Info.rule_face, Info.rule_sch, Info.rule_photo, Info.rule_data, Info.rule_leave, Info.rule_sale, Info.rule_plan)
+	Ref_SubMain_SubContent.SubSix.lbText.text = string.format(TEXT.fmtRole, Info.info_wages, Info.info_reward)
+	Ref_SubMain_SubContent.SubSeven.lbText.text = string.format(TEXT.fmtContext, "", "", Info.info_procontact)
 end
 
 local function init_view()
 	Ref.SubTop.btnBack.onAction = on_subtop_btnback_click
-	Ref.SubTop.btnSurpervisor.onAction = on_subtop_btnsurpervisor_click
 	UIMGR.make_group(Ref.SubMain.SubContent.SubWorkDay.Grp)
 	--!*以上：自动注册的回调函数*--
 end
@@ -90,7 +81,6 @@ end
 local function init_logic()
 	NW.subscribe("PROJECT.SC.GETPROINFOR", on_project_init)
 	NW.subscribe("PROJECT.SC.GETSTOREINFOR",on_store_init)
-	NW.subscribe("WORK.SC.GETPRODUCT", on_product_init)
 	
 	local projectId = UI_DATA.WNDWorkProject.projectId
 	Project = DY_DATA.ProjectList[projectId]
@@ -120,7 +110,7 @@ local function init_logic()
 	if Store == nil then print("Store 为空"..storeId) return end
 
 	if Store == nil then print("Store 为空"..storeId) return end
-	Ref_SubMain_SubContent.SubStore.lbText.text = Store.name
+	Ref_SubMain_SubContent.SubStore.lbName.text = Store.name
 
 	if Store.Info == nil then
 		local nm = NW.msg("PROJECT.CS.GETSTOREINFOR")
@@ -129,14 +119,6 @@ local function init_logic()
 		NW.send(nm)
 	else
 		on_store_init()	
-	end
-
-	if Project.ProductList == nil then
-		local nm = NW.msg("WORK.CS.GETPRODUCT")
-		nm:writeU32(projectId)
-		NW.send(nm)
-	else
-		on_product_init()
 	end
 
 end
@@ -156,7 +138,6 @@ end
 local function on_recycle()
 	NW.unsubscribe("PROJECT.SC.GETPROINFOR", on_project_init)
 	NW.unsubscribe("PROJECT.SC.GETSTOREINFOR",on_store_init)
-	NW.unsubscribe("WORK.SC.GETPRODUCT", on_product_init)
 end
 
 local P = {

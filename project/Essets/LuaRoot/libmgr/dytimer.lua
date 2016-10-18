@@ -32,7 +32,7 @@ end
 
 function P.launch_network_timer()
     local NW = MERequire "network/networkmgr.lua"
-    launch_timer("Network", 0, 6, NW.check_state)
+    launch_timer("Network", 0, 10, NW.check_state)
 end
 
 -- 
@@ -58,55 +58,6 @@ function P.launch_asset_timer(Asset, count, cycle)
     local tm = launch_timer("Asset#"..Asset.id, count, cycle, on_asset_inc)
     tm.param = Asset.id
     print(tm)
-end
--- ============================================================================
-
---
--- 武器训练冷却定时器
---
-local function on_train_cooling(tm)
-    local DY_DATA = _G.PKG["datamgr/dydata"]
-    local Role = DY_DATA.Roles[tm.param]
-    Role.trainCooling = 0
-    return true
-end
-
-function P.launch_train_timer(Role, count, cycle)
-    local tm = launch_timer("Train#"..Role.id, count, cycle, on_train_cooling)
-    tm.param = Role.id
-    print(tm)
-end
--- ============================================================================
-
-local function on_frame_inc(tm)
-    return true
-end
-
-function P.launch_frame_timer(frameId,count,cycle)
-    local tm = launch_timer("Frame#"..frameId,count,cycle,on_frame_inc)
-    print(tm)
-    return tm
-end
-
-local function on_techTree_inc(tm)
-    return true
-end
-
-function P.launch_techTree_timer(count)
-    local tm = launch_timer("TechTree",count,count,on_techTree_inc)
-    return tm
-end
-
---
--- PVP房间准备倒计时
---
-function P.launch_pvproom_timer(Room)
-    local countdown = Room.countdown
-    if countdown > 0 then
-        local tm = launch_timer("PVPRoom#"..Room.id, countdown, countdown, nil)
-        print(tm)
-        tm.param = Room
-    end
 end
 
 --
@@ -159,4 +110,10 @@ function P.launch_stronghold_timer(time, timeMax)
     local tm = launch_timer("Stronghold",countdown, countdown, nil)
     print(tm)
 end
+
+function P.launch_server_timer()
+    local tm = launch_timer("ServerTime", 1, 60, nil)
+    print(tm)
+end
+
 return P

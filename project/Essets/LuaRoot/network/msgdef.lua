@@ -26,6 +26,7 @@ do
             VERIFYLATLNG = ID_BASE + 8, 
             PHUNCH = ID_BASE + 9,
             VERIFY = ID_BASE + 10,
+            GETATTENCE = ID_BASE + 11,
         }
     end
     function  Funcs.attence_sc()
@@ -41,6 +42,7 @@ do
             VERIFYLATLNG = ID_BASE + 8, 
             PHUNCH = ID_BASE + 9,
             VERIFY = ID_BASE + 10,
+            GETATTENCE = ID_BASE + 11,
         }
     end
 
@@ -98,6 +100,10 @@ do
             GETMECHANRE = ID_BASE + 7,
             GETINTELLIGENCE = ID_BASE + 8,
             GETATTINFOR = ID_BASE + 9,
+            GETPROJECT = ID_BASE + 10,
+            GETSTORE = ID_BASE + 11,
+            GETSTOREINFOR = ID_BASE + 12,
+            GETPRODUCT = ID_BASE + 13,
         }
     end
 
@@ -113,6 +119,10 @@ do
             GETMECHANRE = ID_BASE + 7,
             GETINTELLIGENCE = ID_BASE + 8,
             GETATTINFOR = ID_BASE + 9,
+            GETPROJECT = ID_BASE + 10,
+            GETSTORE = ID_BASE + 11,
+            GETSTOREINFOR = ID_BASE + 12,
+            GETPRODUCT = ID_BASE + 13,
         }
     end
 
@@ -146,6 +156,9 @@ do
             GETCOMLIST = ID_BASE + 7,
             GETSALES = ID_BASE + 8,
             GETMECHANISM = ID_BASE + 9,
+            GETASSIGNMENT = ID_BASE + 10,
+            UPDATEASS = ID_BASE + 11,
+            DELETEASS = ID_BASE + 12,
         }
     end
     function Funcs.work_sc()
@@ -160,6 +173,9 @@ do
             GETCOMLIST = ID_BASE + 7,
             GETSALES = ID_BASE + 8,
             GETMECHANISM = ID_BASE + 9,
+            GETASSIGNMENT = ID_BASE + 10,
+            UPDATEASS = ID_BASE + 11,
+            DELETEASS = ID_BASE + 12,
         }
     end
 
