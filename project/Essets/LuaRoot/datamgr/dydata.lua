@@ -76,6 +76,17 @@ function P.get_project_list(init)
     end)
 end
 
+function P.get_schproject_list(init)
+    if init then
+        return init_data_list(P.SchProjectList, "SchProList", function (a, b)
+            return a.id < b.id
+        end)
+    end
+    return get_data_list(P.SchProjectList, "SchProList", function (a, b)
+        return a.id < b.id
+    end)
+end
+
 function P.get_promoter_List(init)
     if init then
         return init_data_list(P.PromoterList, "PromoList", function (a, b)
@@ -120,6 +131,12 @@ function P.get_super_list(init)
     end)
 end
 
+function P.get_store(StoreList, storeId)
+    for i, v in ipairs(StoreList) do
+        if v.id == storeId then return v end
+    end
+    return nil
+end
 
 function P.clear()
     for k,v in pairs(P) do

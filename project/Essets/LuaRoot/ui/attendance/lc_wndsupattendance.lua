@@ -19,6 +19,7 @@ local LOGIN = MERequire "libmgr/login.lua"
 local Ref
 
 local projectId = nil
+local storeId = nil
 local reason = nil
 local on_project_init
 
@@ -37,7 +38,7 @@ local function on_punch_on_callback(Photolist)
 	   		nPhoto = nPhoto + 1
 	   		if nPhoto >= #Photolist then
 		   		local nm = NW.msg("ATTENCE.CS.PHUNCH")
-				nm:writeU32(projectId)
+				nm:writeU32(storeId)
 				NW.send(nm)
 	   		end
 	   	end
@@ -90,6 +91,7 @@ local function on_submain_subscroll_subcontent_subpunch_subinfo_substore_grp_ent
 	Ref_SubPunch.SubProject.lbProject.text = Project.name
 	local StoreList = Project.StoreList
 	local Store = StoreList[index]
+	storeId = Store.id
 	-- local nm = NW.msg("ATTENCE.CS.VERIFY")
 	-- local gps = libsystem.GetGps()
 	-- print(gps, Store.id)
@@ -195,12 +197,9 @@ local function on_punch_finish(Ref)
 end
 
 local function on_store_init()
-	print("on_store_init")
 	local Project = DY_DATA.ProjectList[projectId]
-	print(JSON:encode(Project))
 	local StoreList = Project.StoreList
 	if StoreList == nil then return end
-	print(JSON:encode(StoreList))
 
 	local Ref_SubPunch = Ref.SubMain.SubScroll.SubContent.SubPunch.SubInfo
 	Ref_SubPunch.SubStore.Grp:dup(#StoreList, function( i, Ent, isNew)
@@ -216,6 +215,7 @@ on_project_init = function ()
 		return
 	end
 	local Project = DY_DATA.ProjectList[projectId]
+	if Project == nil then return end
 	local Ref_SubPunch = Ref.SubMain.SubScroll.SubContent.SubPunch.SubInfo
 	Ref_SubPunch.SubProject.lbProject.text = Project.name
 	local StoreList = Project.StoreList

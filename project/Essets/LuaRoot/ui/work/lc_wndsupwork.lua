@@ -33,6 +33,7 @@ local function on_subproject_grpproject_entproject_btntask_click(btn)
 	UI_DATA.WNDSelectStore.on_selected = function (storeId)
 		-- UI_DATA.WNDSupTask.storeId = storeId
 		-- UIMGR.create_window("UI/WNDSupTask")
+		UI_DATA.WNDSupTaskList.projectId = Project.id
 		UI_DATA.WNDSupTaskList.storeId = storeId
 		UIMGR.create_window("UI/WNDSupTaskList")
 	end

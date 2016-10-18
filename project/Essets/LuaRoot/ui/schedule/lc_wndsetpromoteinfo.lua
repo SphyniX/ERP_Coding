@@ -25,7 +25,7 @@ end
 local function on_subtop_btnsave_click(btn)
 	local SubmitList = UI_DATA.WNDSubmitSchedule.MechanismList
 	if SubmitList == nil then SubmitList = {} end
-	
+	local isNil = true
 	for i,v in ipairs(MechanismList) do
 		local Ent = Ref.SubMain.GrpContent.Ents[i]
 		local id = v.id
@@ -34,7 +34,14 @@ local function on_subtop_btnsave_click(btn)
 		-- 	_G.UI.Toast:make(nil, "有数据未填写"):show()
 		-- 	return
 		-- end
-		table.insert(SubmitList, {id = id, value = value})
+		if value ~= "" then 
+			isNil = false
+			table.insert(SubmitList, {id = id, value = value})
+		end
+	end
+	if isNil then 
+		_G.UI.Toast:make(nil, "数据不能全为空"):show()
+		return
 	end
 	UI_DATA.WNDSubmitSchedule.MechanismList = SubmitList
 	UIMGR.close_window(Ref.root)
@@ -42,7 +49,7 @@ end
 
 local function on_ui_init()
 	local projectId = UI_DATA.WNDSubmitSchedule.projectId
-	local Project = DY_DATA.ProjectList[projectId]
+	local Project = DY_DATA.SchProjectList[projectId]
 	if Project == nil then print("Project 为空"..projectId) return end
 	MechanismList = Project.MechanismList
 	if MechanismList == nil then
@@ -64,11 +71,9 @@ local function init_view()
 end
 
 local function init_logic()
-
 	NW.subscribe("WORK.SC.GETMECHANISM", on_ui_init)
-
 	local projectId = UI_DATA.WNDSubmitSchedule.projectId
-	local Project = DY_DATA.ProjectList[projectId]
+	local Project = DY_DATA.SchProjectList[projectId]
 	if Project == nil then print("Project 为空"..projectId) return end
 	if Project.MechanismList == nil then
 		local nm = NW.msg("WORK.CS.GETMECHANISM")

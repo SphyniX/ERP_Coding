@@ -74,8 +74,8 @@ local function on_btnregist_click(btn)
 end
 
 local function on_btnlostpassword_click(btn)
-	UI_DATA.WNDChangePassword.on_changed = function ()
-		UIMGR.create_window("UI/WNDLogin")
+	UI_DATA.WNDBindPhone.on_changed = function ()
+		UIMGR.create_window("UI/WNDChangePassword")
 	end
 	UI_DATA.WNDBindPhone.type = 2
 	UIMGR.create_window("UI/WNDBindPhone")

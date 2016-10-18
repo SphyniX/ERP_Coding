@@ -18,6 +18,9 @@ local City
 
 local function on_bind_supervisored(Ret)
 	if Ret.ret == 1 then
+		UI_DATA.WNDBindPhone.on_changed = function ()
+			UIMGR.create_window("UI/WNDSetUserInfo")
+		end
 		UI_DATA.WNDBindPhone.type = 1
 		UIMGR.create_window("UI/WNDBindPhone")
 	end

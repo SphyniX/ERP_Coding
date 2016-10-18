@@ -16,11 +16,9 @@ local Ref
 
 local phone
 
-local on_changed
-
--- local function on_changed()
--- 	UIMGR.create_window("UI/WNDLogin")
--- end
+local function on_changed()
+	UIMGR.create_window("UI/WNDLogin")
+end
 --!*以下：自动生成的回调函数*--
 
 local function on_submain_tglshow_change(tgl)
@@ -73,8 +71,8 @@ local function init_view()
 end
 
 local function init_logic()
-	phone = UI_DATA.WNDInputPhone.phone
-	on_changed = UI_DATA.WNDChangePassword.on_changed
+	-- phone = UI_DATA.WNDInputPhone.phone
+	phone = UI_DATA.WNDRegist.UserInfo.phone
 end
 
 local function start(self)

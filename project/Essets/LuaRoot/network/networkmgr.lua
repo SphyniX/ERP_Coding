@@ -188,7 +188,7 @@ on_relogin_fail = function ()
     P.clear()
     MB:make("", TEXT.tipPleaseReloginLong, true):set_event(function ()      
         local UI_DATA_WNDLogin = UI_DATA.WNDLogin
-        try_login_account(UI_DATA_WNDLogin.LoginedAcc, on_account_relogined)
+        try_login_account(LOGIN.LoginedAcc, on_account_relogined)
     end):show()
 end
 local function on_relogin_suc()

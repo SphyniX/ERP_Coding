@@ -19,9 +19,9 @@ local ProjectList
 
 local function on_subproject_grpproject_entproject_click(btn)
 	local index = tonumber(btn.name:sub(11))
-	UI_DATA.WNDSelectStore.type = 2
+	
 	UI_DATA.WNDSelectStore.projectId = ProjectList[index].id
-	UIMGR.create_window("UI/WNDSelectStore")
+	UIMGR.create_window("UI/WNDSelectSchStore")
 end
 
 local function on_subbtm_btnatt_click(btn)
@@ -45,7 +45,7 @@ local function on_subbtm_btnuser_click(btn)
 end
 
 local function on_ui_init()
-	ProjectList = DY_DATA.get_project_list()
+	ProjectList = DY_DATA.get_schproject_list()
 	if ProjectList == nil then 
 		print("ProjectList is nil")
 		libunity.SetActive(Ref.SubProject.spNil, true)
@@ -78,10 +78,10 @@ local function init_view()
 end
 
 local function init_logic()
-	NW.subscribe("WORK.SC.GETPROJECT", on_ui_init)
-	if DY_DATA.ProjectList == nil or next(DY_DATA.ProjectList) == nil then
+	NW.subscribe("REPORTED.SC.GETPROJECT", on_ui_init)
+	if DY_DATA.SchProjectList == nil or next(DY_DATA.SchProjectList) == nil then
 		if NW.connected() then
-			local nm = NW.msg("WORK.CS.GETPROJECT")
+			local nm = NW.msg("REPORTED.CS.GETPROJECT")
 			nm:writeU32(DY_DATA.User.id)
 			NW.send(nm)
 		end
@@ -103,7 +103,7 @@ local function update_view()
 end
 
 local function on_recycle()
-	NW.unsubscribe("WORK.SC.GETPROJECT", on_ui_init)
+	NW.unsubscribe("REPORTED.SC.GETPROJECT", on_ui_init)
 end
 
 local P = {

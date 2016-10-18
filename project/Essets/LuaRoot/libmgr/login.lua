@@ -306,9 +306,10 @@ local function on_uodate_password_back(resp, isDone, err)
         _G.UI.Toast:make(nil, NW.get_error(Ret.ret)):show()
     end
 end
-function P.try_update_password(userid, pass, on_call_back)
+function P.try_update_password(phone, pass, on_call_back)
+    on_wnd_update_password = on_call_back
     local HttpParams = {
-        userid = userid,
+        phone = phone,
         password = pass,
     }
     NW.http_post("UpdatePass", P.HTTPSet.updatepwdInterface(), "", HttpParams, "", on_uodate_password_back) 
