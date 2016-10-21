@@ -10,6 +10,7 @@ public class LuaComponent : MonoBehavior
     public const string FUNC_START = "start";
     public const string FUNC_UPDATEVIEW = "update_view";
     public const string FUNC_RECYCLE = "on_recycle";
+    public const string FUNC_UPDATE = "update";
     public static System.Action<LuaComponent> OnStart;
     public static Dictionary<string, LuaComponent> dictLuaComs = new Dictionary<string, LuaComponent>();
 
@@ -53,5 +54,10 @@ public class LuaComponent : MonoBehavior
     {
         CallMethod(FUNC_RECYCLE, false, 0);
         dictLuaComs.Remove(this.name);
+    }
+
+    private void Update() {
+        CallMethod(FUNC_UPDATE, false, 0);
+            
     }
 }

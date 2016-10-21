@@ -15,42 +15,66 @@ local UI_DATA = MERequire "datamgr/uidata.lua"
 local NW = MERequire "network/networkmgr"
 local Ref
 
-local MechanismList
+local ProductList
 --!*以下：自动生成的回调函数*--
 
-local function on_submain_grp_btnsave_click(btn)
-	
-	UIMGR.close_window(Ref.root)
-end
-
 local function on_subtop_btnclear_click(btn)
-	
+
+
+	Ref.SubMain.Grp:dup(#ProductList, function (i, Ent, isNew)
+		
+		Ent.inpValue.text = nil
+	end)
+
+
 end
 
 local function on_subtop_btnback_click(btn)
 	UIMGR.close_window(Ref.root)
 end
 
-local function on_ui_init()
+local function on_btnsave_click(btn)
+	UIMGR.close_window(Ref.root)
+end
+
+local function on_submain_grp_btnsave_click(btn)
 	
+	UIMGR.close_window(Ref.root)
+end
+
+local function on_ui_init()
+
+	local projectId = UI_DATA.WNDSubmitSchedule.projectId
+	local Project = DY_DATA.SchProjectList[projectId]
+
+	ProductList = Project.ProductList
+	if ProductList == nil then
+		libunity.SetActive(Ref.SubMain.Grp.spNil, true)
+		return 
+	end
+	libunity.SetActive(Ref.SubMain.Grp.spNil, #ProductList == 0)
+	Ref.SubMain.Grp:dup(#ProductList, function (i, Ent, isNew)
+		local Product = ProductList[i]
+		Ent.lbName.text = Product.name
+	end)
 end
 
 
 local function init_view()
-	Ref.SubMain.Grp.btnSave.onAction = on_submain_grp_btnsave_click
 	Ref.SubTop.btnClear.onAction = on_subtop_btnclear_click
 	Ref.SubTop.btnBack.onAction = on_subtop_btnback_click
+	Ref.btnSave.onAction = on_btnsave_click
 	UIMGR.make_group(Ref.SubMain.Grp)
 	--!*以上：自动注册的回调函数*--
 end
 
 local function init_logic()
-	NW.subscribe("WORK.SC.GETMECHANISM", on_ui_init)
+	NW.subscribe("REPORTED.SC.GETPRODUCT", on_ui_init)
 	local projectId = UI_DATA.WNDSubmitSchedule.projectId
 	local Project = DY_DATA.SchProjectList[projectId]
 	if Project == nil then print("Project 为空"..projectId) return end
 	if Project.MechanismList == nil then
-		local nm = NW.msg("WORK.CS.GETMECHANISM")
+		local nm = NW.msg("REPORTED.CS.GETPRODUCT")
 		nm:writeU32(projectId)
 		NW.send(nm)
 		return

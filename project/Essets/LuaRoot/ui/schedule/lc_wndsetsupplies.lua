@@ -69,8 +69,9 @@ local function on_set_state_callback(state)
 end
 
 --!*以下：自动生成的回调函数*--
+
 local function on_submain_grp_ent_btnstate_click(btn)
-	local index = tonumber(btn.transform.parent.name:sub(4))
+	-- local index = tonumber(btn.transform.parent.name:sub(4))
 	libunity.SetActive(Ref.SubState.root, true)
 end
 
@@ -78,12 +79,10 @@ local function on_submain_grp_ent_btnphoto_click(btn)
 	-- 上传图片
 end
 
-local function on_submain_grp_btnsave_click(btn)
-	UIMGR.close_window(Ref.root)
-end
-
 local function on_subtop_btnclear_click(btn)
-	
+	Ref.SubMain.Grp:dup(#MaterList, function (i, Ent, isNew)
+		Ent.inpInput.text = nil
+	end)
 end
 
 local function on_subtop_btnback_click(btn)
@@ -104,26 +103,39 @@ local function on_substate_btnback_click(btn)
 	libunity.SetActive(Ref.SubState.root, false)
 end
 
+local function on_btnsave_click(btn)
+	
+end
+
+local function on_submain_grp_ent_click(btn)
+	
+end
+
+local function on_submain_grp_btnsave_click(btn)
+	UIMGR.close_window(Ref.root)
+end
+
 local function on_ui_init()
 	local projectId = UI_DATA.WNDSubmitSchedule.projectId
 	local storeId = UI_DATA.WNDSubmitSchedule.storeId
+
+
 	MaterList = DY_DATA.SchProjectList[projectId].MaterList
 	Ref.SubMain.Grp:dup(#MaterList, function (i, Ent, isNew)
-		Ent.lbName.text = MaterList[i]
+		Ent.lbName.text = MaterList[i].name
 	end)
 end
 
 local function init_view()
 	Ref.SubMain.Grp.Ent.btnState.onAction = on_submain_grp_ent_btnstate_click
 	Ref.SubMain.Grp.Ent.btnPhoto.onAction = on_submain_grp_ent_btnphoto_click
-	Ref.SubMain.Grp.btnSave.onAction = on_submain_grp_btnsave_click
 	Ref.SubTop.btnClear.onAction = on_subtop_btnclear_click
 	Ref.SubTop.btnBack.onAction = on_subtop_btnback_click
 	Ref.SubState.tglGood.onAction = on_substate_tglgood_change
 	Ref.SubState.tglBad.onAction = on_substate_tglbad_change
 	Ref.SubState.btnBack.onAction = on_substate_btnback_click
+	Ref.btnSave.onAction = on_btnsave_click
 	UIMGR.make_group(Ref.SubMain.Grp, function (New, Ent)
-		New.btn.onAction = Ent.btn.onAction
 		New.btnState.onAction = Ent.btnState.onAction
 		New.btnPhoto.onAction = Ent.btnPhoto.onAction
 	end)

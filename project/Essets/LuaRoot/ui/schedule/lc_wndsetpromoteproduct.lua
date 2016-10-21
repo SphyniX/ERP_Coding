@@ -19,15 +19,15 @@ local ProductList
 --!*以下：自动生成的回调函数*--
 
 local function on_submain_grp_ent_click(btn)
+	
 	libunity.SetActive(Ref.SubSet.root, true)
 end
 
-local function on_submain_grp_btnsave_click(btn)
-	UIMGR.close_window(Ref.root)
-end
-
 local function on_subtop_btnclear_click(btn)
-	
+	Ref.SubMain.Grp:dup(#ProductList, function (i, Ent, isNew)
+		local Product = ProductList[i]
+		Ent.lbName.text = Product.name
+	end)
 end
 
 local function on_subtop_btnback_click(btn)
@@ -40,6 +40,16 @@ end
 
 local function on_subset_btnback_click(btn)
 	libunity.SetActive(Ref.SubSet.root, false)
+end
+
+local function on_btnsave_click(btn)
+	
+	
+	UIMGR.close_window(Ref.root)
+end
+
+local function on_submain_grp_btnsave_click(btn)
+	UIMGR.close_window(Ref.root)
 end
 
 local function on_ui_init()
@@ -61,11 +71,11 @@ end
 
 local function init_view()
 	Ref.SubMain.Grp.Ent.btn.onAction = on_submain_grp_ent_click
-	Ref.SubMain.Grp.btnSave.onAction = on_submain_grp_btnsave_click
 	Ref.SubTop.btnClear.onAction = on_subtop_btnclear_click
 	Ref.SubTop.btnBack.onAction = on_subtop_btnback_click
 	Ref.SubSet.btnSubmit.onAction = on_subset_btnsubmit_click
 	Ref.SubSet.btnBack.onAction = on_subset_btnback_click
+	Ref.btnSave.onAction = on_btnsave_click
 	UIMGR.make_group(Ref.SubMain.Grp, function (New, Ent)
 		New.btn.onAction = Ent.btn.onAction
 	end)

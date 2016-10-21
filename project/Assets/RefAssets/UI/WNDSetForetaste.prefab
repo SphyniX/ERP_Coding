@@ -293,7 +293,7 @@ GameObject:
   - 222: {fileID: 22206702}
   - 114: {fileID: 11466562}
   m_Layer: 5
-  m_Name: lb_
+  m_Name: lbNumberper
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -343,7 +343,7 @@ GameObject:
   - 222: {fileID: 22224990}
   - 114: {fileID: 11419180}
   m_Layer: 5
-  m_Name: lb_
+  m_Name: lbVolumeper
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -529,7 +529,7 @@ GameObject:
   m_IsActive: 1
 --- !u!1 &185554
 GameObject:
-  m_ObjectHideFlags: 1
+  m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
@@ -1161,13 +1161,13 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 11407290}
   m_TextComponent: {fileID: 11401466}
   m_Placeholder: {fileID: 0}
-  m_ContentType: 0
+  m_ContentType: 2
   m_InputType: 0
   m_AsteriskChar: 42
-  m_KeyboardType: 0
+  m_KeyboardType: 4
   m_LineType: 0
   m_HideMobileInput: 0
-  m_CharacterValidation: 0
+  m_CharacterValidation: 1
   m_CharacterLimit: 0
   m_OnEndEdit:
     m_PersistentCalls:
@@ -1605,13 +1605,13 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 11423460}
   m_TextComponent: {fileID: 11479256}
   m_Placeholder: {fileID: 0}
-  m_ContentType: 0
+  m_ContentType: 2
   m_InputType: 0
   m_AsteriskChar: 42
-  m_KeyboardType: 0
+  m_KeyboardType: 4
   m_LineType: 0
   m_HideMobileInput: 0
-  m_CharacterValidation: 0
+  m_CharacterValidation: 1
   m_CharacterLimit: 0
   m_OnEndEdit:
     m_PersistentCalls:
@@ -2438,7 +2438,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: -93.000885}
-  m_SizeDelta: {x: 0, y: -93}
+  m_SizeDelta: {x: 0, y: -164.00089}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!224 &22418394
 RectTransform:
@@ -2456,6 +2456,8 @@ RectTransform:
   - {fileID: 22484990}
   - {fileID: 22423344}
   - {fileID: 22436934}
+  - {fileID: 22479456}
+  - {fileID: 22445520}
   m_Father: {fileID: 22486002}
   m_RootOrder: 2
   m_AnchorMin: {x: 0, y: 0}
@@ -2700,11 +2702,11 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 22484990}
-  m_RootOrder: 2
+  m_Father: {fileID: 22418394}
+  m_RootOrder: 7
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 8, y: 0}
+  m_AnchoredPosition: {x: -103.8785, y: -5.6999974}
   m_SizeDelta: {x: 49.1, y: 62}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!224 &22452582
@@ -2736,12 +2738,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 22437294}
-  m_Father: {fileID: 22471506}
-  m_RootOrder: 1
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: -270}
-  m_SizeDelta: {x: 0, y: 71}
+  m_Father: {fileID: 22486002}
+  m_RootOrder: 3
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 720.24316, y: 71}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!224 &22453450
 RectTransform:
@@ -2824,7 +2826,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 22438918}
-  - {fileID: 22452588}
   m_Father: {fileID: 22416394}
   m_RootOrder: 0
   m_AnchorMin: {x: 0.5, y: 1}
@@ -2844,7 +2845,6 @@ RectTransform:
   m_Children:
   - {fileID: 22466780}
   - {fileID: 22431630}
-  - {fileID: 22479456}
   m_Father: {fileID: 22418394}
   m_RootOrder: 2
   m_AnchorMin: {x: 0.5, y: 1}
@@ -2862,11 +2862,11 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 22478104}
-  m_RootOrder: 2
+  m_Father: {fileID: 22418394}
+  m_RootOrder: 6
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 8, y: 0}
+  m_AnchoredPosition: {x: -103.87841, y: 101}
   m_SizeDelta: {x: 49.1, y: 62}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!224 &22483424
@@ -2915,7 +2915,6 @@ RectTransform:
   m_Children:
   - {fileID: 22483424}
   - {fileID: 22466482}
-  - {fileID: 22445520}
   m_Father: {fileID: 22418394}
   m_RootOrder: 3
   m_AnchorMin: {x: 0.5, y: 1}
@@ -2936,6 +2935,7 @@ RectTransform:
   - {fileID: 22416394}
   - {fileID: 22413996}
   - {fileID: 22418394}
+  - {fileID: 22452588}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 0}

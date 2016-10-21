@@ -31,6 +31,8 @@ public static class LibSystem {
             new NameFuncPair("StopGps", StopGps),
             new NameFuncPair("CallApiReturn", CallApiReturn),
             new NameFuncPair("GetOS", GetOS),
+            new NameFuncPair("GetFps",GetFps),
+
         };
 
         lua.L_Register(LIB_NAME, define);
@@ -49,6 +51,17 @@ public static class LibSystem {
 #endif
         return 1;
     }
+
+    [MonoPInvokeCallback(typeof(LuaCSFunction))]
+    private static int GetFps(ILuaState lua)
+    {
+        
+        int fps = (int)(1.0f / Time.unscaledDeltaTime);
+        Debug.Log(fps);
+        lua.PushInteger(fps);
+        return 1;
+    }
+
 
     [MonoPInvokeCallback(typeof(LuaCSFunction))]
     private static int GetHashCode(ILuaState lua)
@@ -179,4 +192,6 @@ public static class LibSystem {
         GPSMgr.Instance.StopGps();
         return 0;
     }
+
+ 
 }

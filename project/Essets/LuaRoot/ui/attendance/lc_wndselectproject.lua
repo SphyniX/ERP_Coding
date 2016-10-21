@@ -38,7 +38,7 @@ local function on_ui_init()
 	end
 	libunity.SetActive(Ref.SubProject.spNil, #AttendanceList == 0)
 		
-	print("init ui")
+	-- print("init ui")
 	Ref.SubProject.GrpProject:dup(#AttendanceList, function ( i, Ent, isNew)
 		local Attendance = AttendanceList[i]
 		Ent.lbName.text = Attendance.name

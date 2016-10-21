@@ -95,8 +95,8 @@ function P.on_nc_receiving(cli, nm)
         if cli == GameCli then
             lastHeartTime = UE_Time.realtimeSinceStartup            
         end
-        _G.UI.Waiting.hide(true)
-
+        
+        _G.UI.Waiting.hide()
         local id = nm.type
         local handle = NCHandler[id]
         libunity.LogD("NCHandler : {0}", JSON:encode(NCHandler))

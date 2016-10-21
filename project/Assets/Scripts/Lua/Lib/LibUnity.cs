@@ -38,6 +38,7 @@ public static class LibUnity
             new NameFuncPair("DelComponent", DelComponent),
             new NameFuncPair("SendMessage", SendMessage),
             new NameFuncPair("SetActive", SetActive),
+            new NameFuncPair("SelfActive",SelfActive),
             new NameFuncPair("ReActive", ReActive),
             new NameFuncPair("SetEnable", SetEnable),
             new NameFuncPair("SetParent", SetParent),
@@ -370,10 +371,20 @@ public static class LibUnity
                 go.SetActive(active);
             }
         }
+        
         return 0;
     }
 
-	[MonoPInvokeCallback(typeof(LuaCSFunction))]
+    [MonoPInvokeCallback(typeof(LuaCSFunction))]
+    private static int SelfActive(ILuaState lua)
+    {
+        GameObject go = lua.ToGameObject(1);
+        lua.PushBoolean(go.activeSelf);
+
+        return 0;
+    }
+
+    [MonoPInvokeCallback(typeof(LuaCSFunction))]
     private static int ReActive(ILuaState lua)
     {
         GameObject go = lua.ToGameObject(1);

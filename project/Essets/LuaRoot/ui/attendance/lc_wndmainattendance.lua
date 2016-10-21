@@ -19,7 +19,10 @@ local LOGIN = MERequire "libmgr/login.lua"
 local Attendance = MERequire "libmgr/attendance.lua"
 
 local Ref
+local x = 1
 
+local TimeInfo = {}
+local SameAsServer
 local undergoreason ,leavereason = nil, nil
 local AttendanceProject = nil
 local projectId = nil
@@ -132,6 +135,58 @@ on_project_init = function ()
 	Ref.SubMain.SubAttOff.lbText.text = AttendanceProject.endtime
 end
 
+local function refreshtime()
+	TimeInfo = os.date("*t",os.time())
+	if DY_DATA.Work.NowTime == nil then
+		local nm = NW.msg("ATTENCE.CS.GETMATER")
+		NW.send(nm)
+		return
+	end
+	Ref.SubMain.SubTime.lbTime.text = DY_DATA.Work.NowTime.time
+	Ref.SubMain.SubTime.lbDay.text = DY_DATA.Work.NowTime.day .. "  " .. DY_DATA.Work.NowTime.week
+	TimeInfo.hour = DY_DATA.Work.NowTime.time:sub(1,2)
+	TimeInfo.min = DY_DATA.Work.NowTime.time:sub(4,5)
+	TimeInfo.sec = DY_DATA.Work.NowTime.time:sub(7,8)
+	-- print(DY_DATA.Work.NowTime.time:sub(1,2))
+	-- print(DY_DATA.Work.NowTime.time:sub(4,5))
+	-- print(DY_DATA.Work.NowTime.time:sub(7,8))
+	print(libsystem.GetFps())
+
+end
+
+
+
+
+local function refreshtime_onupdate()
+	x = x + 1
+	if (x % libsystem.GetFps()) == 0 then
+		x = 0
+		TimeInfo.sec = tostring(tonumber(TimeInfo.sec)+1)
+		printf(TimeInfo.sec)
+
+		if tonumber(TimeInfo.sec) == 60 then
+			TimeInfo.min = tostring(tonumber(TimeInfo.min)+1)
+			TimeInfo.sec = tonumber(0)
+		end
+		if tonumber(TimeInfo.sec) < 10 then TimeInfo.sec = "0" .. TimeInfo.sec end
+
+		if tonumber(TimeInfo.min) == 60 then
+			TimeInfo.hour = tostring(tonumber(TimeInfo.hour)+1)
+			TimeInfo.min = tonumber(0)
+		end
+		if tonumber(TimeInfo.min) < 10 then TimeInfo.min = "0" .. tostring(tonumber(TimeInfo.min)) end
+
+		if tonumber(TimeInfo.hour) == 24 then
+
+			TimeInfo.hour = tonumber(0)
+		end
+		if tonumber(TimeInfo.hour) < 10 then TimeInfo.hour = "0" .. tostring(tonumber(TimeInfo.hour)) end
+		
+		Ref.SubMain.SubTime.lbTime.text = TimeInfo.hour .. ":" .. TimeInfo.min .. ":" .. TimeInfo.sec
+	end
+
+end 
+
 local function on_ui_init()
 	-- Ref.SubMain.SubTime.lbTime.text = libsystem.DateTime()
 	-- Ref.SubMain.SubTime.lbDay.text = ""
@@ -168,9 +223,13 @@ end
 local function init_logic()
 	NW.subscribe("ATTENCE.SC.VERIFYLATLNG", on_try_punch)
 	NW.subscribe("USER.SC.GETUSERINFOR", on_ui_init)
+	NW.subscribe("ATTENCE.SC.GETTIME",refreshtime)
 	-- libsystem.StartGps()
 	on_ui_init()
+	refreshtime()
 end
+
+
 
 local function start(self)
 	if Ref == nil or Ref.root ~= self then
@@ -181,7 +240,7 @@ local function start(self)
 end
 
 local function update_view()
-	
+	print("1")
 end
 
 local function on_recycle()
@@ -190,10 +249,15 @@ local function on_recycle()
 	libsystem.StopGps()
 end
 
+local function update()
+	refreshtime_onupdate()
+end
+
 local P = {
 	start = start,
 	update_view = update_view,
 	on_recycle = on_recycle,
+	update = update,
 }
 return P
 

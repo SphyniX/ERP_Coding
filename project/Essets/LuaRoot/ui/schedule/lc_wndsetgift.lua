@@ -15,19 +15,23 @@ local DY_DATA = MERequire "datamgr/dydata.lua"
 local NW = MERequire "network/networkmgr"
 local Ref
 
-local ProductList
+local GiftList
+local NowEnt
 --!*以下：自动生成的回调函数*--
 
 local function on_submain_grp_ent_click(btn)
-	libunity.SetActive(Ref.SubSet.root, true)
-end
 
-local function on_submain_grp_btnsave_click(btn)
-	UIMGR.close_window(Ref.root)
+	NowEnt = tonumber(btn.name:sub(4))
+	print("NowEnt : " .. NowEnt)
+	Ref.SubSet.lbVolumeper.text = GiftList[NowEnt].per
+	libunity.SetActive(Ref.SubSet.root, true)
+
 end
 
 local function on_subtop_btnclear_click(btn)
-	
+	Ref.SubMain.Grp:dup(#GiftList, function (i, Ent, isNew)
+			Ent.lbVolume.text = "   " .. GiftList[i].per
+	end)
 end
 
 local function on_subtop_btnback_click(btn)
@@ -35,7 +39,14 @@ local function on_subtop_btnback_click(btn)
 end
 
 local function on_subset_btnsubmit_click(btn)
+
+	Ref.SubMain.Grp:dup(#GiftList, function (i, Ent, isNew)
+		if i == NowEnt then 
+			Ent.lbVolume.text = Ref.SubSet.inpVolume.text .. GiftList[i].per
+			Ref.SubSet.inpVolume.text = nil
 	
+		end
+	end)
 	libunity.SetActive(Ref.SubSet.root, false)
 end
 
@@ -44,17 +55,48 @@ local function on_subset_btnback_click(btn)
 	libunity.SetActive(Ref.SubSet.root, false)
 end
 
+local function on_btnsave_click(btn)
+	UIMGR.close_window(Ref.root)
+end
+
+local function on_submain_grp_btnsave_click(btn)
+	UIMGR.close_window(Ref.root)
+end
+
 local function on_ui_init()
+
+	libunity.SetActive(Ref.SubSet.root,false)
+	local projectId = UI_DATA.WNDSubmitSchedule.projectId
+	local Project = DY_DATA.SchProjectList[projectId]
+
+	if Project == nil then return end
+
+	if Project.GiftList == nil then Project.GiftList = {} end
+
+	GiftList = Project.GiftList
+	print("GiftList is :" .. JSON:encode(GiftList))
+	if GiftList == nil then
+		libunity.SetActive(Ref.SubMain.Grp.spNil, true)
+		return 
+	end
+	libunity.SetActive(Ref.SubMain.Grp.spNil, #GiftList == 0)
+	Ref.SubMain.Grp:dup(#GiftList, function (i, Ent, isNew)
+		local Gift = GiftList[i]
+		Ent.lbName.text = Gift.name
+		Ent.lbVolume.text = "   " .. Gift.per
+
+	end)
+
 	
 end
 
 local function init_view()
 	Ref.SubMain.Grp.Ent.btn.onAction = on_submain_grp_ent_click
-	Ref.SubMain.Grp.btnSave.onAction = on_submain_grp_btnsave_click
 	Ref.SubTop.btnClear.onAction = on_subtop_btnclear_click
 	Ref.SubTop.btnBack.onAction = on_subtop_btnback_click
 	Ref.SubSet.btnSubmit.onAction = on_subset_btnsubmit_click
 	Ref.SubSet.btnBack.onAction = on_subset_btnback_click
+	Ref.btnSave.onAction = on_btnsave_click
 	UIMGR.make_group(Ref.SubMain.Grp, function (New, Ent)
 		New.btn.onAction = Ent.btn.onAction
 	end)
@@ -62,14 +104,14 @@ local function init_view()
 end
 
 local function init_logic()
-	NW.subscribe("WORK.SC.GETPRODUCT", on_ui_init)
+	NW.subscribe("REPORTED.SC.GETGIFT", on_ui_init)
 	libunity.SetActive(Ref.SubSet.root, false)
 	
 	local projectId = UI_DATA.WNDSubmitSchedule.projectId
-	local Project = DY_DATA.ProjectList[projectId]
-	if Project == nil then print("Project 为空"..projectId) return end
-	if Project.ProductList == nil then
-		local nm = NW.msg("WORK.CS.GETPRODUCT")
+	local Project = DY_DATA.SchProjectList[projectId]
+	if Project == nil then print("Project 为空 Project 编号 ："..projectId) return end
+	if Project.GiftList == nil then
+		local nm = NW.msg("REPORTED.CS.GETGIFT")
 		nm:writeU32(projectId)
 		NW.send(nm)
 		return

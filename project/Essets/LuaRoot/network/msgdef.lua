@@ -104,6 +104,8 @@ do
             GETSTORE = ID_BASE + 11,
             GETSTOREINFOR = ID_BASE + 12,
             GETPRODUCT = ID_BASE + 13,
+            GETSAMPLE = ID_BASE + 14,
+            GETGIFT = ID_BASE + 15,
         }
     end
 
@@ -123,6 +125,8 @@ do
             GETSTORE = ID_BASE + 11,
             GETSTOREINFOR = ID_BASE + 12,
             GETPRODUCT = ID_BASE + 13,
+            GETSAMPLE = ID_BASE + 14,
+            GETGIFT = ID_BASE + 15,
         }
     end
 

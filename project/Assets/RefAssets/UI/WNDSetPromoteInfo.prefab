@@ -265,7 +265,7 @@ GameObject:
   m_IsActive: 1
 --- !u!1 &191930
 GameObject:
-  m_ObjectHideFlags: 1
+  m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
@@ -1305,10 +1305,10 @@ RectTransform:
   - {fileID: 22479702}
   m_Father: {fileID: 22469066}
   m_RootOrder: 0
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 360, y: -85}
+  m_SizeDelta: {x: 720, y: 170}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &22414476
 RectTransform:
@@ -1340,6 +1340,7 @@ RectTransform:
   m_Children:
   - {fileID: 22477344}
   - {fileID: 22489234}
+  - {fileID: 22458442}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 0}
@@ -1426,12 +1427,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 22445166}
-  m_Father: {fileID: 22469066}
-  m_RootOrder: 1
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: -270}
-  m_SizeDelta: {x: 0, y: 71}
+  m_Father: {fileID: 22422418}
+  m_RootOrder: 2
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 720.24316, y: 71}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!224 &22464656
 RectTransform:
@@ -1479,13 +1480,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 22410622}
-  - {fileID: 22458442}
   m_Father: {fileID: 22477344}
   m_RootOrder: 0
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 720, y: 0}
+  m_SizeDelta: {x: 720, y: 170}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!224 &22470158
 RectTransform:
@@ -1520,8 +1520,8 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -93.000885}
-  m_SizeDelta: {x: 0, y: -93}
+  m_AnchoredPosition: {x: 0.000009968877, y: -93.000885}
+  m_SizeDelta: {x: 0, y: -164.00089}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!224 &22479702
 RectTransform:

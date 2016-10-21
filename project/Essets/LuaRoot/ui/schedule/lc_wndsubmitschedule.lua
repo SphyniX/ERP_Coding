@@ -148,6 +148,26 @@ local function on_subtop_btnback_click(btn)
 	UIMGR.close_window(Ref.root)
 end
 
+-- local function on_work_init()
+-- 	local AttendanceList = DY_DATA.get_attendance_list(false)
+-- 	if AttendanceList == nil then 
+-- 		local nm = NW.msg("ATTENCE.SC.GETWORK")
+-- 		nm:writeU32(DY_DATA.User.id)
+-- 		NW.send(nm)
+-- 		return
+-- 	end
+-- 	print(JSON:encode(AttendanceList))
+-- 	for i=1,#AttendanceList do
+-- 		if AttendanceList[i].name == Project.name then
+-- 			Ref.SubMain.SubContent.SubTime.lbStart.text = AttendanceList[i].starttime
+-- 			Ref.SubMain.SubContent.SubTime.lbEnd.text = AttendanceList[i].endtime
+-- 		end
+-- 	end
+	
+
+-- end
+
+
 local function on_store_init()
 	local storeId = UI_DATA.WNDSubmitSchedule.storeId
 	local projectId = UI_DATA.WNDSubmitSchedule.projectId
@@ -165,6 +185,7 @@ local function on_store_init()
 	Ref.SubMain.SubContent.SubAddress.lbText.text = Store.Info.address
 	Ref.SubMain.SubContent.SubTime.lbStart.text = Store.Info.starttime
 	Ref.SubMain.SubContent.SubTime.lbEnd.text = Store.Info.endtime
+
 end
 
 local function init_view()
@@ -187,7 +208,9 @@ end
 
 local function init_logic()
 	NW.subscribe("REPORTED.SC.GETSTOREINFOR",on_store_init)
-
+	-- NW.subscribe("ATTENCE.SC.GETWORK",on_work_init)
+	libunity.SetActive(Ref.SubMain.SubSupplies.root, false)
+	libunity.SetActive(Ref.SubMain.SubProduct.root, false)
 	local projectId = UI_DATA.WNDSubmitSchedule.projectId
 	Project = DY_DATA.SchProjectList[projectId]
 	if Project == nil then print("StoreList 为空"..projectId) return end
@@ -217,8 +240,21 @@ local function init_logic()
 		on_store_init()	
 	end
 
-	libunity.SetActive(Ref.SubMain.SubSupplies.root, false)
-	libunity.SetActive(Ref.SubMain.SubProduct.root, false)
+
+	-- if DY_DATA.AttendanceList == nil or next(DY_DATA.AttendanceList) == nil then
+	-- 	print("AttendanceList is nil")
+	-- 	if NW.connected() then
+	-- 		local nm = NW.msg("ATTENCE.CS.GETWORK")
+	-- 	    nm:writeU32(DY_DATA.User.id)
+	-- 	    NW.send(nm)
+	-- 	    return
+	-- 	else
+	-- 		DY_DATA.AttendanceList = {}
+	-- 	end
+	-- end
+	
+	
+	-- on_work_init()
 end
 
 local function start(self)
