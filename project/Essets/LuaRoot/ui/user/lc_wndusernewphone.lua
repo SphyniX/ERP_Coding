@@ -17,6 +17,8 @@ local Ref
 
 local function on_reset_phone(Ret)
 	if Ret.ret == 1 then
+		
+		UIMGR.create_window("UI/WNDMainUser")
 		UIMGR.close_window(Ref.root)
 	end
 end

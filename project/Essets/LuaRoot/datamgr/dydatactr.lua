@@ -70,9 +70,10 @@ local function sc_attence_gettime(nm)
     local day = stime:sub(1,10)
     local time = stime:sub(12,21)
     local week = tonumber(nm:readString())
-    print(day, time, week)
+    -- print(week)
     local TEXT = _G.ENV.TEXT
     DY_DATA.Work.NowTime = {day = day, time = time, week = TEXT.Week[week]}
+    -- print("Work.NowTime is :" .. JSON:encode(DY_DATA.Work.NowTime))
 end
 NW.regist("ATTENCE.SC.GETTIME", sc_attence_gettime)
 
@@ -83,14 +84,19 @@ local function sc_attence_getattence(nm)
     -- local st = 
     local n = nm:readString()
     print("GETATTENCE n : " .. n )
+    local TEXT = _G.ENV.TEXT
     local WorkAttenceList = {}
     for i=1,n do
         local Day = nm:readString()
+        local Week = tonumber(nm:readString())
         local Up = nm:readString()
         local Down = nm:readString()
         local LeaveTimes = nm:readString()
 
-        table.insert(WorkAttenceList,{day = day, Up = Up, Down = Down, LeaveTimes = LeaveTimes})
+        table.insert(WorkAttenceList,{Day = Day, Week= TEXT.Week[Week], Up = Up, Down = Down, LeaveTimes = LeaveTimes})
+        -- else
+        --     table.insert(WorkAttenceList,{day = Day})
+        -- end
     end
 
     DY_DATA.Work.AttenceList = WorkAttenceList
@@ -190,6 +196,7 @@ local function sc_user_getsuperlist(nm)
     local List = DY_DATA.SuperList
     if List == nil then List = {} DY_DATA.SuperList = List end
     local n = tonumber(nm:readString())
+    print(n)
     for i=1,n do
         -- 废弃
         local something = tonumber(nm:readString())
@@ -197,11 +204,13 @@ local function sc_user_getsuperlist(nm)
         local Info = {
             id = id,
             name = nm:readString(),
+            state = tonumber(nm:readString()),
         }
         List[id] = Info
         DY_DATA.SuperList = List
         DY_DATA.get_super_list(true)
     end
+    print("SuperList is :" .. JSON.encode(DY_DATA.SuperList))
 end
 NW.regist("USER.SC.GETSUPERLIST", sc_user_getsuperlist)
 
@@ -449,7 +458,7 @@ local function sc_reported_getproduct(nm)
                 id = tonumber(nm:readString()),
                 projectId = projectId,
                 name = nm:readString(),
-                unit = nm:readString(),
+                per = nm:readString(),
             }
             local icon = nm:readString()
             Info.icon = icon ~= nil and icon ~= "nil" and icon..".png" or nil

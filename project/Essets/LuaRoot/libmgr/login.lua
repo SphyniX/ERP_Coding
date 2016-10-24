@@ -14,7 +14,7 @@ local on_account_logined, on_account_registed, on_account_binded, on_http_fail
 
 local P = { } 
 P.IPSet = {
-    test = "192.168.1.47:8000",
+    test = "192.168.1.47:8888",
     productIP = "api.richer.net.cn:8000",
     -- productIP = "139.196.109.3:8080",
     productDomain = "",
@@ -430,10 +430,11 @@ function P.try_getversion(address, port, on_call_back)
 end
 
 function P.do_logout()
-    _G.PKG["global/scenemgr"].load_login_level()
     DY_DATA.clear()
     UI_DATA.clear()
     _G.PKG["libmgr/dytimer"].clear()
+    _G.PKG["global/scenemgr"].load_login_level()
+   
 end
 
 

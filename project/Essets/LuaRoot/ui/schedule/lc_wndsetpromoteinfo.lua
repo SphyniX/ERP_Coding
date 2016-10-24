@@ -16,6 +16,8 @@ local NW = MERequire "network/networkmgr"
 local Ref
 
 local ProductList
+local ProductListOld
+local ProductListForUpdate
 --!*以下：自动生成的回调函数*--
 
 local function on_subtop_btnclear_click(btn)
@@ -34,6 +36,13 @@ local function on_subtop_btnback_click(btn)
 end
 
 local function on_btnsave_click(btn)
+	ProductListForUpdate = {}
+	Ref.SubMain.Grp:dup(#ProductList, function (i, Ent, isNew)
+		local value = Ent.inpValue.text
+		table.insert(ProductListForUpdate,{value =value})
+
+		end)
+	UI_DATA.WNDSubmitSchedule.ProductListInfo = ProductListForUpdate
 	UIMGR.close_window(Ref.root)
 end
 
@@ -57,6 +66,13 @@ local function on_ui_init()
 		local Product = ProductList[i]
 		Ent.lbName.text = Product.name
 	end)
+	ProductListForUpdate = UI_DATA.WNDSubmitSchedule.ProductListInfo
+	if ProductListForUpdate ~= nil then
+		Ref.SubMain.Grp:dup(#ProductListForUpdate, function (i, Ent, isNew)
+			local Product = ProductListForUpdate[i]
+			Ent.inpValue.text = Product.value
+		end)
+	end
 end
 
 

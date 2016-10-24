@@ -21,6 +21,10 @@ local function on_changed()
 end
 --!*以下：自动生成的回调函数*--
 
+local function on_subtop_btnback_click(btn)
+	UIMGR.close_window(Ref.root)
+end
+
 local function on_submain_tglshow_change(tgl)
 	if tgl.value == true then
 		local txt = Ref.SubMain.SubPassword.inpPassword.text
@@ -59,14 +63,10 @@ local function on_submain_btnenter_click(btn)
 	LOGIN.try_update_password(phone, password, on_changed)
 end
 
-local function on_subtop_btnback_click(btn)
-	UIMGR.close_window(Ref.root)
-end
-
 local function init_view()
+	Ref.SubTop.btnBack.onAction = on_subtop_btnback_click
 	Ref.SubMain.tglShow.onAction = on_submain_tglshow_change
 	Ref.SubMain.btnEnter.onAction = on_submain_btnenter_click
-	Ref.SubTop.btnBack.onAction = on_subtop_btnback_click
 	--!*以上：自动注册的回调函数*--
 end
 

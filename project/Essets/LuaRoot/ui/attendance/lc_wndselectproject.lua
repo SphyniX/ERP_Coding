@@ -19,9 +19,9 @@ local AttendanceList
 
 local function on_subproject_grpproject_entproject_click(btn)
 	local index = tonumber(btn.name:sub(11))
-	local id = AttendanceList[index].id
+	local id = AttendanceList[index].Assignmentid
 	local on_call_back = UI_DATA.WNDSelectProject.on_call_back
-	if on_call_back ~= nil then on_call_back(id) end
+	if on_call_back ~= nil then on_call_back(index,DY_DATA.AttendanceList) end
 	UIMGR.close_window(Ref.root)
 end
 

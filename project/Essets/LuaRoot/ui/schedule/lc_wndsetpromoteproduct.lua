@@ -14,19 +14,25 @@ local UI_DATA = MERequire "datamgr/uidata.lua"
 local NW = MERequire "network/networkmgr"
 local DY_DATA = MERequire "datamgr/dydata.lua"
 local Ref
-
+local NowEnt
 local ProductList
+local ProductListOld
+local ProductListForUpdate
 --!*以下：自动生成的回调函数*--
 
 local function on_submain_grp_ent_click(btn)
-	
+	NowEnt = tonumber(btn.name:sub(4))
 	libunity.SetActive(Ref.SubSet.root, true)
+	libunity.SetActive(Ref.SubSet.btnSubmit,false)
 end
 
 local function on_subtop_btnclear_click(btn)
 	Ref.SubMain.Grp:dup(#ProductList, function (i, Ent, isNew)
 		local Product = ProductList[i]
 		Ent.lbName.text = Product.name
+		Ent.lbVolume.text = "   " .. ProductList[i].per
+		Ent.lbPrice.text = "   " .. "元"
+		Ent.lbSale.text = "   " .. "元"
 	end)
 end
 
@@ -34,7 +40,24 @@ local function on_subtop_btnback_click(btn)
 	UIMGR.close_window(Ref.root)
 end
 
+local function on_subset_btncount_click(btn)
+	Ref.SubSet.lbSale.text = tostring(tonumber(Ref.SubSet.inpVolume.text) * tonumber(Ref.SubSet.inpPrice.text))
+	libunity.SetActive(Ref.SubSet.btnCount,false)
+	libunity.SetActive(Ref.SubSet.btnSubmit,true)
+end
+
 local function on_subset_btnsubmit_click(btn)
+	Ref.SubMain.Grp:dup(#ProductList, function (i, Ent, isNew)
+		if i == NowEnt then 
+			Ent.lbVolume.text = Ref.SubSet.inpVolume.text .. ProductList[i].per
+			Ent.lbPrice.text = Ref.SubSet.inpPrice.text .. "元"
+			Ent.lbSale.text = Ref.SubSet.lbSale.text .. "元"
+			Ref.SubSet.inpVolume.text = nil
+			Ref.SubSet.inpPrice.text = nil
+			Ref.SubSet.lbSale.text = nil
+		end
+	end)
+	libunity.SetActive(Ref.SubSet.btnCount,true)
 	libunity.SetActive(Ref.SubSet.root, false)
 end
 
@@ -43,14 +66,26 @@ local function on_subset_btnback_click(btn)
 end
 
 local function on_btnsave_click(btn)
-	
+	ProductListForUpdate = {}
+	Ref.SubMain.Grp:dup(#ProductList, function (i, Ent, isNew)
+		local price = Ent.lbPrice.text:sub(1,string.len(Ent.lbPrice.text)-3)
+		local volume = Ent.lbVolume.text:sub(1,string.len(Ent.lbVolume.text)-3)
+		local sale = Ent.lbSale.text:sub(1,string.len(Ent.lbSale.text)-3)
+		local value = ""
+		if price == "   "then 
+			price = ""
+		end
+		if volume == "   "then 
+			volume = ""
+		end
+		table.insert(ProductListForUpdate,{price = price , volume = volume , sale = sale})
+	end)
+	UI_DATA.WNDSubmitSchedule.ProductList = ProductListForUpdate
 	
 	UIMGR.close_window(Ref.root)
 end
 
-local function on_submain_grp_btnsave_click(btn)
-	UIMGR.close_window(Ref.root)
-end
+
 
 local function on_ui_init()
 	libunity.SetActive(Ref.SubSet.root, false)
@@ -67,12 +102,33 @@ local function on_ui_init()
 		local Product = ProductList[i]
 		Ent.lbName.text = Product.name
 	end)
+	on_subtop_btnclear_click()
+	ProductListForUpdate = UI_DATA.WNDSubmitSchedule.ProductList
+	print("ProductListForUpdate is :" .. JSON:encode(ProductListForUpdate))
+	if ProductListForUpdate ~= nil then
+		Ref.SubMain.Grp:dup(#ProductList, function (i, Ent, isNew)
+			local Product = ProductListForUpdate[i]
+			if Product.price == ""then 
+			Product.price = "   "
+			end
+			if Product.volume == ""then 
+				Product.volume = "   "
+			end
+			if Product.sale == ""then 
+				Product.sale = "   "
+			end
+			Ent.lbVolume.text = Product.volume .. ProductList[i].per
+			Ent.lbPrice.text = Product.price .. "元"
+			Ent.lbSale.text = Product.sale .. "元"
+		end)
+	end
 end
 
 local function init_view()
 	Ref.SubMain.Grp.Ent.btn.onAction = on_submain_grp_ent_click
 	Ref.SubTop.btnClear.onAction = on_subtop_btnclear_click
 	Ref.SubTop.btnBack.onAction = on_subtop_btnback_click
+	Ref.SubSet.btnCount.onAction = on_subset_btncount_click
 	Ref.SubSet.btnSubmit.onAction = on_subset_btnsubmit_click
 	Ref.SubSet.btnBack.onAction = on_subset_btnback_click
 	Ref.btnSave.onAction = on_btnsave_click

@@ -32,6 +32,7 @@ local P = {
     WNDSetCompeteProduct = {},
     WNDMsgLower = {},
     WNDBindPhone = {},
+    WNDVerifyPhone = {},
     WNDSelectPerson = {},
     WNDSupChangeTask = {},
     WNDSetComPhoto = {},

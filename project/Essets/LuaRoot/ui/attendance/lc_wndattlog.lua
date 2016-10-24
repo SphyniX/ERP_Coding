@@ -17,6 +17,37 @@ local Ref
 
 --!*以下：自动生成的回调函数*--
 
+local function on_subtop_submouth_btnnew_click(btn)
+	libunity.SetActive(Ref.SubTop.SubMouth.btnNew, false)
+	libunity.SetActive(Ref.SubTop.SubMouth.btnLast, true)
+	DY_DATA.Work.AttenceList = {}
+	local nm = NW.msg("ATTENCE.CS.GETATTENCE")
+	nm:writeU32(DY_DATA.User.id)
+	nm:writeU32(2)
+	NW.send(nm)
+	-- on_ui_init()
+end
+
+local function on_subtop_submouth_btnlast_click(btn)
+	libunity.SetActive(Ref.SubTop.SubMouth.btnNew, true)
+	libunity.SetActive(Ref.SubTop.SubMouth.btnLast, false)
+	DY_DATA.Work.AttenceList = {}
+	local nm = NW.msg("ATTENCE.CS.GETATTENCE")
+	nm:writeU32(DY_DATA.User.id)
+	nm:writeU32(1)
+
+	NW.send(nm)
+	-- on_ui_init()
+end
+
+local function on_subtop_btnback_click(btn)
+	UIMGR.close_window(Ref.root)
+end
+
+
+
+
+
 local function on_ui_init( )
 	
 	local AttenceList = DY_DATA.Work.AttenceList
@@ -33,49 +64,18 @@ local function on_ui_init( )
 	end
 	Ref.SubLog.GrpLog:dup(#AttenceList, function ( i, Ent, isNew)
 		local Attence = AttenceList[i]
-		Ent.lbDay.text = Attence.Day
+
+		
+		-- if Attence.Day ~= "无" then 
 		Ent.lbUp.text = Attence.Up
 		Ent.lbDown.text = Attence.Down
 		Ent.lbLeaveTimes.text = Attence.LeaveTimes
+		Ent.lbDay.text = Attence.Day
+		Ent.lbWeek.text = Attence.Week
+		-- end
 	end)
 
 end
-
-local function on_subtop_submouth_btnnew_click(btn)
-	libunity.SetActive(Ref.SubTop.SubMouth.btnNew, false)
-	libunity.SetActive(Ref.SubTop.SubMouth.btnLast, true)
-	local nm = NW.msg("ATTENCE.CS.GETATTENCE")
-	nm:writeU32(DY_DATA.User.id)
-	if libunity.SelfActive(Ref.SubTop.SubMouth.btnNew) then
-	    nm:writeU32(1)
-	else
-		nm:writeU32(2)
-	end
-	NW.send(nm)
-	on_ui_init()
-end
-
-local function on_subtop_submouth_btnlast_click(btn)
-	libunity.SetActive(Ref.SubTop.SubMouth.btnNew, true)
-	libunity.SetActive(Ref.SubTop.SubMouth.btnLast, false)
-	local nm = NW.msg("ATTENCE.CS.GETATTENCE")
-	nm:writeU32(DY_DATA.User.id)
-	if libunity.SelfActive(Ref.SubTop.SubMouth.btnNew) then
-	    nm:writeU32(1)
-	else
-		nm:writeU32(2)
-	end
-	NW.send(nm)
-	on_ui_init()
-end
-
-local function on_subtop_btnback_click(btn)
-	UIMGR.close_window(Ref.root)
-end
-
-
-
-
 
 local function init_view()
 	Ref.SubTop.SubMouth.btnNew.onAction = on_subtop_submouth_btnnew_click
@@ -94,11 +94,7 @@ local function init_logic()
 	if AttenceList == nil then
 		local nm = NW.msg("ATTENCE.CS.GETATTENCE")
 		nm:writeU32(DY_DATA.User.id)
-		if libunity.SelfActive(Ref.SubTop.SubMouth.btnNew) then
-		    nm:writeU32(1)
-		else
-			nm:writeU32(2)
-		end
+		nm:writeU32(1)
 		NW.send(nm)
 		return
 	end

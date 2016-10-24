@@ -19,8 +19,8 @@ local Ref
 --!*以下：自动生成的回调函数*--
 
 local function on_submain_btnsave_click(btn)
-	local height = Ref.SubMain.SubHeight.inpInput.text
-	local weight = Ref.SubMain.SubWeight.inpInput.text
+	local height = tonumber(Ref.SubMain.SubHeight.inpInput.text)
+	local weight = tonumber(Ref.SubMain.SubWeight.inpInput.text)
 	local User = DY_DATA.User
 	if height ~= User.height or weight ~= User.weight then
 		local nm = NW.msg("USER.CS.UPDATEINF")
@@ -42,8 +42,8 @@ local function on_ui_init()
 	local User = DY_DATA.User
 	Ref.SubMain.SubSex.lbText.text = TEXT.Sex[User.sex]
 	Ref.SubMain.SubAge.lbText.text = User.age
-	Ref.SubMain.SubHeight.inpInput.text = User.height.."cm"
-	Ref.SubMain.SubWeight.inpInput.text = User.weight.."kg"
+	Ref.SubMain.SubHeight.inpInput.text = User.height
+	Ref.SubMain.SubWeight.inpInput.text = User.weight
 end
 
 local function init_view()

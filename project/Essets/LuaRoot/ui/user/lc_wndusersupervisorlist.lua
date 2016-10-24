@@ -13,6 +13,7 @@ local UIMGR = MERequire "ui/uimgr"
 local UI_DATA = MERequire "datamgr/uidata.lua"
 local DY_DATA = MERequire "datamgr/dydata.lua"
 local NW = MERequire "network/networkmgr"
+local TEXT = _G.ENV.TEXT
 local Ref
 
 local SupervisorList
@@ -39,7 +40,7 @@ local function on_ui_init()
 	Ref.SubMain.GrpSupervisor:dup(#SupervisorList, function (i, Ent, isNew)
 		local Supervisor = SupervisorList[i]
 		Ent.lbName.text = Supervisor.name
-		Ent.lbState.text = Supervisor.state
+		Ent.lbState.text = TEXT.SurperState[Supervisor.state]
 	end)
 end
 

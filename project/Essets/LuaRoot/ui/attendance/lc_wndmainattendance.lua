@@ -26,7 +26,7 @@ local SameAsServer
 local undergoreason ,leavereason = nil, nil
 local AttendanceProject = nil
 local projectId = nil
-
+local AttendanceList
 local on_project_init
 
 local punch_type -- 1 上班， 2 下班
@@ -35,8 +35,10 @@ local function time_to_string(Time)
 	return string.format("%d-%d-%d %d:%d", Time.year, Time.month, Time.day, Time.hour, Time.minute)
 end
 
-local function on_select_project(id)
+local function on_select_project(id,inAttendanceList)
+	print("Start Making Project :" .. id)
 	projectId = id
+	AttendanceList = inAttendanceList
 	on_project_init()
 end
 
@@ -129,7 +131,8 @@ on_project_init = function ()
 		Ref.SubMain.SubAttOff.lbText.text = ""
 		return
 	end
-	local AttendanceProject = DY_DATA.AttendanceList[projectId]
+	local AttendanceProject = AttendanceList[projectId]
+	print("AttendanceProject in MainAttance :" .. JSON:encode(AttendanceProject))
 	Ref.SubMain.SubProject.lbText.text = AttendanceProject.name
 	Ref.SubMain.SubAttOn.lbText.text = AttendanceProject.starttime
 	Ref.SubMain.SubAttOff.lbText.text = AttendanceProject.endtime
@@ -137,20 +140,24 @@ end
 
 local function refreshtime()
 	TimeInfo = os.date("*t",os.time())
+	
 	if DY_DATA.Work.NowTime == nil then
-		local nm = NW.msg("ATTENCE.CS.GETMATER")
+		local nm = NW.msg("ATTENCE.CS.GETTIME")
 		NW.send(nm)
 		return
 	end
-	Ref.SubMain.SubTime.lbTime.text = DY_DATA.Work.NowTime.time
-	Ref.SubMain.SubTime.lbDay.text = DY_DATA.Work.NowTime.day .. "  " .. DY_DATA.Work.NowTime.week
+	print("Work.NowTime is :" .. JSON:encode(DY_DATA.Work.NowTime))
+	local TimeOfDay = DY_DATA.Work.NowTime
+	print("TimeOfDay is :" .. JSON:encode(TimeOfDay))
+	Ref.SubMain.SubTime.lbTime.text = TimeOfDay.time
+	Ref.SubMain.SubTime.lbDay.text = TimeOfDay.day .. " " .. TimeOfDay.week
 	TimeInfo.hour = DY_DATA.Work.NowTime.time:sub(1,2)
 	TimeInfo.min = DY_DATA.Work.NowTime.time:sub(4,5)
 	TimeInfo.sec = DY_DATA.Work.NowTime.time:sub(7,8)
 	-- print(DY_DATA.Work.NowTime.time:sub(1,2))
 	-- print(DY_DATA.Work.NowTime.time:sub(4,5))
 	-- print(DY_DATA.Work.NowTime.time:sub(7,8))
-	print(libsystem.GetFps())
+	-- print(libsystem.GetFps())
 
 end
 
@@ -162,7 +169,7 @@ local function refreshtime_onupdate()
 	if (x % libsystem.GetFps()) == 0 then
 		x = 0
 		TimeInfo.sec = tostring(tonumber(TimeInfo.sec)+1)
-		printf(TimeInfo.sec)
+		-- printf(TimeInfo.sec)
 
 		if tonumber(TimeInfo.sec) == 60 then
 			TimeInfo.min = tostring(tonumber(TimeInfo.min)+1)
@@ -221,9 +228,11 @@ local function init_view()
 end
 
 local function init_logic()
+	DY_DATA.Work.NowTime = nil
 	NW.subscribe("ATTENCE.SC.VERIFYLATLNG", on_try_punch)
 	NW.subscribe("USER.SC.GETUSERINFOR", on_ui_init)
 	NW.subscribe("ATTENCE.SC.GETTIME",refreshtime)
+
 	-- libsystem.StartGps()
 	on_ui_init()
 	refreshtime()

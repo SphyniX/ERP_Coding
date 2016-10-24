@@ -132,6 +132,7 @@ local function init_logic()
 		local nm = NW.msg("PROJECT.CS.GETSTOREINFOR")
 		nm:writeU32(projectId)
 		nm:writeU32(storeId)
+		nm:writeU32(DY_DATA.User.id)
 		NW.send(nm)
 	else
 		on_store_init()	

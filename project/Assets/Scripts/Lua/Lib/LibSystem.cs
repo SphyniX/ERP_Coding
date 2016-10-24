@@ -57,7 +57,7 @@ public static class LibSystem {
     {
         
         int fps = (int)(1.0f / Time.unscaledDeltaTime);
-        Debug.Log(fps);
+        //Debug.Log(fps);
         lua.PushInteger(fps);
         return 1;
     }
