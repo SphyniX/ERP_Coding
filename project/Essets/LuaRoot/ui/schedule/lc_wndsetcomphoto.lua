@@ -12,21 +12,40 @@ local libunity = require "libunity.cs"
 local UIMGR = MERequire "ui/uimgr"
 local UI_DATA = MERequire "datamgr/uidata.lua"
 local Ref
-
+local PhotoId
+local ComListForUpdate
 local callback, PhotoList
+local PhotoName 
 --!*以下：自动生成的回调函数*--
 
 local function on_submain_sptex_click(btn)
 
-	local name = "upload.png"
+	local name = "upload".. btn.name:sub(4) .. "png"
 	local tex = Ref.SubMain.spTex
 	-- local tex = Ent.spPhoto
 	UIMGR.on_sdk_take_photo(name, tex, function (succ, name, image)
-		UI_DATA.WNDSubmitSchedule.PhotoList[UI_DATA.WNDSetComPhoto.id].name = name
+		PhotoName = name
 	end)
 end
 
 local function on_submain_btnsave_click(btn)
+	ComListForUpdate = {}
+	if PhotoName == nil then 
+		PhotoName = ""
+	end
+	ComListForUpdate = {
+		id = UI_DATA.WNDSetComPhoto.id,
+		price = Ref.SubMain.inpPrice.text,
+		info = Ref.SubMain.inInfo.text,
+		name = PhotoName,
+	}
+	-- table.insert(ComListForUpdate,{id = id , price = price , info = info , name = name})
+	if UI_DATA.WNDSubmitSchedule.ComList == nil then
+		UI_DATA.WNDSubmitSchedule.ComList = {}
+	end
+	table.insert(UI_DATA.WNDSubmitSchedule.ComList,ComListForUpdate)
+	Ref.SubMain.inpPrice.text = nil
+	Ref.SubMain.inInfo.text = nil
 	UIMGR.close_window(Ref.root)
 end
 
@@ -38,12 +57,29 @@ end
 local function on_subtop_btnback_click(btn)
 	UIMGR.close_window(Ref.root)
 end
-
+ 
 local function init_view()
+
 	Ref.SubMain.spTex.onAction = on_submain_sptex_click
 	Ref.SubMain.btnSave.onAction = on_submain_btnsave_click
 	Ref.SubTop.btnClear.onAction = on_subtop_btnclear_click
 	Ref.SubTop.btnBack.onAction = on_subtop_btnback_click
+	local ComList = UI_DATA.WNDSubmitSchedule.ComList
+	ComListForUpdate = {}
+	if ComList ~= nil then 
+		print("ComList is :" .. JSON:encode(ComList))
+		print("WNDSetComPhoto.id is :" .. UI_DATA.WNDSetComPhoto.id)
+		for i=1,#ComList do
+			if ComList[i].id == UI_DATA.WNDSetComPhoto.id then
+				ComListForUpdate = ComList[i]
+			end
+		end
+	end
+	print("ComListForUpdate Now is :" .. JSON:encode(ComListForUpdate))
+	if ComListForUpdate ~= nil then 
+		Ref.SubMain.inpPrice.text = ComListForUpdate.price
+		Ref.SubMain.inInfo.text = ComListForUpdate.info
+	end
 	--!*以上：自动注册的回调函数*--
 end
 
@@ -60,7 +96,7 @@ local function start(self)
 end
 
 local function update_view()
-	
+	init_view()
 end
 
 local function on_recycle()

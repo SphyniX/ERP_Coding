@@ -14,7 +14,7 @@ local DY_DATA = MERequire "datamgr/dydata.lua"
 local UI_DATA = MERequire "datamgr/uidata.lua"
 local NW = MERequire "network/networkmgr"
 local Ref
-
+local ProductListForUpdate
 
 local SampleList 
 local NowEnt
@@ -63,6 +63,16 @@ local function on_subset_btnback_click(btn)
 end
 
 local function on_btnsave_click(btn)
+	ProductListForUpdate = {}
+	Ref.SubMain.Grp:dup(#SampleList, function (i, Ent, isNew)
+		local id = SampleList[i].id
+		local value = Ent.lbVolume.text:sub(1,string.len(Ent.lbVolume.text)-3)
+		local number = Ent.lbNumber.text:sub(1,string.len(Ent.lbNumber.text)-3)
+		table.insert(ProductListForUpdate,{id = id ,value =value,number = number})
+
+		end)
+	UI_DATA.WNDSubmitSchedule.ProductListForetaste = ProductListForUpdate
+
 	UIMGR.close_window(Ref.root)
 end
 
@@ -91,11 +101,17 @@ local function on_ui_init()
 		Ent.lbVolume.text = "   " .. Sample.per
 		Ent.lbNumber.text = "   " .. "次"
 	end)
+	ProductListForUpdate = UI_DATA.WNDSubmitSchedule.ProductListForetaste
 
-	
-
-
-
+	if ProductListForUpdate ~= nil then 
+		print("ProductListForUpdate in WNDSetForetaste is :" .. JSON:encode(ProductListForUpdate))
+		Ref.SubMain.Grp:dup(#SampleList, function (i, Ent, isNew)
+			local Sample = SampleList[i]
+			-- Ent.lbName.text = Sample.name
+			Ent.lbVolume.text = ProductListForUpdate[i].value .. Sample.per
+			Ent.lbNumber.text = ProductListForUpdate[i].number .. "次"
+		end)
+	end
 end
 
 local function init_view()

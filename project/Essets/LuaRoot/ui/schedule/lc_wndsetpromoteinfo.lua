@@ -38,8 +38,9 @@ end
 local function on_btnsave_click(btn)
 	ProductListForUpdate = {}
 	Ref.SubMain.Grp:dup(#ProductList, function (i, Ent, isNew)
+		local id = ProductList[i].id
 		local value = Ent.inpValue.text
-		table.insert(ProductListForUpdate,{value =value})
+		table.insert(ProductListForUpdate,{id = id ,value =value})
 
 		end)
 	UI_DATA.WNDSubmitSchedule.ProductListInfo = ProductListForUpdate

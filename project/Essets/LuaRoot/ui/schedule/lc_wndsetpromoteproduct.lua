@@ -78,7 +78,8 @@ local function on_btnsave_click(btn)
 		if volume == "   "then 
 			volume = ""
 		end
-		table.insert(ProductListForUpdate,{price = price , volume = volume , sale = sale})
+		local id = ProductList[i].id
+		table.insert(ProductListForUpdate,{id = id , price = price , volume = volume , sale = sale})
 	end)
 	UI_DATA.WNDSubmitSchedule.ProductList = ProductListForUpdate
 	

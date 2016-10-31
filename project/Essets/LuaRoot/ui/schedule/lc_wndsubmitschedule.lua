@@ -15,7 +15,7 @@ local DY_DATA = MERequire "datamgr/dydata.lua"
 local NW = MERequire "network/networkmgr"
 local TEXT = _G.ENV.TEXT
 local Ref
-
+local ProductListWithProductAndInfo
 local Project, Store
 
 --!*以下：自动生成的回调函数*--
@@ -38,6 +38,63 @@ local function on_submain_subcontent_subinfolist_btninfo_click(btn)
 end
 
 local function on_submain_subcontent_btnbutton_click(btn)
+
+	local TempProductList = UI_DATA.WNDSubmitSchedule.ProductList
+	local TempProductListInfo = UI_DATA.WNDSubmitSchedule.ProductListInfo
+	local TempProductListForetaste = UI_DATA.WNDSubmitSchedule.ProductListForetaste
+	local TempProductListGift = UI_DATA.WNDSubmitSchedule.ProductListGift
+	local TempComList = UI_DATA.WNDSubmitSchedule.ComList
+	if TempProductList ~= nil then
+		if TempProductListInfo ~= nil then
+			ProductListWithProductAndInfo = {}
+			for i=1,#TempProductList do
+				local id = TempProductList[i].id
+				local price = TempProductList[i].price
+				local volume = TempProductList[i].volume
+				local value = TempProductListInfo[i].value
+				table.insert(ProductListWithProductAndInfo,{id = id , price = price , volume = volume , value = value})
+			end
+		else
+			_G.UI.Toast:make(nil, "促销机制不能全为空"):show()
+			return 
+		end
+	else
+		_G.UI.Toast:make(nil, "产品数据不能全为空"):show()
+		return 
+	end
+	if ProductListWithProductAndInfo ~= nil then
+		print("WNDSubmitSchedule.ProductListWithProductAndInfo is :" .. JSON:encode(ProductListWithProductAndInfo))
+	end
+
+	if TempProductListForetaste ~= nil then
+		print("WNDSubmitSchedule.ProductListForetaste is :" .. JSON:encode(TempProductListForetaste))
+	else
+		_G.UI.Toast:make(nil,"试吃品数据不能全为空"):show()
+		return
+	end
+
+	if TempProductListGift ~= nil then
+		print("WNDSubmitSchedule.ProductListGift is :" .. JSON:encode(TempProductListGift))
+	else
+		_G.UI.Toast:make(nil,"赠品数据不能全为空"):show()
+		return
+	end
+	if TempComList ~= nil then
+		print("WNDSubmitSchedule.ComList is :" .. JSON:encode(TempComList))
+	else
+		_G.UI.Toast:make(nil,"竞品数据不能全为空"):show()
+		return
+	end
+	-- print("WNDSubmitSchedule.ProductList is :" .. JSON:encode(UI_DATA.WNDSubmitSchedule.ProductList))
+	-- print("WNDSubmitSchedule.ProductListInfo is :" .. JSON:encode(UI_DATA.WNDSubmitSchedule.ProductListInfo))
+	-- print("WNDSubmitSchedule.ProductListForetaste is :" .. JSON:encode(UI_DATA.WNDSubmitSchedule.ProductListForetaste))
+	
+
+
+
+
+
+
 	-- -- libunity.SetActive(Ref.SubMain.SubContent.SubTip.root, false)
 
 	-- local ProductList = UI_DATA.WNDSubmitSchedule.ProductList

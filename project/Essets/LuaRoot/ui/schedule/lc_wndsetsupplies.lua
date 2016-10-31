@@ -71,7 +71,8 @@ end
 --!*以下：自动生成的回调函数*--
 
 local function on_submain_grp_ent_btnstate_click(btn)
-	-- local index = tonumber(btn.transform.parent.name:sub(4))
+	local index = tonumber(btn.transform.parent.name:sub(4))
+	print(index)
 	libunity.SetActive(Ref.SubState.root, true)
 end
 

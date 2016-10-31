@@ -17,6 +17,7 @@ local ProvinceList
 local CityList
 local City
 local CityChoose
+local ProvinceNow
 
 local function on_bind_supervisored(Ret)
 	if Ret.ret == 1 then
@@ -30,6 +31,7 @@ end
 --!*以下：自动生成的回调函数*--
 
 local function on_submain_subselect_subprovince_grp_ent_click(btn)
+
 	print("a")
 	local index = tonumber(btn.name:sub(4))
 	CityList = _G.CFG.CityLib.get_city_list(index)
@@ -39,13 +41,16 @@ local function on_submain_subselect_subprovince_grp_ent_click(btn)
 	end)
 
 	Ref.SubMain.SubSelect.lbCity.text = ProvinceList[index].name
+	ProvinceNow = ProvinceList[index].name
+	print(Ref.SubMain.SubSelect.RectTransform.position)
 	-- libunity.SetActive(Ref.SubMain.SubSelect.root,false)
 end
 
 
 local function on_submain_subselect_subcity_grp_ent_click(btn)
 	local index = tonumber(btn.name:sub(4))
-	Ref.SubMain.SubSelect.lbCity.text = Ref.SubMain.SubSelect.lbCity.text .. "  -   " .. CityList[index].name
+
+	Ref.SubMain.SubSelect.lbCity.text = ProvinceNow .. "  -   " .. CityList[index].name
 	CityChoose = CityList[index].name
 end
 
@@ -70,6 +75,7 @@ end
 
 local function on_submain_subselect_btnsave_click(btn)
 	Ref.SubMain.SubInfo.SubCity.lbcity.text = CityChoose
+	
 	libunity.SetActive(Ref.SubMain.SubSelect.root,false)
 end
 

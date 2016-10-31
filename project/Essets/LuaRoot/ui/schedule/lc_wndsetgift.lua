@@ -14,7 +14,7 @@ local UI_DATA = MERequire "datamgr/uidata.lua"
 local DY_DATA = MERequire "datamgr/dydata.lua"
 local NW = MERequire "network/networkmgr"
 local Ref
-
+local ProductListForUpdate 
 local GiftList
 local NowEnt
 --!*以下：自动生成的回调函数*--
@@ -56,6 +56,15 @@ local function on_subset_btnback_click(btn)
 end
 
 local function on_btnsave_click(btn)
+	ProductListForUpdate = {}
+	Ref.SubMain.Grp:dup(#GiftList, function (i, Ent, isNew)
+		local id = GiftList[i].id
+		local volume = Ent.lbVolume.text:sub(1,string.len(Ent.lbVolume.text)-3)
+		-- local number = Ent.lbNumber.text
+		table.insert(ProductListForUpdate,{id = id ,volume = volume})
+
+		end)
+	UI_DATA.WNDSubmitSchedule.ProductListGift = ProductListForUpdate
 	UIMGR.close_window(Ref.root)
 end
 
@@ -86,6 +95,13 @@ local function on_ui_init()
 		Ent.lbVolume.text = "   " .. Gift.per
 
 	end)
+	ProductListForUpdate = UI_DATA.WNDSubmitSchedule.ProductListGift
+	if ProductListForUpdate ~= nil then
+		Ref.SubMain.Grp:dup(#GiftList, function (i, Ent, isNew)
+			local Gift = GiftList[i]	
+			Ent.lbVolume.text = ProductListForUpdate[i].volume .. Gift.per
+		end)
+	end
 
 	
 end
