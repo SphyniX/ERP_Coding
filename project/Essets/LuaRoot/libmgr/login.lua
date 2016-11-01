@@ -15,13 +15,13 @@ local on_account_logined, on_account_registed, on_account_binded, on_http_fail
 local P = { } 
 P.IPSet = {
     test = "192.168.1.47:8888",
-    productIP = "api.richer.net.cn:8000",
+    productIP = "api.richer.net.cn:8888",
     -- productIP = "139.196.109.3:8080",
     productDomain = "",
 }
 P.Channel = {
     -- loginHost = P.IPSet.productIP,
-    loginHost = P.IPSet.test,
+    loginHost = P.IPSet.productIP,
     downloadHost = "139.196.109.3:8000",
     pid = 1,
     minAccLen = 6,

@@ -42,7 +42,7 @@ local function on_submain_subselect_subprovince_grp_ent_click(btn)
 
 	Ref.SubMain.SubSelect.lbCity.text = ProvinceList[index].name
 	ProvinceNow = ProvinceList[index].name
-	print(Ref.SubMain.SubSelect.RectTransform.position)
+	-- print(Ref.SubMain.SubSelect.RectTransform.position)
 	-- libunity.SetActive(Ref.SubMain.SubSelect.root,false)
 end
 

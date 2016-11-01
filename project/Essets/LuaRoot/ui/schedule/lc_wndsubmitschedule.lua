@@ -44,6 +44,8 @@ local function on_submain_subcontent_btnbutton_click(btn)
 	local TempProductListForetaste = UI_DATA.WNDSubmitSchedule.ProductListForetaste
 	local TempProductListGift = UI_DATA.WNDSubmitSchedule.ProductListGift
 	local TempComList = UI_DATA.WNDSubmitSchedule.ComList
+	local TempMaterList = DY_DATA.WNDSubmitSchedule.MaterList
+	local TempInfor = DY_DATA.WNDSubmitSchedule.Infor
 	if TempProductList ~= nil then
 		if TempProductListInfo ~= nil then
 			ProductListWithProductAndInfo = {}
@@ -69,7 +71,7 @@ local function on_submain_subcontent_btnbutton_click(btn)
 	if TempProductListForetaste ~= nil then
 		print("WNDSubmitSchedule.ProductListForetaste is :" .. JSON:encode(TempProductListForetaste))
 	else
-		_G.UI.Toast:make(nil,"试吃品数据不能全为空"):show()
+		_G.UI.Toast:make(nil,"体验品数据不能全为空"):show()
 		return
 	end
 
@@ -85,6 +87,13 @@ local function on_submain_subcontent_btnbutton_click(btn)
 		_G.UI.Toast:make(nil,"竞品数据不能全为空"):show()
 		return
 	end
+	if TempMaterList ~= nil then 
+		print("WNDSubmitSchedule.MaterList is :" .. JSON:encode(TempMaterList))
+	else
+		_G.UI.Toast:make(nil,"物料数据不能全为空"):show()
+		return
+	end
+	if TempInfor == nil then TempInfor = "" else print(TempInfor) end
 	-- print("WNDSubmitSchedule.ProductList is :" .. JSON:encode(UI_DATA.WNDSubmitSchedule.ProductList))
 	-- print("WNDSubmitSchedule.ProductListInfo is :" .. JSON:encode(UI_DATA.WNDSubmitSchedule.ProductListInfo))
 	-- print("WNDSubmitSchedule.ProductListForetaste is :" .. JSON:encode(UI_DATA.WNDSubmitSchedule.ProductListForetaste))
@@ -114,41 +123,63 @@ local function on_submain_subcontent_btnbutton_click(btn)
 	-- 	return
 	-- end
 
-	-- if NW.connected() then
-	-- 	local storeId = UI_DATA.WNDSubmitSchedule.storeId
-	-- 	local projectId = UI_DATA.WNDSubmitSchedule.projectId
-	-- 	local nm = NW.msg("REPORTED.CS.REPORTEDPRO")
-	-- 	nm:writeU32(DY_DATA.User.id)
-	-- 	nm:writeU32(storeId)
+	if NW.connected() then
+		local storeId = UI_DATA.WNDSubmitSchedule.storeId
+		local projectId = UI_DATA.WNDSubmitSchedule.projectId
+		local nm = NW.msg("REPORTED.CS.REPORTEDPRO")
+		nm:writeU32(DY_DATA.User.id)
+		nm:writeU32(storeId)
 
 
-	-- 	nm:writeU32(#ProductList)
-	-- 	for _,v in ipairs(ProductList) do
-	-- 		nm:writeU32(v.id)
-	-- 		nm:writeU32(v.price == "" and 0 or tonumber(v.price))
-	-- 		nm:writeU32(v.volume == "" and 0 or tonumber(v.volume))
-	-- 		nm:writeU32(v.average == "" and 0 or tonumber(v.average))
-	-- 		print(JSON:encode(v))
-	-- 	end
+		nm:writeU32(#ProductListWithProductAndInfo)
+		for _,v in ipairs(ProductListWithProductAndInfo) do
+			nm:writeU32(v.id == "" and 0 or tonumber(v.id))
+			nm:writeU32(v.price == "" and 0 or tonumber(v.price))
+			nm:writeU32(v.volume == "" and 0 or tonumber(v.volume))
+			nm:writeString(v.value)
+			print(JSON:encode(v))
+		end
 
-	-- 	nm:writeU32(#MechanismList)
-	-- 	for _,v in ipairs(MechanismList) do
-	-- 		nm:writeU32(tonumber(v.id))
-	-- 		nm:writeString(v.value)
-	-- 		print(JSON:encode(v))
-	-- 	end
+		nm:writeU32(#TempMaterList)
+		for _,v in ipairs(TempMaterList) do
+			nm:writeU32(v.id == "" and 0 or tonumber(v.id))
+			nm:writeString(v.state)
+			nm:writeString(v.discribe)
+			nm:writeString(v.photo)
+			print(JSON:encode(v))
+		end
 
-	-- 	nm:writeU32(#CompeteProductList)
-	-- 	for _,v in ipairs(CompeteProductList) do
-	-- 		nm:writeU32(tonumber(v.id))
-	-- 		nm:writeString(v.name)
-	-- 		print(JSON:encode(v))
-	-- 	end
-	-- 	local info = Ref.SubMain.SubContent.inpInfo.text
-	-- 	nm:writeString(info or "")
-	-- 	NW.send(nm)
-	-- 	_G.UI.Waiting.show()
-	-- end
+		nm:writeU32(#TempComList)
+		for _,v in ipairs(TempComList) do
+			nm:writeU32(v.id == "" and 0 or tonumber(v.id))
+			nm:writeString(v.price)
+			nm:writeString(v.info)
+			nm:writeString(v.name)
+			print(JSON:encode(v))
+		end
+
+		nm:writeU32(0)
+
+		nm:writeU32(#TempProductListGift)
+		for _,v in ipairs(TempProductListGift) do
+			nm:writeU32(v.id == "" and 0 or tonumber(v.id))
+			nm:writeU32(v.volume == "" and 0 or tonumber(v.volume))
+			print(JSON:encode(v))
+		end
+
+		nm:writeU32(#TempProductListForetaste)
+		for _,v in ipairs(TempProductListForetaste) do
+			nm:writeU32(v.id == "" and 0 or tonumber(v.id))
+			nm:writeU32(v.number == "" and 0 or tonumber(v.number))
+			nm:writeU32(v.value == "" and 0 or tonumber(v.value))
+			print(JSON:encode(v))
+		end
+
+		
+		nm:writeString(TempInfor or "")
+		NW.send(nm)
+		_G.UI.Waiting.show()
+	end
 end
 
 -- 物料
