@@ -24,7 +24,11 @@ local function on_submain_sptex_click(btn)
 	local tex = Ref.SubMain.spTex
 	-- local tex = Ent.spPhoto
 	UIMGR.on_sdk_take_photo(name, tex, function (succ, name, image)
-		PhotoName = name
+		if succ then
+			PhotoName = name
+		else
+			PhotoName = nil
+		end
 	end)
 end
 
@@ -79,7 +83,16 @@ local function init_view()
 	if ComListForUpdate ~= nil then 
 		Ref.SubMain.inpPrice.text = ComListForUpdate.price
 		Ref.SubMain.inInfo.text = ComListForUpdate.info
+		-- UIMGR.load_photo(Ref.SubMain.spTex, ComListForUpdate.name, function (succ, name, image)
+		-- 		if succ then
+		-- 			PhotoList[1].image = image
+		-- 		else
+		-- 			PhotoList[1].image = nil
+		-- 		end
+		-- 	end)
 	end
+
+
 	--!*以上：自动注册的回调函数*--
 end
 

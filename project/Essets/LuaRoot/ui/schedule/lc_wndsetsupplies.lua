@@ -19,16 +19,17 @@ local Ref
 local reason, reasonIndex, photoIndex
 local state, stateIndex
 local MaterList
+local MaterListForUpdate
 local Imagelist = {}
 local InfoList = {}
 local on_photo_init
 
-local function on_set_reason_callback(reason, context)
+local function on_set_reason_callback(reason)
 	if reasonIndex == nil then return end
-	local Ent = Ref.SubMain.GrpContent.Ents[reasonIndex]
+	local Ent = Ref.SubMain.Grp.Ent[reasonIndex]
 	if Ent then
-		Ent.lbTitle.text = TEXT.SuppliesType[reason]
-		Ent.lbInfo.text = context
+		Ent.lbState.text = TEXT.SuppliesType[reason]
+		-- Ent.lbInfo.text = context
 		local id = MaterList[reasonIndex].id
 		InfoList[id] = {reason = reason, context = context}
 	end
@@ -39,10 +40,20 @@ local function set_reason(index)
 	reason = ""
 	libunity.SetActive(Ref.SubReason.root, true)
 end
+
 local function on_set_photo_callback(Photolist)
-	local id = MaterList[photoIndex].id
-	Imagelist[id] = Photolist[1].image
-	on_photo_init()
+
+	local function on_http_photo_callback(Ret)
+	if photoIndex == nil then return end
+	Ref.SubMain.Grp:dup(#MaterList, function (i, Ent, isNew)
+		if i == photoIndex then 
+			Ent.lbPhoto.text = state
+		end
+	end)
+		-- body
+	end
+	LOGIN.try_uploadphoto(DY_DATA.User.id, v.typeId, nil, Photolist[1].image, on_http_photo_callback)
+	-- on_photo_init()
 end
 
 local function set_photo(index)
@@ -58,31 +69,35 @@ local function set_photo(index)
 end
 
 local function on_set_state_callback(state)
-	if reasonIndex == nil then return end
-	local Ent = Ref.SubMain.GrpContent.Ents[stateIndex]
-	if Ent then
-		Ent.lbState.text = state
-
+	print("on_set_state_callback stateIndex is :" .. stateIndex)
+	if stateIndex == nil then return end
+	Ref.SubMain.Grp:dup(#MaterList, function (i, Ent, isNew)
+		if i == stateIndex then 
+			Ent.lbState.text = state
+		end
+	end)
 		-- local id = MaterList[reasonIndex].id
 		-- InfoList[id] = {state = state}
-	end
+	
 end
 
 --!*以下：自动生成的回调函数*--
 
 local function on_submain_grp_ent_btnstate_click(btn)
-	local index = tonumber(btn.transform.parent.name:sub(4))
-	print(index)
+	stateIndex = tonumber(btn.transform.parent.name:sub(4))
 	libunity.SetActive(Ref.SubState.root, true)
 end
 
 local function on_submain_grp_ent_btnphoto_click(btn)
 	-- 上传图片
+	set_photo(tonumber(btn.transform.parent.name:sub(4)))
 end
 
 local function on_subtop_btnclear_click(btn)
 	Ref.SubMain.Grp:dup(#MaterList, function (i, Ent, isNew)
 		Ent.inpInput.text = nil
+		Ent.lbState.text = "状态"
+		Ent.lbPhoto.text = nil
 	end)
 end
 
@@ -96,7 +111,7 @@ local function on_substate_tglgood_change(tgl)
 end
 
 local function on_substate_tglbad_change(tgl)
-	on_set_state_callback("反馈问题")
+	on_set_state_callback("损坏")
 	libunity.SetActive(Ref.SubState.root, false)	
 end
 
@@ -105,7 +120,27 @@ local function on_substate_btnback_click(btn)
 end
 
 local function on_btnsave_click(btn)
-	
+	MaterListForUpdate = {}
+
+	Ref.SubMain.Grp:dup(#MaterList, function (i, Ent, isNew)
+
+		local name = Ent.lbName.text
+		local photo = Ent.lbPhoto.text
+		local state = Ent.lbState.text
+		local id = MaterList[i].id
+		local discribe = Ent.inpInput.text
+		if state == "状态" then state = "" end
+		if photo == nil then photo = "" end
+		if discribe == nil then discribe = "" end
+		table.insert(MaterListForUpdate,{id = id,name = name , photo = photo , state = state , discribe = discribe})
+
+	end)
+	if DY_DATA.WNDSubmitSchedule.MaterList == nil then
+		DY_DATA.WNDSubmitSchedule.MaterList = {}
+	end
+	DY_DATA.WNDSubmitSchedule.MaterList = MaterListForUpdate
+	print("WNDSubmitSchedule.MaterList in WNDSetSupplies is :" .. JSON:encode(DY_DATA.WNDSubmitSchedule.MaterList) )
+	UIMGR.close_window(Ref.root)
 end
 
 local function on_submain_grp_ent_click(btn)
@@ -125,6 +160,15 @@ local function on_ui_init()
 	Ref.SubMain.Grp:dup(#MaterList, function (i, Ent, isNew)
 		Ent.lbName.text = MaterList[i].name
 	end)
+
+	MaterListForUpdate = UI_DATA.WNDSubmitSchedule.MaterList
+	if MaterListForUpdate ~= nil then 
+		Ref.SubMain.Grp:dup(#MaterListForUpdate, function (i, Ent, isNew)
+			Ent.lbState.text = MaterListForUpdate[i].state
+			Ent.lbPhoto.text = MaterListForUpdate[i].photo
+			Ent.inpInput.text = MaterListForUpdate[i].discribe
+		end)
+	end
 end
 
 local function init_view()

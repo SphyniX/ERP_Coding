@@ -20,8 +20,8 @@ P.IPSet = {
     productDomain = "",
 }
 P.Channel = {
+    -- loginHost = P.IPSet.productIP,
     loginHost = P.IPSet.productIP,
-    -- loginHost = P.IPSet.test,
     downloadHost = "139.196.109.3:8000",
     pid = 1,
     minAccLen = 6,
@@ -327,14 +327,14 @@ local function on_uploadphoto_back(resp, isDone, err)
     end
     libunity.LogD("on_uploadphoto_back :{0}",resp)
     local Ret = JSON:decode(resp)
-    if Ret.ret == 1 then
-        if on_wnd_uploadphoto then on_wnd_uploadphoto(Ret) end
-    else
-        _G.UI.Toast:make(nil, NW.get_error(Ret.ret)):show()
-    end
+    -- if Ret.ret == 1 then
+    --     if on_wnd_uploadphoto then on_wnd_uploadphoto(Ret) end
+    -- else
+    --     _G.UI.Toast:make(nil, NW.get_error(Ret.ret)):show()
+    -- end
     
-    -- if on_wnd_uploadphoto then on_wnd_uploadphoto(Ret) end
-    -- if Ret.ret ~= 1 then _G.UI.Toast:make(nil, NW.get_error(Ret.ret)):show() end
+    if on_wnd_uploadphoto then on_wnd_uploadphoto(Ret) end
+    if Ret.ret ~= 1 then _G.UI.Toast:make(nil, NW.get_error(Ret.ret)):show() end
     
 end
 
@@ -468,7 +468,6 @@ end
 local SysInfo = nil
 local function on_enter_login()
     -- 网络连接成功，启动网络定时器
-    print("<color=#fff000> 网络起动成功</color>")
     local DY_TIMER = MERequire "libmgr/dytimer.lua"
     DY_TIMER.launch_network_timer()
 
