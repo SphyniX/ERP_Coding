@@ -54,8 +54,12 @@ local function on_tglremamber_change(tgl)
 end
 
 local function on_btnenter_click(btn)
+	print("lc_wndlogin------> on_btnenter_click")
+	--UIMGR.create_window("UI/WNDLaunch11")
+	--UIMGR.create_window("UI/WNDsuptest1111")
 	local inpAccount = Ref.SubAccount.inpAccount.text
 	local inpPassword = Ref.SubPassword.inpPassword.text
+	--判断是否使用端口登录
 	if inpAccount == debug_account and inpPassword == debug_password then
 		UIMGR.create_window("UI/WNDLaunch")
 		return

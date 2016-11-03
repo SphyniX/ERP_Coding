@@ -17,22 +17,23 @@ local LOGIN = MERequire "libmgr/login.lua"
 local Ref
 
 local function on_set_photo(Photolist)
-	local nPhoto = 0
+	-- local nPhoto = 0
 	local function on_http_photo_callback()
-   		nPhoto = nPhoto + 1
-   		if nPhoto >= #Photolist then
-   		end
+   		-- nPhoto = nPhoto + 1
+   		-- if nPhoto >= #Photolist then
+   		-- end
    	end
    	for i,v in ipairs(Photolist) do
-   		print(v)
    		LOGIN.try_uploadphoto(DY_DATA.User.id, v.typeId, nil, v.image, on_http_photo_callback)
    	end
 end
 
 local function on_set_idcard(Photolist, inp)
    	local nPhoto = 0
+   	local PhotoListName = {}
    	if NW.connected() then
-		local function on_http_photo_callback()
+		local function on_http_photo_callback(Ret)
+			table.insert(PhotoListName,{name = Ret.name})
 	   		nPhoto = nPhoto + 1
 	   		if nPhoto >= #Photolist then
 		   		local nm = NW.msg("USER.CS.UPDATEIDNUM")

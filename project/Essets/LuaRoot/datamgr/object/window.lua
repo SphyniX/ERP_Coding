@@ -58,6 +58,7 @@ end
 --=============================================================================
 
 function OBJDEF.new(path, depth)
+print("window.lua    OBJDEF.new")
 	local self = { 
 		path = path,
 		depth = depth,
@@ -67,24 +68,34 @@ function OBJDEF.new(path, depth)
 end
 
 function OBJDEF:is_opened()
+  print("打开界面---------OBJDEF:is_opened()")
 	return libunity.IsActive(self.go)
 end
 
 function OBJDEF:open(instantly)
+  print("打开界面")
 	if self:is_opened() then
+	 print("打开界面  self:is_opened()")
 		--libugui.DOMethod(self.go, "update_view")
 	else
+	print("打开界面  self:is_opened()1")
 		if self.Cached then
+		   print("打开界面  self:is_opened()3")
 			local self_Cached = self.Cached
 			self_Cached.T[self_Cached.k] = self_Cached.v
 			self.Cached = nil
 		end
+		print("打开界面  self:is_opened()4")
 		self.go = OBJDEF.u_create(self.path, self.depth, instantly)
+		print("打开界面  self:is_opened()5")
 		if self.on_open then 
+		   print("打开界面  self:is_opened()6")
 			self.on_open()
 		end
 	end
+	print("打开界面  self:is_opened()7")
 	if self.PopWnd then
+	  print("打开界面  self:is_opened()8")
 		libunity.StartCoroutine(self.go, coro_pop_wnd, self.PopWnd)
 	end
 	return self.go

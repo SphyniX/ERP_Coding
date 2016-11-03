@@ -38,6 +38,7 @@ end
 --!窗口管理，放到一个栈内
 -- 在指定的深度打开一个新窗口并压入栈，关闭原栈顶窗口
 function P.create_window(prefab, depth, instantly)
+  print("P.create_window  创建界面")
 	if depth == nil then depth = DEPTH_WND end
 	-- 记录因本窗口打开而关闭的窗口数量
 	local n = 0
@@ -63,12 +64,18 @@ function P.create_window(prefab, depth, instantly)
 			end
 		end
 	end
+	print("设置深度 完成")
 	
 	local NewWnd = WindowDEF.new(prefab, depth)
+	print(NewWnd)
+	 print("创建物体"..tostring(n))
 	NewWnd.prevN = n
 	P.WNDStack:push(NewWnd)
+	 print("创建物体1")
 	--print("Push", NewWnd, NewWnd.prevN, #P.WNDStack)
 	NewWnd:open(instantly)
+	 print("创建物体2")
+	
 	return NewWnd.go
 end
 
@@ -154,7 +161,6 @@ function P.load_photo(go, name, callBack)
 		if callBack ~= nil then callBack( p, name, o) end
 	end)
 end
-
 function P.on_sdk_take_photo(name, tex, callBack)
 	if name == nil or name == "" then 
 		if callBack then callBack(false, nil, nil) end 

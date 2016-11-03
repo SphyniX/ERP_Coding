@@ -24,6 +24,7 @@ MERequire "datamgr/dydataop"
 local function on_sc_entergame(Ret)
 	_G.UI.Waiting.hide()
 	local limit = DY_DATA.User.limit
+
 	if limit == 1 then
 		UIMGR.create_window("UI/WNDMainAttendance")
 	elseif limit == 2 then
@@ -85,7 +86,7 @@ local function on_btnregisted_click(btn)
 	local LOGIN = MERequire "libmgr/login.lua"
     LOGIN.do_logout()
 end
-
+--判断用户类型
 local function on_ui_init()
 	if _G.Debug then
 		local id = DY_DATA.User.id

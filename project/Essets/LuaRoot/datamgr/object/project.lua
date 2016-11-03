@@ -21,6 +21,8 @@ OBJDEF.__tostring = function (self)
 end
 
 function OBJDEF.new(id)
+print("创建物体类")
+
     local self = { 
         id = id,
     }

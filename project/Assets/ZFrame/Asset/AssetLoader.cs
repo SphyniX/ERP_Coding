@@ -169,9 +169,11 @@ namespace ZFrame.Asset
 		public const string ASSET_EXT = ".unity3d";
 		public static void GetAssetpath(string path, out string assetbundleName, out string assetName)
 		{
-			assetbundleName = Path.GetDirectoryName(path) + ASSET_EXT;
+            Debug.Log("<color=#ff00ff>AssetLoader.cs资源名字" + path + "</color>");
+            assetbundleName = Path.GetDirectoryName(path) + ASSET_EXT;
 			assetName = Path.GetFileNameWithoutExtension(path);
-			assetbundleName = assetbundleName.ToLower();
+            Debug.Log("<color=#ffff00>AssetLoader.cs资源名字"+assetbundleName +"-----"+ assetName+"</color>");
+            assetbundleName = assetbundleName.ToLower();
 		}
 
 		#region 资源管理
@@ -274,13 +276,19 @@ namespace ZFrame.Asset
 			
 			AbstractAssetBundleRef abRef;
             Object loadedObj = null;
-			if (TryGetAssetBundle(assetbundleName, out abRef)) {
+            Debug.Log("1不存在prefab--------" + assetName);
+            if (TryGetAssetBundle(assetbundleName, out abRef)) {
+                Debug.Log("2不存在prefab--------" + assetName);
                 loadedObj = abRef.Load(assetName, type);
+                Debug.Log("3不存在prefab--------" + assetName);
                 if (loadedObj) {
+                    Debug.Log("4不存在prefab--------"+ assetName);
                     return loadedObj;
                 } else {
+                    Debug.Log("5不存在prefab--------" + assetName);
                     if (warnIfMissing) {
-                        LogMgr.W("{0}<{1}>不存在。[{2} {3}]", path, type, assetbundleName, assetName);
+                        //LogMgr.W("{0}<{1}>不存在资源。[{2} {3}]", path, type, assetbundleName, assetbundleName);
+                        Debug.Log(path +"<" +type+">不存在资源。"+"[{ "+assetbundleName+"} { "+ assetName + @"}]");
                     } else {
                         Log("{0}<{1}> not exist.[{2} {3}]", path, type, assetbundleName, assetName);
                     }

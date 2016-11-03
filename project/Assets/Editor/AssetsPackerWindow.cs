@@ -79,8 +79,9 @@ public class AssetsPackerWindow : EditorWindow {
 		
 		if (!Directory.Exists(ProductPath)) Directory.CreateDirectory(ProductPath);
 		if (!Directory.Exists(ProductPCPath)) Directory.CreateDirectory(ProductPCPath);
-		
-		//开始打游戏包
+
+        //开始打游戏包
+        Debug.Log(BuildName);
 		BuildPipeline.BuildPlayer(new string[] {
 			"Assets/Scenes/ZERO.unity",
 		}, BuildName, AssetPacker.buildTarget, bo);

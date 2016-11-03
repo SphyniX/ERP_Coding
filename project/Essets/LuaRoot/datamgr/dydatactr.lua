@@ -19,7 +19,7 @@ local MineDEF = _G.DEF.Mine
 local GoodsDEF = _G.DEF.Goods
 
 local P = {}
-
+print("<color=#ff0000>---------------------------------------------加载ydatactr.lua</color>")
 local function sc_attence_gettask(nm)
     local n = tonumber(nm:readString())
     local AttendanceList = {}
@@ -43,7 +43,7 @@ local function sc_attence_gettask(nm)
     -- DY_DATA.get_attendance_list(true)
 end
 NW.regist("ATTENCE.SC.GETWORK", sc_attence_gettask)
-
+print("<color=#00ff00>NW.regist(ATTENCE.SC.GETWORK, sc_attence_gettask)</color>")
 local function sc_attence_getleavelist(nm)
     local n = tonumber(nm:readString())
     local List = {}

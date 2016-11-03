@@ -15,13 +15,13 @@ local on_account_logined, on_account_registed, on_account_binded, on_http_fail
 local P = { } 
 P.IPSet = {
     test = "192.168.1.47:8888",
-    productIP = "api.richer.net.cn:8000",
+    productIP = "api.richer.net.cn:8888",
     -- productIP = "139.196.109.3:8080",
     productDomain = "",
 }
 P.Channel = {
-    -- loginHost = P.IPSet.productIP,
-    loginHost = P.IPSet.test,
+    loginHost = P.IPSet.productIP,
+    -- loginHost = P.IPSet.test,
     downloadHost = "139.196.109.3:8000",
     pid = 1,
     minAccLen = 6,
@@ -327,14 +327,14 @@ local function on_uploadphoto_back(resp, isDone, err)
     end
     libunity.LogD("on_uploadphoto_back :{0}",resp)
     local Ret = JSON:decode(resp)
-    -- if Ret.ret == 1 then
-    --     if on_wnd_uploadphoto then on_wnd_uploadphoto(Ret) end
-    -- else
-    --     _G.UI.Toast:make(nil, NW.get_error(Ret.ret)):show()
-    -- end
+    if Ret.ret == 1 then
+        if on_wnd_uploadphoto then on_wnd_uploadphoto(Ret) end
+    else
+        _G.UI.Toast:make(nil, NW.get_error(Ret.ret)):show()
+    end
     
-    if on_wnd_uploadphoto then on_wnd_uploadphoto(Ret) end
-    if Ret.ret ~= 1 then _G.UI.Toast:make(nil, NW.get_error(Ret.ret)):show() end
+    -- if on_wnd_uploadphoto then on_wnd_uploadphoto(Ret) end
+    -- if Ret.ret ~= 1 then _G.UI.Toast:make(nil, NW.get_error(Ret.ret)):show() end
     
 end
 
@@ -468,6 +468,7 @@ end
 local SysInfo = nil
 local function on_enter_login()
     -- 网络连接成功，启动网络定时器
+    print("<color=#fff000> 网络起动成功</color>")
     local DY_TIMER = MERequire "libmgr/dytimer.lua"
     DY_TIMER.launch_network_timer()
 

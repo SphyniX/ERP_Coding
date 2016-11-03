@@ -173,15 +173,24 @@ public static class LibUnity
         lua.PushBoolean(o != null);
         return 1;
     }
-
+    /// <summary>
+    /// 判断对象是否是活动状态并把状态传递个lua
+    /// </summary>
+    /// <param name="lua"></param>
+    /// <returns></returns>
 	[MonoPInvokeCallback(typeof(LuaCSFunction))]
     private static int IsActive(ILuaState lua)
     {
+        Debug.Log("判断对象状态");
         GameObject go = lua.ToGameObject(1);
         lua.PushBoolean(go != null && go.activeSelf);
         return 1;
     }
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="lua"></param>
+    /// <returns></returns>
 	[MonoPInvokeCallback(typeof(LuaCSFunction))]
     private static int Destroy(ILuaState lua)
     {

@@ -17,10 +17,94 @@ local UI_DATA = MERequire "datamgr/uidata.lua"
 local NW = MERequire "network/networkmgr"
 local LOGIN = MERequire "libmgr/login.lua"
 local Ref
-
+local x = 1
+local TimeInfo = {}
+local AttendanceList=nil
 local projectId = nil
 local reason = nil
 local on_project_init
+
+------Fuck You Up!!!!____________-----老子就是任性------------
+-- .'"'.         ___,,,___         .'``.
+-- : (\   `."'"```          ```"'"-'   /) ;
+-- :   \                          `./   .'
+--    `.                             :.'
+--      /         _          _         \
+--     |          0}        {0          |
+--     |          /          \          |
+--     |         /            \         |
+--     |        /              \        |
+--      \      |       .-.       |      /
+--       `.    | . . /    \ . . |    .'
+--         `-._\.'.(      ).'./_.-'
+--             `\'   `._.'   '/'
+--               `. --'-- .'
+--                 `-...-'  
+
+---proj Select callback Func ----
+local function on_select_project(id,inAttendanceList)
+	print("Start Making Project :" .. id)
+	projectId = id
+	AttendanceList = inAttendanceList
+	on_project_init()
+end
+
+---end---
+
+---Timer---
+local function refreshtime()
+	TimeInfo = os.date("*t",os.time())
+	
+	if DY_DATA.Work.NowTime == nil then
+		local nm = NW.msg("ATTENCE.CS.GETTIME")
+		NW.send(nm)
+		return
+	end
+	print("Work.NowTime is :" .. JSON:encode(DY_DATA.Work.NowTime))
+	local TimeOfDay = DY_DATA.Work.NowTime
+	print("TimeOfDay is :" .. JSON:encode(TimeOfDay))
+	Ref.SubMain.SubTime.lbTime.text = TimeOfDay.time
+	Ref.SubMain.SubTime.lbDay.text = TimeOfDay.day .. " " .. TimeOfDay.week
+	TimeInfo.hour = DY_DATA.Work.NowTime.time:sub(1,2)
+	TimeInfo.min = DY_DATA.Work.NowTime.time:sub(4,5)
+	TimeInfo.sec = DY_DATA.Work.NowTime.time:sub(7,8)
+	-- print(DY_DATA.Work.NowTime.time:sub(1,2))
+	-- print(DY_DATA.Work.NowTime.time:sub(4,5))
+	-- print(DY_DATA.Work.NowTime.time:sub(7,8))
+	-- print(libsystem.GetFps())
+
+end
+
+local function refreshtime_onupdate()
+	x = x + 1
+	if (x % libsystem.GetFps()) == 0 then
+		x = 0
+		TimeInfo.sec = tostring(tonumber(TimeInfo.sec)+1)
+		-- printf(TimeInfo.sec)
+
+		if tonumber(TimeInfo.sec) == 60 then
+			TimeInfo.min = tostring(tonumber(TimeInfo.min)+1)
+			TimeInfo.sec = tonumber(0)
+		end
+		if tonumber(TimeInfo.sec) < 10 then TimeInfo.sec = "0" .. TimeInfo.sec end
+
+		if tonumber(TimeInfo.min) == 60 then
+			TimeInfo.hour = tostring(tonumber(TimeInfo.hour)+1)
+			TimeInfo.min = tonumber(0)
+		end
+		if tonumber(TimeInfo.min) < 10 then TimeInfo.min = "0" .. tostring(tonumber(TimeInfo.min)) end
+
+		if tonumber(TimeInfo.hour) == 24 then
+
+			TimeInfo.hour = tonumber(0)
+		end
+		if tonumber(TimeInfo.hour) < 10 then TimeInfo.hour = "0" .. tostring(tonumber(TimeInfo.hour)) end
+		
+		Ref.SubMain.SubTime.lbTime.text = TimeInfo.hour .. ":" .. TimeInfo.min .. ":" .. TimeInfo.sec
+	end
+
+end 
+---Timer End ---
 
 local function time_to_string(Time)
 	return string.format("%d-%d-%d %d:%d", Time.year, Time.month, Time.day, Time.hour, Time.minute)
@@ -76,11 +160,48 @@ local function on_try_punch(Ret)
 end
 --!*以下：自动生成的回调函数*--
 
-local function on_submain_subscroll_subcontent_subpunch_subinfo_subproject_click(btn)
-	-- 巡店 选择项目
-	UI_DATA.WNDSelectProject.on_call_back = on_select_project
-	UIMGR.create_window("UI/WNDSupSelectProject")
+local function on_subtop_btnbutton_click(btn)
+	
 end
+
+local function on_subbtm_btnwork_click(btn)
+-- ##	UIMGR.WNDStack:pop()
+	UIMGR.create_window("UI/WNDSupWork")
+end
+
+local function on_subbtm_btnsch_click(btn)
+-- ##	UIMGR.WNDStack:pop()
+	UIMGR.create_window("UI/WNDSupSchedule")
+end
+
+local function on_subbtm_btnmsg_click(btn)
+-- ##	UIMGR.WNDStack:pop()
+	UIMGR.create_window("UI/WNDSupMsg")
+end
+
+local function on_subbtm_btnuser_click(btn)
+-- ##	UIMGR.WNDStack:pop()
+	UIMGR.create_window("UI/WNDSupUser")
+end
+
+local function on_submain_subproject_click(btn)
+	UI_DATA.WNDSelectProject.on_call_back = on_select_project
+	UIMGR.create_window("UI/WNDSelectProject")
+end
+
+local function on_submain_subpunch_btnbutton_click(btn)
+	
+end
+
+local function on_submain_subunder_btnbutton_click(btn)
+	UIMGR.create("UI/WNDAttUnder")
+end
+
+-- local function on_submain_subscroll_subcontent_subpunch_subinfo_subproject_click(btn)
+-- 	-- 巡店 选择项目
+-- 	UI_DATA.WNDSelectProject.on_call_back = on_select_project
+-- 	UIMGR.create_window("UI/WNDSupSelectProject")
+-- end
 
 local function on_submain_subscroll_subcontent_subpunch_subinfo_substore_grp_entproject_btnbutton_click(btn)
 	-- 签到
@@ -117,7 +238,7 @@ end
 
 local function on_submain_subscroll_subcontent_subleave_subinfo_subreason_click(btn)
 	-- 选择原因
-	libunity.SetActive(Ref.SubSelect.root, true)
+	-- libunity.SetActive(Ref.SubSelect.root, true)
 end
 
 local function on_submain_subscroll_subcontent_subleave_subinfo_subbtn_btnleave_click(btn)
@@ -145,47 +266,27 @@ local function on_subtop_subbtn_subleave_click(btn)
 	-- 换页
 end
 
-local function on_subbtm_btnwork_click(btn)
--- ##	UIMGR.WNDStack:pop()
-	UIMGR.create_window("UI/WNDSupWork")
-end
+-- local function on_subselect_btnback_click(btn)
+-- 	libunity.SetActive(Ref.SubSelect.root, false)
+-- end
 
-local function on_subbtm_btnsch_click(btn)
--- ##	UIMGR.WNDStack:pop()
-	UIMGR.create_window("UI/WNDSupSchedule")
-end
+-- local function on_subselect_subone_click(btn)
+-- 	reason = Ref.SubSelect.SubOne.lbText.text
+-- 	Ref.SubMain.SubScroll.SubContent.SubLeave.SubInfo.SubReason.lbText.text = reason
+-- 	libunity.SetActive(Ref.SubSelect.root, false)
+-- end
 
-local function on_subbtm_btnmsg_click(btn)
--- ##	UIMGR.WNDStack:pop()
-	UIMGR.create_window("UI/WNDSupMsg")
-end
+-- local function on_subselect_subtwo_click(btn)
+-- 	reason = Ref.SubSelect.SubTwo.lbText.text
+-- 	Ref.SubMain.SubScroll.SubContent.SubLeave.SubInfo.SubReason.lbText.text = reason
+-- 	libunity.SetActive(Ref.SubSelect.root, false)
+-- end
 
-local function on_subbtm_btnuser_click(btn)
--- ##	UIMGR.WNDStack:pop()
-	UIMGR.create_window("UI/WNDSupUser")
-end
-
-local function on_subselect_btnback_click(btn)
-	libunity.SetActive(Ref.SubSelect.root, false)
-end
-
-local function on_subselect_subone_click(btn)
-	reason = Ref.SubSelect.SubOne.lbText.text
-	Ref.SubMain.SubScroll.SubContent.SubLeave.SubInfo.SubReason.lbText.text = reason
-	libunity.SetActive(Ref.SubSelect.root, false)
-end
-
-local function on_subselect_subtwo_click(btn)
-	reason = Ref.SubSelect.SubTwo.lbText.text
-	Ref.SubMain.SubScroll.SubContent.SubLeave.SubInfo.SubReason.lbText.text = reason
-	libunity.SetActive(Ref.SubSelect.root, false)
-end
-
-local function on_subselect_subthree_click(btn)
-	reason = Ref.SubSelect.SubThree.lbText.text
-	Ref.SubMain.SubScroll.SubContent.SubLeave.SubInfo.SubReason.lbText.text = reason
-	libunity.SetActive(Ref.SubSelect.root, false)
-end
+-- local function on_subselect_subthree_click(btn)
+-- 	reason = Ref.SubSelect.SubThree.lbText.text
+-- 	Ref.SubMain.SubScroll.SubContent.SubLeave.SubInfo.SubReason.lbText.text = reason
+-- 	libunity.SetActive(Ref.SubSelect.root, false)
+-- end
 
 local function on_punch_finish(Ref)
 	local nm = NW.msg("WORK.CS.GETSTORE")
@@ -211,63 +312,68 @@ local function on_store_init()
 	end)
 end
 
+
+-----老版存留----
+-- on_project_init = function ()
+-- 	if projectId == nil then	
+-- 		return
+-- 	end
+-- 	local Project = DY_DATA.ProjectList[projectId]
+-- 	local Ref_SubPunch = Ref.SubMain.SubScroll.SubContent.SubPunch.SubInfo
+-- 	Ref_SubPunch.SubProject.lbProject.text = Project.name
+-- 	local StoreList = Project.StoreList
+-- 	if StoreList == nil then
+-- 		print("StoreList is nil")
+-- 		local nm = NW.msg("WORK.CS.GETSTORE")
+-- 		nm:writeU32(projectId)
+-- 		nm:writeU32(DY_DATA.User.id)
+-- 		NW.send(nm)
+-- 	end
+-- end
+---
+
 on_project_init = function ()
-	if projectId == nil then	
+	if projectId == nil then
+		Ref.SubMain.SubProject.lbText.text = "请选择项目"
 		return
 	end
-	local Project = DY_DATA.ProjectList[projectId]
-	local Ref_SubPunch = Ref.SubMain.SubScroll.SubContent.SubPunch.SubInfo
-	Ref_SubPunch.SubProject.lbProject.text = Project.name
-	local StoreList = Project.StoreList
-	if StoreList == nil then
-		print("StoreList is nil")
-		local nm = NW.msg("WORK.CS.GETSTORE")
-		nm:writeU32(projectId)
-		nm:writeU32(DY_DATA.User.id)
-		NW.send(nm)
-	end
+	local AttendanceProject = AttendanceList[projectId]
+	print("AttendanceProject in MainAttance :" .. JSON:encode(AttendanceProject))
+	Ref.SubMain.SubProject.lbText.text = AttendanceProject.name
 end
 
 local function on_ui_init()
-	libunity.SetActive(Ref.SubSelect.root, false)
+	-- libunity.SetActive(Ref.SubSelect.root, false)
 	
-	local Ref_SubMain_SubScroll_SubContent = Ref.SubMain.SubScroll.SubContent
+	-- local Ref_SubMain_SubScroll_SubContent = Ref.SubMain.SubScroll.SubContent
 	local User = DY_DATA.User
 
-	local Ref_SubPunch = Ref_SubMain_SubScroll_SubContent.SubPunch.SubInfo
-	Ref_SubPunch.lbName.text = User.name
-	Ref_SubPunch.lbId.text = User.id
-	Ref_SubPunch.lbTime.text = libsystem.DateTime()
-	Ref_SubPunch.SubProject.lbProject.text = ""
-	local Ref_SubLeave = Ref_SubMain_SubScroll_SubContent.SubLeave.SubInfo
-	Ref_SubLeave.SubStartTime.lbText.text = ""
-	Ref_SubLeave.SubEndTime.lbText.text = ""
+	-- local Ref_SubPunch = Ref_SubMain_SubScroll_SubContent.SubPunch.SubInfo
+	-- Ref_SubPunch.lbName.text = User.name
+	-- Ref_SubPunch.lbId.text = User.id
+	-- Ref_SubPunch.lbTime.text = libsystem.DateTime()
+	-- Ref_SubPunch.SubProject.lbProject.text = ""
+	-- local Ref_SubLeave = Ref_SubMain_SubScroll_SubContent.SubLeave.SubInfo
+	-- Ref_SubLeave.SubStartTime.lbText.text = ""
+	-- Ref_SubLeave.SubEndTime.lbText.text = ""
 	
 	on_project_init()
 
-	local Ref_SubLeave = Ref_SubMain_SubScroll_SubContent.SubLeave.SubInfo
-	Ref_SubLeave.lbName.text = User.name
-	Ref_SubLeave.lbId.text = User.id
-	Ref_SubLeave.lbTime.text = libsystem.DateTime()
-	Ref_SubLeave.SubReason.lbText.text = ""
+	-- local Ref_SubLeave = Ref_SubMain_SubScroll_SubContent.SubLeave.SubInfo
+	-- Ref_SubLeave.lbName.text = User.name
+	-- Ref_SubLeave.lbId.text = User.id
+	-- Ref_SubLeave.lbTime.text = libsystem.DateTime()
+	-- Ref_SubLeave.SubReason.lbText.text = ""
 end
 local function init_view()
-	Ref.SubMain.SubScroll.SubContent.SubPunch.SubInfo.SubProject.btn.onAction = on_submain_subscroll_subcontent_subpunch_subinfo_subproject_click
-	Ref.SubMain.SubScroll.SubContent.SubPunch.SubInfo.SubStore.Grp.Ent.btnButton.onAction = on_submain_subscroll_subcontent_subpunch_subinfo_substore_grp_entproject_btnbutton_click
-	Ref.SubMain.SubScroll.SubContent.SubLeave.SubInfo.SubStartTime.btn.onAction = on_submain_subscroll_subcontent_subleave_subinfo_substarttime_click
-	Ref.SubMain.SubScroll.SubContent.SubLeave.SubInfo.SubEndTime.btn.onAction = on_submain_subscroll_subcontent_subleave_subinfo_subendtime_click
-	Ref.SubMain.SubScroll.SubContent.SubLeave.SubInfo.SubReason.btn.onAction = on_submain_subscroll_subcontent_subleave_subinfo_subreason_click
-	Ref.SubMain.SubScroll.SubContent.SubLeave.SubInfo.SubBtn.btnLeave.onAction = on_submain_subscroll_subcontent_subleave_subinfo_subbtn_btnleave_click
-	Ref.SubMain.SubScroll.SubContent.SubLeave.SubInfo.SubBtn.btnRecord.onAction = on_submain_subscroll_subcontent_subleave_subinfo_subbtn_btnrecord_click
-	Ref.SubTop.SubBtn.SubPunchClock.btn.onAction = on_subtop_subbtn_subpunchclock_click
-	Ref.SubTop.SubBtn.SubLeave.btn.onAction = on_subtop_subbtn_subleave_click
+	Ref.SubTop.btnButton.onAction = on_subtop_btnbutton_click
 	Ref.SubBtm.btnWork.onAction = on_subbtm_btnwork_click
 	Ref.SubBtm.btnSch.onAction = on_subbtm_btnsch_click
 	Ref.SubBtm.btnMsg.onAction = on_subbtm_btnmsg_click
 	Ref.SubBtm.btnUser.onAction = on_subbtm_btnuser_click
-	UIMGR.make_group(Ref.SubMain.SubScroll.SubContent.SubPunch.SubInfo.SubStore.Grp, function (New, Ent)
-		New.btnButton.onAction = Ent.btnButton.onAction
-	end)
+	Ref.SubMain.SubProject.btn.onAction = on_submain_subproject_click
+	Ref.SubMain.SubPunch.btnButton.onAction = on_submain_subpunch_btnbutton_click
+	Ref.SubMain.SubUnder.btnButton.onAction = on_submain_subunder_btnbutton_click
 	--!*以上：自动注册的回调函数*--
 end
 
@@ -279,6 +385,7 @@ local function init_logic()
 	
 	-- libsystem.StartGps()
 	on_ui_init()
+	refreshtime()
 end
 
 local function start(self)
@@ -301,10 +408,15 @@ local function on_recycle()
 	libsystem.StopGps()
 end
 
+local function update()
+	refreshtime_onupdate()
+end
+
 local P = {
 	start = start,
 	update_view = update_view,
 	on_recycle = on_recycle,
+	update = update,
 }
 return P
 

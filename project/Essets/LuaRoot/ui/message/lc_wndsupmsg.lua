@@ -16,6 +16,31 @@ local NW = MERequire "network/networkmgr"
 local Ref
 --!*以下：自动生成的回调函数*--
 
+local function on_subtop_btnwrite_click(btn)
+	UIMGR.create_window("UI/WNDSupEditorMsg")
+end
+
+local function on_subbtm_btnwork_click(btn)
+-- ##	UIMGR.WNDStack:pop()
+	UIMGR.create_window("UI/WNDSupWork")
+end
+
+local function on_subbtm_btnsch_click(btn)
+	
+-- ##	UIMGR.WNDStack:pop()
+	UIMGR.create_window("UI/WNDSupSchedule")
+end
+
+local function on_subbtm_btnmsg_click(btn)
+	
+end
+
+local function on_subbtm_btnuser_click(btn)
+	
+-- ##	UIMGR.WNDStack:pop()
+	UIMGR.create_window("UI/WNDSupUser")
+end
+
 local function on_submsg_grpmsg_entmsg_subcontext_btncontext_click(btn)
 	local index = tonumber(btn.transform.parent.parent.name:sub(7))
 	local MsgList = DY_DATA.MsgList
@@ -41,34 +66,26 @@ local function on_submsg_grpmsg_entmsg_subcontext_btndel_click(btn)
 	NW.send(nm)
 end
 
+local function on_subtop_btnnext_click(btn)
+print(Ref.SubTop.MsgInput.text)
+	
+end
+
+local function on_subtop_btnbutton_click(btn)
+	
+end
+
+local function on_btnwrite_click(btn)
+	
+end
+
 local function on_subbtm_btnatt_click(btn)
 -- ##	UIMGR.WNDStack:pop()
 	UIMGR.create_window("UI/WNDSupAttendance")
 end
 
-local function on_subbtm_btnwork_click(btn)
--- ##	UIMGR.WNDStack:pop()
-	UIMGR.create_window("UI/WNDSupWork")
-end
-
-local function on_subbtm_btnsch_click(btn)
-	
--- ##	UIMGR.WNDStack:pop()
-	UIMGR.create_window("UI/WNDSupSchedule")
-end
-
-local function on_subbtm_btnuser_click(btn)
-	
--- ##	UIMGR.WNDStack:pop()
-	UIMGR.create_window("UI/WNDSupUser")
-end
-
 local function on_subtop_btncontact_click(btn)
 	libunity.SetActive(Ref.SubTop.SubContact.root, true)
-end
-
-local function on_subtop_btnwrite_click(btn)
-	UIMGR.create_window("UI/WNDWriteMsg")
 end
 
 local function on_subtop_subcontact_btnarea_click(btn)
@@ -117,16 +134,13 @@ local function on_ui_init()
 end
 
 local function init_view()
-	Ref.SubMsg.GrpMsg.Ent.SubContext.btnContext.onAction = on_submsg_grpmsg_entmsg_subcontext_btncontext_click
-	Ref.SubMsg.GrpMsg.Ent.SubContext.btnDel.onAction = on_submsg_grpmsg_entmsg_subcontext_btndel_click
-	Ref.SubBtm.btnAtt.onAction = on_subbtm_btnatt_click
+	Ref.SubTop.btnWrite.onAction = on_subtop_btnwrite_click
 	Ref.SubBtm.btnWork.onAction = on_subbtm_btnwork_click
 	Ref.SubBtm.btnSch.onAction = on_subbtm_btnsch_click
+	Ref.SubBtm.btnMsg.onAction = on_subbtm_btnmsg_click
 	Ref.SubBtm.btnUser.onAction = on_subbtm_btnuser_click
-	Ref.SubTop.btnContact.onAction = on_subtop_btncontact_click
-	Ref.SubTop.btnWrite.onAction = on_subtop_btnwrite_click
-	Ref.SubTop.SubContact.btnArea.onAction = on_subtop_subcontact_btnarea_click
-	Ref.SubTop.SubContact.btnSale.onAction = on_subtop_subcontact_btnsale_click
+	Ref.SubMsg.GrpMsg.Ent.SubContext.btnContext.onAction = on_submsg_grpmsg_entmsg_subcontext_btncontext_click
+	Ref.SubMsg.GrpMsg.Ent.SubContext.btnDel.onAction = on_submsg_grpmsg_entmsg_subcontext_btndel_click
 	UIMGR.make_group(Ref.SubMsg.GrpMsg, function (New, Ent)
 		New.SubContext.btnContext.onAction = Ent.SubContext.btnContext.onAction
 		New.SubContext.btnDel.onAction = Ent.SubContext.btnDel.onAction
@@ -137,7 +151,7 @@ end
 local function init_logic()
 	NW.subscribe("MESSAGE.SC.GETMESSAGELIST", on_ui_init)
 	NW.subscribe("MESSAGE.SC.GETLOWER", on_ui_init)
-	libunity.SetActive(Ref.SubTop.SubContact.root, false)
+	--libunity.SetActive(Ref.SubTop.SubContact.root, false)             ---zzg
 
 	if DY_DATA.LowerList == nil or next(DY_DATA.LowerList) == nil then
 		local nm = NW.msg("MESSAGE.CS.GETLOWER")

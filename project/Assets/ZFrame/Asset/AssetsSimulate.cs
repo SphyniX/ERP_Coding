@@ -136,7 +136,12 @@ namespace ZFrame.Asset
 	        }
 	        //*/
 	    }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="task"></param>
+        /// <param name="output"></param>
+        /// <returns></returns>
 		protected override IEnumerator PerformTask(AsyncLoadingTask task, ABRefOut output)
 		{
 			yield return null;

@@ -33,6 +33,7 @@ end
 --!*以下：自动生成的回调函数*--
 
 local function on_submain_subicon_btnchange_click(btn)
+	print("投点击了 修改图像")
 	UI_DATA.WNDShowPhoto.title = "头像"
 	UI_DATA.WNDShowPhoto.tip = ""
 	local User = DY_DATA.User
@@ -44,28 +45,28 @@ local function on_submain_subicon_btnchange_click(btn)
    	UIMGR.create_window("UI/WNDSubmitPhoto")
 end
 
-local function on_submain_subaddress_click(btn)
-	
-end
-
-local function on_submain_subphone_click(btn)
-	UIMGR.create_window("UI/WNDUserChangePhone")
-end
-
 local function on_submain_subotherphone_click(btn)
+	print("投点击了 联系方式")
 	UIMGR.create_window("UI/WNDContact")
 end
 
 local function on_submain_subpassword_click(btn)
+	print("投点击了 修改密码")
 	UIMGR.create_window("UI/WNDUserResetPassword")
 end
 
 local function on_submain_subsuggest_click(btn)
+	print("投点击了 投诉建议")
 	UIMGR.create_window("UI/WNDSuggest")
 end
 
-local function on_subtop_btnback_click(btn)
-	_G.PKG["libmgr/login"].do_logout()
+local function on_submain_about_click(btn)
+	print("投点击了 关于")
+	UIMGR.create_window("UI/WNDAbout")
+end
+
+local function on_submain_btnlogout_click(btn)
+	
 end
 
 local function on_subbtm_btnatt_click(btn)
@@ -88,22 +89,33 @@ local function on_subbtm_btnmsg_click(btn)
 	UIMGR.create_window("UI/WNDSupMsg")
 end
 
+local function on_submain_subaddress_click(btn)
+	
+end
+
+local function on_submain_subphone_click(btn)
+	UIMGR.create_window("UI/WNDUserChangePhone")
+end
+
+local function on_subtop_btnback_click(btn)
+	_G.PKG["libmgr/login"].do_logout()
+end
+
 local function on_ui_init()
 	local Ref_SubMain = Ref.SubMain
 	local User = DY_DATA.User
-	Ref_SubMain.SubAddress.lbText.text =_G.CFG.CityLib.get_city(User.cityid).name
-	Ref_SubMain.SubPhone.lbText.text = User.phone
+	--Ref_SubMain.SubAddress.lbText.text =_G.CFG.CityLib.get_city(User.cityid).name
+	--Ref_SubMain.SubPhone.lbText.text = User.phone
 	UIMGR.get_photo(Ref_SubMain.SubIcon.spIcon, User.icon)
 end
 
 local function init_view()
 	Ref.SubMain.SubIcon.btnChange.onAction = on_submain_subicon_btnchange_click
-	Ref.SubMain.SubAddress.btn.onAction = on_submain_subaddress_click
-	Ref.SubMain.SubPhone.btn.onAction = on_submain_subphone_click
 	Ref.SubMain.SubOtherPhone.btn.onAction = on_submain_subotherphone_click
 	Ref.SubMain.SubPassword.btn.onAction = on_submain_subpassword_click
 	Ref.SubMain.SubSuggest.btn.onAction = on_submain_subsuggest_click
-	Ref.SubTop.btnBack.onAction = on_subtop_btnback_click
+	Ref.SubMain.About.onAction = on_submain_about_click
+	Ref.SubMain.btnLogout.onAction = on_submain_btnlogout_click
 	Ref.SubBtm.btnAtt.onAction = on_subbtm_btnatt_click
 	Ref.SubBtm.btnWork.onAction = on_subbtm_btnwork_click
 	Ref.SubBtm.btnSch.onAction = on_subbtm_btnsch_click

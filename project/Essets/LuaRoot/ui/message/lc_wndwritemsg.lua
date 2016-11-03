@@ -32,10 +32,14 @@ local function on_lower_init()
 	for k,v in pairs(LowerList) do
 		str = str + v.name + ";"
 	end
-	Ref.SubMain.SubReceiver.lbText.text = str
+	--Ref.SubMain.SubReceiver.lbText.text = str               --zzg
 end
 
 --!*以下：自动生成的回调函数*--
+
+local function on_subtop_btnnext_click(btn)
+	UIMGR.create_window("UI/WNDSupReceiveMsg")
+end
 
 local function on_submain_subreceiver_click(btn)
 	UI_DATA.WNDMsgLower.type = nil
@@ -76,10 +80,7 @@ local function on_subtop_btnback_click(btn)
 end
 
 local function init_view()
-	Ref.SubMain.SubReceiver.btn.onAction = on_submain_subreceiver_click
-	Ref.SubMain.SubTime.btn.onAction = on_submain_subtime_click
-	Ref.SubBtm.btnSend.onAction = on_subbtm_btnsend_click
-	Ref.SubTop.btnBack.onAction = on_subtop_btnback_click
+	Ref.SubTop.btnNext.onAction = on_subtop_btnnext_click
 	--!*以上：自动注册的回调函数*--
 end
 
