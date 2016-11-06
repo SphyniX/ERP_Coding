@@ -54,6 +54,8 @@ P.get_city_list = function (id)
 	return P.ProvinceList[id].CityList
 end
 
+
+--通过City_ID获取城市信息
 P.get_city = function (id)
 	if id == nil then return nil end
 	return Citys[id]
@@ -83,17 +85,18 @@ P.get_province_list_fromserver = function (cityid_list)
 end
 
 
-P.get_city_list_fromserver = function (cityid_list,id)
+P.get_city_list_fromserver = function (cityid_list,name)
 	local CityListFromServer
 	CityListFromServer = {}
-	if id == nil then return nil end
-	if P.ProvinceList[id] == nil then return nil end
+	if name == nil then return nil end
+	if P.ProvinceList == nil then return nil end
 	for i=1,#cityid_list do
 		print(Citys[cityid_list[i]].province)
-		if P.ProvinceList[Citys[cityid_list[i]].province].id == id then
+		if P.ProvinceList[Citys[cityid_list[i]].province].name == name then
 			table.insert(CityListFromServer,Citys[cityid_list[i]])
 		end
 	end
+	print("CityList in P.get_city_list_fromserver is :" .. JSON:encode(CityListFromServer))
 	return CityListFromServer
 end
 
