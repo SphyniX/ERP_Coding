@@ -105,20 +105,6 @@ local function on_subtop_btnback_click(btn)
 	UIMGR.close_window(Ref.root)
 end
 
-local function on_substate_tglgood_change(tgl)
-	on_set_state_callback("完好")
-	libunity.SetActive(Ref.SubState.root, false)
-end
-
-local function on_substate_tglbad_change(tgl)
-	on_set_state_callback("损坏")
-	libunity.SetActive(Ref.SubState.root, false)	
-end
-
-local function on_substate_btnback_click(btn)
-	libunity.SetActive(Ref.SubState.root, false)
-end
-
 local function on_btnsave_click(btn)
 	MaterListForUpdate = {}
 
@@ -141,6 +127,20 @@ local function on_btnsave_click(btn)
 	DY_DATA.WNDSubmitSchedule.MaterList = MaterListForUpdate
 	print("WNDSubmitSchedule.MaterList in WNDSetSupplies is :" .. JSON:encode(DY_DATA.WNDSubmitSchedule.MaterList) )
 	UIMGR.close_window(Ref.root)
+end
+
+local function on_substate_tglgood_change(tgl)
+	on_set_state_callback("完好")
+	libunity.SetActive(Ref.SubState.root, false)
+end
+
+local function on_substate_tglbad_change(tgl)
+	on_set_state_callback("损坏")
+	libunity.SetActive(Ref.SubState.root, false)	
+end
+
+local function on_substate_btnback_click(btn)
+	libunity.SetActive(Ref.SubState.root, false)
 end
 
 local function on_submain_grp_ent_click(btn)
@@ -176,9 +176,6 @@ local function init_view()
 	Ref.SubMain.Grp.Ent.btnPhoto.onAction = on_submain_grp_ent_btnphoto_click
 	Ref.SubTop.btnClear.onAction = on_subtop_btnclear_click
 	Ref.SubTop.btnBack.onAction = on_subtop_btnback_click
-	Ref.SubState.tglGood.onAction = on_substate_tglgood_change
-	Ref.SubState.tglBad.onAction = on_substate_tglbad_change
-	Ref.SubState.btnBack.onAction = on_substate_btnback_click
 	Ref.btnSave.onAction = on_btnsave_click
 	UIMGR.make_group(Ref.SubMain.Grp, function (New, Ent)
 		New.btnState.onAction = Ent.btnState.onAction

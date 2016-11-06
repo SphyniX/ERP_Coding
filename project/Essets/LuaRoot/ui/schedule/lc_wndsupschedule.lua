@@ -1,7 +1,7 @@
 --
 -- @file    ui/schedule/lc_wndsupschedule.lua
--- @authors zl
--- @date    2016-08-14 18:57:12
+-- @authors cks
+-- @date    2016-11-06 17:57:08
 -- @desc    WNDSupSchedule
 --
 
@@ -14,37 +14,52 @@ local DY_DATA = MERequire "datamgr/dydata.lua"
 local UI_DATA = MERequire "datamgr/uidata.lua"
 local NW = MERequire "network/networkmgr"
 local Ref
-
 local ProjectList
 --!*以下：自动生成的回调函数*--
 
-local function on_subproject_grpproject_entproject_click(btn)
+local function on_subbtm_spatt_click(btn)
+		-- ##	UIMGR.WNDStack:pop()
+	UIMGR.create_window("UI/WNDSupAttendance")
+end
+
+local function on_subbtm_btnwork_click(btn)
+	-- ##	UIMGR.WNDStack:pop()
+	UIMGR.create_window("UI/WNDSupWork")
+end
+
+local function on_subbtm_btnsch_click(btn)
+	
+end
+
+local function on_subbtm_btnmsg_click(btn)
+	-- ##	UIMGR.WNDStack:pop()
+	UIMGR.create_window("UI/WNDSupMsg")
+end
+
+local function on_subbtm_btnuser_click(btn)
+	-- ##	UIMGR.WNDStack:pop()
+	UIMGR.create_window("UI/WNDSupUser")
+end
+
+local function on_subproject_grpproject_entproject_workproject_click(btn)
 	local index = tonumber(btn.name:sub(11))
 	UI_DATA.WNDSelectStore.type = 2
 	UI_DATA.WNDSelectStore.projectId = ProjectList[index].id
 	UIMGR.create_window("UI/WNDSupSelectStore")
 end
 
-local function on_subbtm_btnatt_click(btn)
--- ##	UIMGR.WNDStack:pop()
-	UIMGR.create_window("UI/WNDSupAttendance")
+local function init_view()
+	Ref.SubBtm.spAtt.onAction = on_subbtm_spatt_click
+	Ref.SubBtm.btnWork.onAction = on_subbtm_btnwork_click
+	Ref.SubBtm.btnSch.onAction = on_subbtm_btnsch_click
+	Ref.SubBtm.btnMsg.onAction = on_subbtm_btnmsg_click
+	Ref.SubBtm.btnUser.onAction = on_subbtm_btnuser_click
+	Ref.SubProject.GrpProject.Ent.WorkProject.onAction = on_subproject_grpproject_entproject_workproject_click
+	UIMGR.make_group(Ref.SubProject.GrpProject, function (New, Ent)
+		New.WorkProject.onAction = Ent.WorkProject.onAction
+	end)
+	--!*以上：自动注册的回调函数*--
 end
-
-local function on_subbtm_btnwork_click(btn)
--- ##	UIMGR.WNDStack:pop()
-	UIMGR.create_window("UI/WNDSupWork")
-end
-
-local function on_subbtm_btnmsg_click(btn)
--- ##	UIMGR.WNDStack:pop()
-	UIMGR.create_window("UI/WNDSupMsg")
-end
-
-local function on_subbtm_btnuser_click(btn)
--- ##	UIMGR.WNDStack:pop()
-	UIMGR.create_window("UI/WNDSupUser")
-end
-
 local function on_ui_init()
 	ProjectList = DY_DATA.get_project_list()
 	if ProjectList == nil then 
@@ -64,17 +79,6 @@ local function on_ui_init()
 		libunity.SetActive(Ent.spYellow, clr == 0)
 	end)
 end
-local function init_view()
-	Ref.SubProject.GrpProject.Ent.btn.onAction = on_subproject_grpproject_entproject_click
-	Ref.SubBtm.btnAtt.onAction = on_subbtm_btnatt_click
-	Ref.SubBtm.btnWork.onAction = on_subbtm_btnwork_click
-	Ref.SubBtm.btnMsg.onAction = on_subbtm_btnmsg_click
-	Ref.SubBtm.btnUser.onAction = on_subbtm_btnuser_click
-	UIMGR.make_group(Ref.SubProject.GrpProject, function (New, Ent)
-		New.btn.onAction = Ent.btn.onAction
-	end)
-	--!*以上：自动注册的回调函数*--
-end
 
 local function init_logic()
 	NW.subscribe("WORK.SC.GETPROJECT", on_ui_init)
@@ -86,7 +90,7 @@ local function init_logic()
 		end
 		return
 	end
-	on_ui_init()
+	on_ui_init()	
 end
 
 local function start(self)
@@ -102,7 +106,7 @@ local function update_view()
 end
 
 local function on_recycle()
-	NW.unsubscribe("WORK.SC.GETPROJECT", on_ui_init)
+	
 end
 
 local P = {

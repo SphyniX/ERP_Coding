@@ -40,6 +40,18 @@ local function on_subtop_btnback_click(btn)
 	UIMGR.close_window(Ref.root)
 end
 
+local function on_subtop_btncity_click(btn)
+	
+end
+
+local function on_subselectcity_subno_click(btn)
+	
+end
+
+local function on_subselectcity_subok_click(btn)
+	
+end
+
 local function on_ui_init()
 	local projectId = UI_DATA.WNDSelectStore.projectId
 	local Project = DY_DATA.ProjectList[projectId]
@@ -64,9 +76,14 @@ end
 local function init_view()
 	Ref.SubStore.GrpStore.Ent.btn.onAction = on_substore_grpstore_entstore_click
 	Ref.SubTop.btnBack.onAction = on_subtop_btnback_click
+	Ref.SubTop.BtnCity.onAction = on_subtop_btncity_click
+	Ref.SubselectCity.SubNo.btn.onAction = on_subselectcity_subno_click
+	Ref.SubselectCity.SubOk.btn.onAction = on_subselectcity_subok_click
 	UIMGR.make_group(Ref.SubStore.GrpStore, function (New, Ent)
 		New.btn.onAction = Ent.btn.onAction
 	end)
+	UIMGR.make_group(Ref.SubselectCity.Subcity.GrpView)
+	UIMGR.make_group(Ref.SubselectCity.SubProvince.GrpProvince)
 	--!*以上：自动注册的回调函数*--
 end
 

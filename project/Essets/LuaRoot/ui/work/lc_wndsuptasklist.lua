@@ -19,16 +19,6 @@ local projectId, storeId
 local TaskList
 --!*以下：自动生成的回调函数*--
 
-local function on_subtask_grp_enttask_click(btn)
-	local index = tonumber(btn.name:sub(8))
-	local Task = TaskList[index]
-	UI_DATA.WNDSupChangeTask.Task = Task
-	UI_DATA.WNDSupChangeTask.AddList = nil
-	UI_DATA.WNDSupChangeTask.RemoveList = nil
-	
-	UIMGR.create_window("UI/WNDSupChangeTask")
-end
-
 local function on_subtop_btnback_click(btn)
 	UIMGR.close_window(Ref.root)
 end
@@ -37,6 +27,28 @@ local function on_subtop_btnnew_click(btn)
 	UI_DATA.WNDSupNewTask.TimeList = {}
 	UI_DATA.WNDSupNewTask.PersonList = {}
 	UIMGR.create_window("UI/WNDSupNewTask")
+end
+
+local function on_substarttime_btnbutton_click(btn)
+	
+end
+
+local function on_subendttime _btnbutton_click(btn)
+	
+end
+
+local function on_subwork_btnbutton_click(btn)
+	
+end
+
+local function on_subtask_grp_enttask_click(btn)
+	local index = tonumber(btn.name:sub(8))
+	local Task = TaskList[index]
+	UI_DATA.WNDSupChangeTask.Task = Task
+	UI_DATA.WNDSupChangeTask.AddList = nil
+	UI_DATA.WNDSupChangeTask.RemoveList = nil
+	
+	UIMGR.create_window("UI/WNDSupChangeTask")
 end
 
 local function on_ui_init()
@@ -62,12 +74,11 @@ local function on_ui_init()
 end
 
 local function init_view()
-	Ref.SubTask.Grp.Ent.btn.onAction = on_subtask_grp_enttask_click
 	Ref.SubTop.btnBack.onAction = on_subtop_btnback_click
 	Ref.SubTop.btnNew.onAction = on_subtop_btnnew_click
-	UIMGR.make_group(Ref.SubTask.Grp, function (New, Ent)
-		New.btn.onAction = Ent.btn.onAction
-	end)
+	Ref.SubStartTime.btnButton.onAction = on_substarttime_btnbutton_click
+	Ref.SubEndtTime .btnButton.onAction = on_subendttime _btnbutton_click
+	Ref.SubWork.btnButton.onAction = on_subwork_btnbutton_click
 	--!*以上：自动注册的回调函数*--
 end
 
