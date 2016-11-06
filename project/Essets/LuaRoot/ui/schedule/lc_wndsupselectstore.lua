@@ -18,6 +18,18 @@ local Ref
 local Project, StoreList
 --!*以下：自动生成的回调函数*--
 
+local function on_substore_grpstore_entstore_click(btn)
+	
+end
+
+local function on_subtop _btnback_click(btn)
+	
+end
+
+local function on_subtop _btncity_click(btn)
+	
+end
+
 local function on_substore_grpstore_entstore_btnschedule_click(btn)
 	local index = tonumber(btn.transform.parent.name:sub(9))
 	local Store = StoreList[index]
@@ -99,20 +111,11 @@ local function on_ui_init()
 end
 
 local function init_view()
-	Ref.SubStore.GrpStore.Ent.btnSchedule.onAction = on_substore_grpstore_entstore_btnschedule_click
-	Ref.SubStore.GrpStore.Ent.btnMechanism.onAction = on_substore_grpstore_entstore_btnmechanism_click
-	Ref.SubStore.GrpStore.Ent.btnPerson.onAction = on_substore_grpstore_entstore_btnperson_click
-	Ref.SubStore.GrpStore.Ent.btnShowCompare.onAction = on_substore_grpstore_entstore_btnshowcompare_click
-	Ref.SubStore.GrpStore.Ent.btnSubmitCompare.onAction = on_substore_grpstore_entstore_btnsubmitcompare_click
-	Ref.SubStore.GrpStore.Ent.btnInfo.onAction = on_substore_grpstore_entstore_btninfo_click
-	Ref.SubTop.btnBack.onAction = on_subtop_btnback_click
+	Ref.SubStore.GrpStore.Ent.btn.onAction = on_substore_grpstore_entstore_click
+	Ref.SubTop .btnBack.onAction = on_subtop _btnback_click
+	Ref.SubTop .BtnCity.onAction = on_subtop _btncity_click
 	UIMGR.make_group(Ref.SubStore.GrpStore, function (New, Ent)
-		New.btnSchedule.onAction = Ent.btnSchedule.onAction
-		New.btnMechanism.onAction = Ent.btnMechanism.onAction
-		New.btnPerson.onAction = Ent.btnPerson.onAction
-		New.btnShowCompare.onAction = Ent.btnShowCompare.onAction
-		New.btnSubmitCompare.onAction = Ent.btnSubmitCompare.onAction
-		New.btnInfo.onAction = Ent.btnInfo.onAction
+		New.btn.onAction = Ent.btn.onAction
 	end)
 	--!*以上：自动注册的回调函数*--
 end

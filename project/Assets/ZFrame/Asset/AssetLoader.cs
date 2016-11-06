@@ -276,16 +276,11 @@ namespace ZFrame.Asset
 			
 			AbstractAssetBundleRef abRef;
             Object loadedObj = null;
-            Debug.Log("1不存在prefab--------" + assetName);
             if (TryGetAssetBundle(assetbundleName, out abRef)) {
-                Debug.Log("2不存在prefab--------" + assetName);
                 loadedObj = abRef.Load(assetName, type);
-                Debug.Log("3不存在prefab--------" + assetName);
                 if (loadedObj) {
-                    Debug.Log("4不存在prefab--------"+ assetName);
                     return loadedObj;
                 } else {
-                    Debug.Log("5不存在prefab--------" + assetName);
                     if (warnIfMissing) {
                         //LogMgr.W("{0}<{1}>不存在资源。[{2} {3}]", path, type, assetbundleName, assetbundleName);
                         Debug.Log(path +"<" +type+">不存在资源。"+"[{ "+assetbundleName+"} { "+ assetName + @"}]");

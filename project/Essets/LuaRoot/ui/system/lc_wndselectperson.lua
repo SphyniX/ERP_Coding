@@ -19,6 +19,14 @@ local PersonList, SelectList
 local callback
 --!*以下：自动生成的回调函数*--
 
+local function on_submain_grp_ent _tglselect_change(tgl)
+	
+end
+
+local function on_subbtnsave_click(btn)
+	
+end
+
 local function on_submain_grp_ent_tglselect_change(tgl)
 	local index = tonumber(tgl.transform.parent.name:sub(4))
 	local Person = PersonList[index]
@@ -57,9 +65,8 @@ local function on_ui_init()
 end
 
 local function init_view()
-	Ref.SubMain.Grp.Ent.tglSelect.onAction = on_submain_grp_ent_tglselect_change
-	Ref.SubTop.btnBack.onAction = on_subtop_btnback_click
-	Ref.SubTop.btnSave.onAction = on_subtop_btnsave_click
+	Ref.SubMain.Grp.Ent.tglSelect.onAction = on_submain_grp_ent _tglselect_change
+	Ref.SubbtnSave.btn.onAction = on_subbtnsave_click
 	UIMGR.make_group(Ref.SubMain.Grp, function (New, Ent)
 		New.tglSelect.onAction = Ent.tglSelect.onAction
 	end)

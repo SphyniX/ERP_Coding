@@ -13,7 +13,11 @@ local UIMGR = MERequire "ui/uimgr"
 local Ref
 --!*以下：自动生成的回调函数*--
 
-local function on_subproject_grpproject_ent_entproject_click(btn)
+local function on_subproject_grpproject_entproject_subworkproject_click(btn)
+	
+end
+
+local function on_subbtm_spatt_click(btn)
 	
 end
 
@@ -41,8 +45,13 @@ local function on_btntask_click(btn)
 	
 end
 
+local function on_subproject_grpproject_ent_entproject_click(btn)
+	
+end
+
 local function init_view()
-	Ref.SubProject.GrpProject.Ent.EntProject.onAction = on_subproject_grpproject_ent_entproject_click
+	Ref.SubProject.GrpProject.Ent.SubWorkProject.btn.onAction = on_subproject_grpproject_entproject_subworkproject_click
+	Ref.SubBtm.spAtt.onAction = on_subbtm_spatt_click
 	Ref.SubBtm.btnWork.onAction = on_subbtm_btnwork_click
 	Ref.SubBtm.btnSch.onAction = on_subbtm_btnsch_click
 	Ref.SubBtm.btnMsg.onAction = on_subbtm_btnmsg_click
@@ -50,10 +59,7 @@ local function init_view()
 	Ref.btnData.onAction = on_btndata_click
 	Ref.btnTask.onAction = on_btntask_click
 	UIMGR.make_group(Ref.SubProject.GrpProject, function (New, Ent)
-		New.entProject.onAction = Ent.entProject.onAction
-	end)
-	UIMGR.make_group(Ref.SubProject.GrpProject.ent, function (New, Ent)
-		New.btn.onAction = Ent.btn.onAction
+		New.SubWorkProject.btn.onAction = Ent.SubWorkProject.btn.onAction
 	end)
 	--!*以上：自动注册的回调函数*--
 end
