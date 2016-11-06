@@ -362,8 +362,14 @@ end
 
 -- 订阅消息
 function P.subscribe(code, handler)
+    print("<color=#00ff00>开始订阅消息"..tostring(code).."</color>")
     local id = chk_msg_type(code)
-    if id == nil then return end
+    if id == nil then
+     print("<color=#00ff00>订阅消息{"..tostring(code).."}不存在".."</color>")
+     return
+    else
+    print("<color=#00ff00>订阅消息{"..tostring(code).."}存在，ID："..tostring(id).."</color>")
+     end
 
     local Subscriber = SubscriberSet[id]
     if Subscriber == nil then

@@ -10,10 +10,13 @@ local ipairs, pairs
 local libugui = require "libugui.cs"
 local libunity = require "libunity.cs"
 local UIMGR = MERequire "ui/uimgr"
+local UI_DATA = MERequire "datamgr/uidata.lua"
 local Ref
 --!*以下：自动生成的回调函数*--
 
 local function on_subtop_btnnext_click(btn)
+	UI_DATA.WNDSupEditorMsg.InputText=Ref.MsgInput.text
+
 	UIMGR.create_window("UI/WNDSupReceiveMsg")
 end
 
@@ -29,7 +32,7 @@ local function init_view()
 end
 
 local function init_logic()
-	
+
 end
 
 local function start(self)

@@ -884,6 +884,11 @@ end
 NW.regist("MESSAGE.SC.GETLOWER", sc_message_getlower)
 
 local function sc_message_getmessagelist(nm)
+    if nm==nil then
+     print("<color=#00ff00>回调信息列表MESSAGE.SC.GETMESSAGELIST-no-</color>")
+ else
+    print("<color=#00ff00>回调信息列表MESSAGE.SC.GETMESSAGELIST-yes-</color>")
+ end
     local n = tonumber(nm:readString())
     local List = {}
     for i=1,n do
@@ -896,7 +901,7 @@ local function sc_message_getmessagelist(nm)
             time = nm:readString(),
             state = nm:readString(), -- （1 未读，2 已读）
         }
-        
+       -- print("<color=#00ff00>回调信息列表MESSAGE.SC.GETMESSAGELIST-yes--"..Msg.time.."-</color>")
         table.insert(List, Msg)
     end
     DY_DATA.MsgList = List

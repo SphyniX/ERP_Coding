@@ -57,6 +57,10 @@ local function on_submsg_grpmsg_entmsg_subcontext_btncontext_click(btn)
 	end
 end
 
+local function on_subcontext_btncontext_click(btn)
+	
+end
+
 local function on_submsg_grpmsg_entmsg_subcontext_btndel_click(btn)
 	local index = tonumber(btn.transform.parent.parent.name:sub(7))
 	local MsgList = DY_DATA.MsgList
@@ -109,11 +113,18 @@ local function on_subtop_subcontact_btnsale_click(btn)
 end
 
 local function on_ui_init()
+	print("<color=#00ff00>订阅消息 回调</color>")
 	local MsgList = DY_DATA.MsgList
 	if MsgList == nil then 
+		print("<color=#00ff00>获取信息数据失败</color>")
 		libunity.SetActive(Ref.SubMsg.spNil, true)
-		return end
-	libunity.SetActive(Ref.SubMsg.spNil, #MsgList == 0)
+		return 
+else
+		print("<color=#00ff00>获取信息数据成功</color>")
+
+	end
+
+	print(#MsgList)
 	local LowerList = DY_DATA.LowerList
 	print(JSON:encode(LowerList))
 	print(#MsgList)
@@ -126,10 +137,10 @@ local function on_ui_init()
 		print(Msg.people)
 		print(JSON:encode(LowerList[Msg.people]))
 		
-		Ent.SubContext.lbTitle.text = LowerList[Msg.people] and LowerList[Msg.people].name or Msg.people
+		Ent.SubContext.lbTitle.text = Msg.people--LowerList[Msg.people] and LowerList[Msg.people].name or Msg.people
 		Ent.SubContext.lbText.text = Msg.context
 		Ent.SubContext.lbTime.text = Msg.time
-		Ent.SubContext.lbDay.text = Msg.day
+		--Ent.SubContext.lbDay.text = Msg.day
 	end)
 end
 
@@ -140,31 +151,29 @@ local function init_view()
 	Ref.SubBtm.btnMsg.onAction = on_subbtm_btnmsg_click
 	Ref.SubBtm.btnUser.onAction = on_subbtm_btnuser_click
 	Ref.SubMsg.GrpMsg.Ent.SubContext.btnContext.onAction = on_submsg_grpmsg_entmsg_subcontext_btncontext_click
-	Ref.SubMsg.GrpMsg.Ent.SubContext.btnDel.onAction = on_submsg_grpmsg_entmsg_subcontext_btndel_click
 	UIMGR.make_group(Ref.SubMsg.GrpMsg, function (New, Ent)
 		New.SubContext.btnContext.onAction = Ent.SubContext.btnContext.onAction
-		New.SubContext.btnDel.onAction = Ent.SubContext.btnDel.onAction
 	end)
 	--!*以上：自动注册的回调函数*--
 end
 
 local function init_logic()
 	NW.subscribe("MESSAGE.SC.GETMESSAGELIST", on_ui_init)
-	NW.subscribe("MESSAGE.SC.GETLOWER", on_ui_init)
+	--NW.subscribe("MESSAGE.SC.GETLOWER", on_ui_init)
 	--libunity.SetActive(Ref.SubTop.SubContact.root, false)             ---zzg
-
-	if DY_DATA.LowerList == nil or next(DY_DATA.LowerList) == nil then
-		local nm = NW.msg("MESSAGE.CS.GETLOWER")
-		nm:writeU32(DY_DATA.User.id)
-		NW.send(nm)
-	end
-
+	-- if DY_DATA.LowerList == nil or next(DY_DATA.LowerList) == nil then
+	-- 	local nm = NW.msg("MESSAGE.CS.GETLOWER")
+	-- 	nm:writeU32(DY_DATA.User.id)
+	-- 	NW.send(nm)
+	-- end
+print("<color=#00ff00>获取数据失败2</color>")
 	if DY_DATA.MsgList == nil or next(DY_DATA.MsgList) == nil then
 		local nm = NW.msg("MESSAGE.CS.GETMESSAGELIST")
 		nm:writeU32(DY_DATA.User.id)
 		NW.send(nm)
 		return
 	end
+	print("<color=#00ff00>获取数据失败3</color>")
 	on_ui_init()
 end
 
