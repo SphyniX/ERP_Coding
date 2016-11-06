@@ -21,7 +21,7 @@ P.IPSet = {
 }
 P.Channel = {
     -- loginHost = P.IPSet.productIP,
-    loginHost = P.IPSet.productIP,
+    loginHost = P.IPSet.test,
     downloadHost = "139.196.109.3:8000",
     pid = 1,
     minAccLen = 6,
@@ -47,6 +47,8 @@ P.HTTPSet = {
     uploadInterface = function () return "http://"..P.Channel.loginHost.."/api/photo/upload" end,
 
     uploadphotoInterface = function () return "http://"..P.Channel.loginHost.."/api/photo/uploadphoto" end,
+
+    uploadphotoForReport = function () return "http://"..P.Channel.loginHost.."/api/photo/uploadimage" end,
 
     getqrcodeInterface = function () return "http://"..P.Channel.loginHost.."/api/photo/getqrcode" end,
 
@@ -349,6 +351,17 @@ function P.try_uploadphoto(userid, typeid, stid, Image, on_call_back)
     _G.UI.Waiting.show()
 end
 
+
+function P.try_uploadphotoforreport(userid, Image, on_call_back)
+    on_wnd_uploadphoto = on_call_back
+    local HttpParams = {
+        UserID = userid,
+        Typeid = typeid,
+        Stid = stid,
+    }
+    NW.http_upphoto("uploadphoto", P.HTTPSet.uploadInterface(), "", HttpParams, Image, "", on_uploadphoto_back)
+    _G.UI.Waiting.show()
+end
 -- local on_wnd_getqrcode
 -- local function on_getqrcode_back(tex, isDone, err)
 --     if not isDone or err then

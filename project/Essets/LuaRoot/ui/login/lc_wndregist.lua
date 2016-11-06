@@ -1,3 +1,4 @@
+
 --
 -- @file    ui/login/lc_wndregist.lua
 -- @authors ckxz
@@ -54,9 +55,16 @@ local function on_submain_subselect_subcity_grp_ent_click(btn)
 	CityChoose = CityList[index].name
 end
 
+local function on_select_place_callback( id )
+	Ref.SubMain.SubInfo.SubCity.lbcity.text = _G.CFG.CityLib.get_city(id).name
+end
 
 local function on_submain_subinfo_subcity_click(btn)
-	libunity.SetActive(Ref.SubMain.SubSelect.root,true)
+	UI_DATA.WNDSelectPlace.FromWhere = "1"
+	UI_DATA.WNDSelectPlace.cityid = {1,10,11,12}
+	UI_DATA.WNDSelectPlace.callbackfunc = on_select_place_callback
+	UIMGR.create("UI/WNDSelectPlace")
+	-- libunity.SetActive(Ref.SubMain.SubSelect.root,true)
 end
 
 local function on_submain_btnenter_click(btn)
@@ -96,6 +104,11 @@ local function on_ui_init()
 	Ref.SubMain.SubInfo.SubCity.lbcity.text = City and City.name or "选择所在城市"
 	ProvinceList = _G.CFG.CityLib.get_province_list()
 
+	--------TEST----------
+	-- local cityid_list = {10,11,12}
+	-- print(_G.CFG.CityLib.get_province_list_fromserver(cityid_list)[1].name)
+
+	----------------------
 	Ref.SubMain.SubSelect.SubProvince.Grp:dup(#ProvinceList, function (i, Ent, isNew)
 		local Province = ProvinceList[i]
 		Ent.lbName.text = Province.name

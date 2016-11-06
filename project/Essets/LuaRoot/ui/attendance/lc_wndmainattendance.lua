@@ -26,6 +26,7 @@ local SameAsServer
 local undergoreason ,leavereason = nil, nil
 local AttendanceProject = nil
 local projectId = nil
+local Assignmentid = nil
 local AttendanceList
 local on_project_init
 
@@ -38,6 +39,7 @@ end
 local function on_select_project(id,inAttendanceList)
 	print("Start Making Project :" .. id)
 	projectId = id
+	print(projectId)
 	AttendanceList = inAttendanceList
 	on_project_init()
 end
@@ -45,7 +47,7 @@ end
 local function on_try_punch(Ret)
 	if Ret.ret == 1 then
 		local workstate = DY_DATA.User.workstate -- 1 下班， 2， 上班中， 3 离岗
-		Attendance.on_try_punch(punch_type, projectId)
+		Attendance.on_try_punch(punch_type, Assignmentid)
 	end
 end
 
@@ -132,6 +134,7 @@ on_project_init = function ()
 	end
 	local AttendanceProject = AttendanceList[projectId]
 	print("AttendanceProject in MainAttance :" .. JSON:encode(AttendanceProject))
+	Assignmentid = AttendanceProject.Assignmentid
 	Ref.SubMain.SubProject.lbText.text = AttendanceProject.name
 	Ref.SubMain.SubAttOn.lbText.text = AttendanceProject.starttime
 	Ref.SubMain.SubAttOff.lbText.text = AttendanceProject.endtime

@@ -4,6 +4,7 @@ P.ProvinceList = {}
 
 local ProvinceList
 local Citys = {}
+
 do
 	local ipairs
 		= ipairs
@@ -53,10 +54,52 @@ P.get_city_list = function (id)
 	return P.ProvinceList[id].CityList
 end
 
+
+--通过City_ID获取城市信息
 P.get_city = function (id)
 	if id == nil then return nil end
 	return Citys[id]
 end
+
+P.get_province_list_fromserver = function (cityid_list)
+	local ProvinceListFromServer
+	ProvinceListFromServer = {}
+	for i=1,#cityid_list do
+		print(P.ProvinceList[Citys[cityid_list[i]].province].name)
+		for _,v in ipairs(P.ProvinceList) do
+			if v.name == P.ProvinceList[Citys[cityid_list[i]].province].name then
+				local flag = true
+				for i=1,#ProvinceListFromServer do
+					if ProvinceListFromServer[i].name == v.name then 
+						flag = false
+					end
+				end
+				if flag then
+					table.insert(ProvinceListFromServer, v)
+				end
+			end
+		end
+	end
+	print(JSON:encode(ProvinceListFromServer))
+	return ProvinceListFromServer
+end
+
+
+P.get_city_list_fromserver = function (cityid_list,name)
+	local CityListFromServer
+	CityListFromServer = {}
+	if name == nil then return nil end
+	if P.ProvinceList == nil then return nil end
+	for i=1,#cityid_list do
+		print(Citys[cityid_list[i]].province)
+		if P.ProvinceList[Citys[cityid_list[i]].province].name == name then
+			table.insert(CityListFromServer,Citys[cityid_list[i]])
+		end
+	end
+	print("CityList in P.get_city_list_fromserver is :" .. JSON:encode(CityListFromServer))
+	return CityListFromServer
+end
+
 
 print("已载入城市配置")
 

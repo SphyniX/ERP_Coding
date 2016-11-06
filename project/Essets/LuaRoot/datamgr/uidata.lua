@@ -36,7 +36,11 @@ local P = {
     WNDSelectPerson = {},
     WNDSupChangeTask = {},
     WNDSetComPhoto = {},
+<<<<<<< HEAD
     WNDSupEditorMsg={},
+=======
+    WNDSelectPlace = {},
+>>>>>>> 526de461b8523e17ab2a535aa453d7035eed9d6f
 }
 
 local LocalDB = {}
