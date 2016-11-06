@@ -36,6 +36,7 @@ local P = {
     WNDSelectPerson = {},
     WNDSupChangeTask = {},
     WNDSetComPhoto = {},
+    WNDSelectPlace = {},
 }
 
 local LocalDB = {}

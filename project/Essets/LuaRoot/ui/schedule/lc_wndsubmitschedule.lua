@@ -38,7 +38,7 @@ local function on_submain_subcontent_subinfolist_btninfo_click(btn)
 end
 
 local function on_submain_subcontent_btnbutton_click(btn)
-
+	---上传数据准备-----
 	local TempProductList = UI_DATA.WNDSubmitSchedule.ProductList
 	local TempProductListInfo = UI_DATA.WNDSubmitSchedule.ProductListInfo
 	local TempProductListForetaste = UI_DATA.WNDSubmitSchedule.ProductListForetaste
@@ -93,36 +93,8 @@ local function on_submain_subcontent_btnbutton_click(btn)
 		_G.UI.Toast:make(nil,"物料数据不能全为空"):show()
 		return
 	end
-	if TempInfor == nil then TempInfor = "" else print(TempInfor) end
-	-- print("WNDSubmitSchedule.ProductList is :" .. JSON:encode(UI_DATA.WNDSubmitSchedule.ProductList))
-	-- print("WNDSubmitSchedule.ProductListInfo is :" .. JSON:encode(UI_DATA.WNDSubmitSchedule.ProductListInfo))
-	-- print("WNDSubmitSchedule.ProductListForetaste is :" .. JSON:encode(UI_DATA.WNDSubmitSchedule.ProductListForetaste))
-	
-
-
-
-
-
-
-	-- -- libunity.SetActive(Ref.SubMain.SubContent.SubTip.root, false)
-
-	-- local ProductList = UI_DATA.WNDSubmitSchedule.ProductList
-	-- local CompeteProductList =UI_DATA.WNDSubmitSchedule.CompeteProductList
-	-- local MechanismList = UI_DATA.WNDSubmitSchedule.MechanismList
-
-	-- if ProductList == nil or #ProductList == 0 then
-	-- 	_G.UI.Toast:make(nil, "产品数据不能全为空"):show()
-	-- 	return 
-	-- end
-	-- if MechanismList == nil or #MechanismList == 0 then 
-	-- 	_G.UI.Toast:make(nil, "促销机制数据不能全为空"):show()
-	-- 	return
-	-- end
-	-- if CompeteProductList == nil or #CompeteProductList == 0 then 
-	-- 	_G.UI.Toast:make(nil, "竞品数据不能全为空"):show()
-	-- 	return
-	-- end
-
+	if TempInfor == nil then TempInfor = "" else print("WNDSubmitSchedule.TempInfor is :" .. TempInfor) end 
+	----上传数据------
 	if NW.connected() then
 		local storeId = UI_DATA.WNDSubmitSchedule.storeId
 		local projectId = UI_DATA.WNDSubmitSchedule.projectId
@@ -137,7 +109,7 @@ local function on_submain_subcontent_btnbutton_click(btn)
 			nm:writeU32(v.price == "" and 0 or tonumber(v.price))
 			nm:writeU32(v.volume == "" and 0 or tonumber(v.volume))
 			nm:writeString(v.value)
-			print(JSON:encode(v))
+			-- print(JSON:encode(v))
 		end
 
 		nm:writeU32(#TempMaterList)
@@ -146,7 +118,7 @@ local function on_submain_subcontent_btnbutton_click(btn)
 			nm:writeString(v.state)
 			nm:writeString(v.discribe)
 			nm:writeString(v.photo)
-			print(JSON:encode(v))
+			-- print(JSON:encode(v))
 		end
 
 		nm:writeU32(#TempComList)
@@ -155,7 +127,7 @@ local function on_submain_subcontent_btnbutton_click(btn)
 			nm:writeString(v.price)
 			nm:writeString(v.info)
 			nm:writeString(v.name)
-			print(JSON:encode(v))
+			-- print(JSON:encode(v))
 		end
 
 		nm:writeU32(0)
@@ -164,7 +136,7 @@ local function on_submain_subcontent_btnbutton_click(btn)
 		for _,v in ipairs(TempProductListGift) do
 			nm:writeU32(v.id == "" and 0 or tonumber(v.id))
 			nm:writeU32(v.volume == "" and 0 or tonumber(v.volume))
-			print(JSON:encode(v))
+			-- print(JSON:encode(v))
 		end
 
 		nm:writeU32(#TempProductListForetaste)
@@ -172,7 +144,7 @@ local function on_submain_subcontent_btnbutton_click(btn)
 			nm:writeU32(v.id == "" and 0 or tonumber(v.id))
 			nm:writeU32(v.number == "" and 0 or tonumber(v.number))
 			nm:writeU32(v.value == "" and 0 or tonumber(v.value))
-			print(JSON:encode(v))
+			-- print(JSON:encode(v))
 		end
 
 		

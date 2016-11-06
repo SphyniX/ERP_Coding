@@ -1,3 +1,4 @@
+
 --
 -- @file    ui/login/lc_wndregist.lua
 -- @authors ckxz
@@ -96,6 +97,11 @@ local function on_ui_init()
 	Ref.SubMain.SubInfo.SubCity.lbcity.text = City and City.name or "选择所在城市"
 	ProvinceList = _G.CFG.CityLib.get_province_list()
 
+	--------TEST----------
+	-- local cityid_list = {10,11,12}
+	-- print(_G.CFG.CityLib.get_province_list_fromserver(cityid_list)[1].name)
+
+	----------------------
 	Ref.SubMain.SubSelect.SubProvince.Grp:dup(#ProvinceList, function (i, Ent, isNew)
 		local Province = ProvinceList[i]
 		Ent.lbName.text = Province.name
