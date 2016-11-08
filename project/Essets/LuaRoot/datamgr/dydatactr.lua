@@ -44,6 +44,77 @@ local function sc_attence_gettask(nm)
 end
 NW.regist("ATTENCE.SC.GETWORK", sc_attence_gettask)
 print("<color=#00ff00>NW.regist(ATTENCE.SC.GETWORK, sc_attence_gettask)</color>")
+
+local function sc_attence_getcity(nm)
+    local GetCityList = {}
+    local projectId = tonumber(nm:readString())
+    local n = tonumber(nm:readString())
+    for i=1,n do
+        local cityid = tonumber(nm:readString())
+        local name = nm:readString()
+        -- table.insert(AttendanceList, Attendance)
+        table.insert(GetCityList,{id = cityid})
+    end
+    DY_DATA.GetCityList = GetCityList
+    printf("GetCityList : " .. JSON:encode(GetCityList))
+    -- DY_DATA.get_attendance_list(true)
+end
+NW.regist("ATTENCE.SC.GETCITY", sc_attence_getcity)
+
+local function sc_attence_getsuptask(nm)
+
+    local n = tonumber(nm:readString())
+    print("ProjectLength in Limit 2 is :" .. n)
+    local AttendanceList = {}
+    for i=1,n do
+        local ProjectId = tonumber(nm:readString())
+        local Attendance = {
+            ProjectId = ProjectId,
+       
+            name = nm:readString(),
+        }
+        -- table.insert(AttendanceList, Attendance)
+        table.insert(AttendanceList,Attendance)
+    end
+    DY_DATA.AttendanceList = AttendanceList
+    printf("AttendanceList : " .. JSON:encode(AttendanceList))
+    -- DY_DATA.get_attendance_list(true)
+end
+NW.regist("ATTENCE.SC.GETPROJECT", sc_attence_getsuptask)
+
+local function sc_attence_getattstore(nm)
+    local projectId = tonumber(nm:readString())
+    local n = tonumber(nm:readString())
+    local AttendanceProject = DY_DATA.AttendanceList[projectId]
+    local ProjectProject = DY_DATA.ProjectList[projectId]
+    local SchProject = DY_DATA.SchProjectList[projectId]        
+    if AttendanceProject == nil then return end
+    if ProjectProject == nil then return end
+    if SchProject == nil then return end
+    if AttendanceProject.StoreList == nil then AttendanceProject.StoreList = {} end
+    if ProjectProject.StoreList == nil then ProjectProject.StoreList = {} end
+    if SchProject.StoreList == nil then SchProject.StoreList = {} end
+    local AttendanceStoreList = AttendanceProject.StoreList
+    local ProjectStoreList = ProjectProject.StoreList
+    local SchStoreList = SchProject.StoreList
+    for i=1,n do
+        local id = tonumber(nm:readString())
+        local name = nm:readString()
+        local cityid = tonumber(nm:readString())
+        local icon = nm:readString()
+        icon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
+        local state  = tonumber(nm:readString())
+        table.insert(AttendanceStoreList,{id = id, name = name, cityid = cityid , icon = icon, state = state})
+        -- table.insert(ProjectStoreList,{id = id, name = name, cityid = cityid , icon = icon, state = state})
+        -- table.insert(SchStoreList,{id = id, name = name, cityid = cityid , icon = icon, state = state})
+    end
+    print("ScheduleList is :" .. JSON:encode(SchStoreList))
+    print("ScheduleList in DY_DATA is :" .. JSON:encode(DY_DATA.SchProjectList.StoreList))
+   
+    -- DY_DATA.get_attendance_list(true)
+end
+NW.regist("ATTENCE.SC.GETATTSTORE", sc_attence_getattstore)
+
 local function sc_attence_getleavelist(nm)
     local n = tonumber(nm:readString())
     local List = {}
@@ -378,18 +449,24 @@ NW.regist("REPORTED.SC.GETATTINFOR", sc_reported_getattinfor)
 
 local function sc_reported_getproject(nm)
     local n = tonumber(nm:readString())
-    if DY_DATA.SchProjectList == nil then DY_DATA.SchProjectList = {} end
-    local List = DY_DATA.SchProjectList
-    for i=1,n do
-        local id = tonumber(nm:readString())
-        local name = nm:readString()
-        local type = nm:readString()
-        local icon = nm:readString()
-        icon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
-        List[id] = {id = id, name = name, type = type, icon = icon}
-    end
-    DY_DATA.SchProjectList = List
-    DY_DATA.get_schproject_list(true)
+
+
+        if DY_DATA.SchProjectList == nil then DY_DATA.SchProjectList = {} end
+        local List = DY_DATA.SchProjectList
+        for i=1,n do
+            local id = tonumber(nm:readString())
+            local name = nm:readString()
+            local type = nm:readString()
+            local icon = nm:readString()
+            icon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
+            List[id] = {id = id, name = name, type = type, icon = icon}
+        end
+        DY_DATA.SchProjectList = List
+        DY_DATA.get_schproject_list(true)
+
+
+
+
 end
 NW.regist("REPORTED.SC.GETPROJECT", sc_reported_getproject)
 
@@ -641,18 +718,46 @@ end
 NW.regist("PROJECT.SC.GETSTOREINFOR", sc_project_getstoreinfor)
 
 local function sc_work_getproject(nm)
-    local n = tonumber(nm:readString())
-    local List = DY_DATA.ProjectList
-    for i=1,n do
-        local id = tonumber(nm:readString())
-        if List[id] == nil then List[id] = {} end
-        List[id].id = id
-        List[id].name = nm:readString()
-        local icon = nm:readString()
-        List[id].icon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
-    end
-    DY_DATA.ProjectList = List
     DY_DATA.get_project_list(true)
+    local n = tonumber(nm:readString())
+
+    if DY_DATA.User.limit == 1 then
+        local List = DY_DATA.ProjectList
+        print("Length of List is" .. #List)
+        for i=1,n do
+            local id = tonumber(nm:readString())
+            if List[id] == nil then List[id] = {} end
+            List[id].id = id
+            List[id].name = nm:readString()
+            local icon = nm:readString()
+            List[id].icon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
+        end
+        DY_DATA.ProjectList = List
+        DY_DATA.get_project_list(true)
+    else    
+        local List = DY_DATA.ProjectList
+        print("Length of List is" .. #List)
+        for i=1,n do
+            local idstring = nm:readString()
+            print(idstring)
+            local id = tonumber(idstring)
+            if List[id] == nil then List[id] = {} end
+            List[id].id = id
+            List[id].name = nm:readString()
+            List[id].brandnum = tonumber(nm:readString())
+            local icon = nm:readString()
+            List[id].icon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
+        end
+        DY_DATA.AttendanceList = List
+        DY_DATA.ProjectList = List
+        DY_DATA.SchProjectList = List
+        DY_DATA.get_project_list(true)
+        DY_DATA.get_attendance_list(true)
+        DY_DATA.get_schproject_list(true)
+        print(JSON:encode(DY_DATA.get_project_list(false)))
+        print(JSON:encode(DY_DATA.get_attendance_list(false)))
+        print(JSON:encode(DY_DATA.get_schproject_list(false)))
+    end
 end
 NW.regist("WORK.SC.GETPROJECT", sc_work_getproject)
 
@@ -858,6 +963,38 @@ local function sc_work_getassignment(nm)
     Store.TaskList = List
 end
 NW.regist("WORK.SC.GETASSIGNMENT",sc_work_getassignment)
+
+local function sc_work_getsellphoto(nm)
+    local projectId = tonumber(nm:readString())
+    local Project = DY_DATA.SchProjectList[projectId]
+    if Project == nil then return end
+
+    if Project.SellPhoto == nil then Project.SellPhoto = {} end
+    local SellPhoto = Project.SellPhoto
+
+    local n = tonumber(nm:readString())
+    for i=1, n do
+        local id = tonumber(nm:readString())
+        local name = nm:readString()
+        table.insert(SellPhoto, {id = id, name = name})
+    end
+end
+NW.regist("WORK.SC.GETSELLPHOTO", sc_work_getsellphoto)
+
+local function sc_work_getbrand(nm)
+    if DY_DATA.BrandList == nil then DY_DATA.BrandList = {} end
+    local BrandList = {}
+    local n = tonumber(nm:readString())
+    print ("BrandList Length is :" .. n)
+    for i=1, n do
+        local id = tonumber(nm:readString())
+        local name = nm:readString()
+        table.insert(BrandList, {id = id, name = name})
+    end
+    print("BrandList is :"  .. JSON:encode(BrandList))
+    DY_DATA.BrandList = BrandList
+end
+NW.regist("WORK.SC.GETBRAND", sc_work_getbrand)
 
 local function sc_message_getlower(nm)
     local n = tonumber(nm:readString())

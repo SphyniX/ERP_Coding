@@ -13,59 +13,60 @@ local UIMGR = MERequire "ui/uimgr"
 local Ref
 --!*以下：自动生成的回调函数*--
 
-local function on_subproject_grpproject_entproject_subworkproject_click(btn)
+local function on_subproject_grpproject_entproject_click(btn)
+	
+end
+
+local function on_subtop_btnbrand_click(btn)
 	
 end
 
 local function on_subbtm_spatt_click(btn)
-	
-end
-
-local function on_subbtm_btnwork_click(btn)
-	
+	UIMGR.create_window("UI/WNDSupAttendance")
 end
 
 local function on_subbtm_btnsch_click(btn)
-	
+-- ##	UIMGR.WNDStack:pop()
+	UIMGR.create_window("UI/WNDSupSchedule")
 end
 
 local function on_subbtm_btnmsg_click(btn)
-	
+-- ##	UIMGR.WNDStack:pop()
+	UIMGR.create_window("UI/WNDSupMsg")
 end
 
 local function on_subbtm_btnuser_click(btn)
-	
+-- ##	UIMGR.WNDStack:pop()
+	UIMGR.create_window("UI/WNDSupUser")
 end
 
-local function on_btndata_click(btn)
-	
-end
 
-local function on_btntask_click(btn)
-	
-end
-
-local function on_subproject_grpproject_ent_entproject_click(btn)
-	
-end
 
 local function init_view()
-	Ref.SubProject.GrpProject.Ent.SubWorkProject.btn.onAction = on_subproject_grpproject_entproject_subworkproject_click
+	Ref.SubProject.GrpProject.Ent.btn.onAction = on_subproject_grpproject_entproject_click
+	Ref.SubTop.btnBrand.onAction = on_subtop_btnbrand_click
 	Ref.SubBtm.spAtt.onAction = on_subbtm_spatt_click
-	Ref.SubBtm.btnWork.onAction = on_subbtm_btnwork_click
 	Ref.SubBtm.btnSch.onAction = on_subbtm_btnsch_click
 	Ref.SubBtm.btnMsg.onAction = on_subbtm_btnmsg_click
 	Ref.SubBtm.btnUser.onAction = on_subbtm_btnuser_click
-	Ref.btnData.onAction = on_btndata_click
-	Ref.btnTask.onAction = on_btntask_click
 	UIMGR.make_group(Ref.SubProject.GrpProject, function (New, Ent)
-		New.SubWorkProject.btn.onAction = Ent.SubWorkProject.btn.onAction
+		New.btn.onAction = Ent.btn.onAction
 	end)
 	--!*以上：自动注册的回调函数*--
 end
 
 local function init_logic()
-	
+	NW.subscribe("WORK.SC.GETPROJECT", on_ui_init)
+
+	if DY_DATA.ProjectList == nil or next(DY_DATA.ProjectList) == nil then
+		if NW.connected() then
+			local nm = NW.msg("WORK.CS.GETPROJECT")
+			nm:writeU32(DY_DATA.User.id)
+			NW.send(nm)
+		end
+		return
+	end
+	on_ui_init()
 end
 
 local function start(self)

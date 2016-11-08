@@ -230,6 +230,7 @@ local function init_view()
 end
 
 local function init_logic()
+	print("Test DY_DATA.ProjectList is :"  .. JSON:encode(DY_DATA.ProjectList))
 	DY_DATA.Work.NowTime = nil
 	NW.subscribe("ATTENCE.SC.VERIFYLATLNG", on_try_punch)
 	NW.subscribe("USER.SC.GETUSERINFOR", on_ui_init)
