@@ -306,7 +306,7 @@ end
 -- ============================================================================
 -- 创建一个消息对象
 function P.msg(code, size)   
-    print("创建消息对象："..tostring(code))
+    print("networkmgr.msg创建消息对象："..tostring(code))
     local id = chk_msg_type(code)
     if id == nil then return end
 
@@ -316,7 +316,7 @@ end
 
 -- 客户端发送消息
 function P.send(nm, only)
-    print("<color=#00ff00>发送消息："..tostring(JSON.encode(nm)).."</color>")
+    print("<color=#00ff00>networkmgr.send发送消息：</color>")
     if P.connected() then
         local post = NtfNmList[nm.type]
         if not post then MsgQueue:enqueue({nm = nm, only = only == true}) end
@@ -325,7 +325,6 @@ function P.send(nm, only)
         else
             log("Enqueue: {0}", nm)
         end
-        print("<color=#00ff00>发送消息结束："..tostring(JSON.encode(nm)).."</color>")
     end
 end
 
@@ -352,6 +351,7 @@ end
 -- 注册消息分析器
 -- 一个消息只能注册一次
 function P.regist(code, handler, reset)
+    print("<color=#00ff00>networkmgr.regist:注册消息"..tostring(code).."</color>")
     local id = chk_msg_type(code)
     if id == nil then return end
 
@@ -359,19 +359,19 @@ function P.regist(code, handler, reset)
     if cbf == nil then
         NCHandler[id] = handler
     else
-        libunity.LogW("消息[{0}({1})]已经被注册！请订阅该消息", code, id)
+        libunity.LogW("networkmgr.regist消息[{0}({1})]已经被注册！请订阅该消息", code, id)
     end 
 end
 
 -- 订阅消息
 function P.subscribe(code, handler)
-    print("<color=#00ff00>开始订阅消息"..tostring(code).."</color>")
+    print("<color=#00ff00>networkmgr.subscribe:开始订阅消息"..tostring(code).."</color>")
     local id = chk_msg_type(code)
     if id == nil then
-     print("<color=#00ff00>订阅消息{"..tostring(code).."}不存在".."</color>")
+     print("<color=#00ff00>networkmgr.subscribe订阅消息{"..tostring(code).."}不存在".."</color>")
      return
     else
-    print("<color=#00ff00>订阅消息{"..tostring(code).."}存在，ID："..tostring(id).."</color>")
+    print("<color=#00ff00>networkmgr.subscribe订阅消息{"..tostring(code).."}存在，ID："..tostring(id).."</color>")
      end
 
     local Subscriber = SubscriberSet[id]
@@ -381,7 +381,7 @@ function P.subscribe(code, handler)
     else
         for _,v in ipairs(Subscriber) do
             if v == handler then
-                libunity.LogW("{0}已订阅{1}", handler, code)
+                libunity.LogW("networkmgr.subscribe{0}已订阅{1}", handler, code)
             return end
         end
         table.insert(Subscriber, handler)

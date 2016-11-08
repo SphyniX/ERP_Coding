@@ -40,7 +40,7 @@ local P = {
     WNDSelectPlace = {},
     WNDSUPSENDEESELECT={},
     WNDsupmsgData={},
-    
+    WNDSupWork={},
     WNDSelectBrand = {},
     WNDSupStoreData = {},
 }

@@ -14,14 +14,14 @@ local on_account_logined, on_account_registed, on_account_binded, on_http_fail
 
 local P = { } 
 P.IPSet = {
-    test = "192.168.1.47:8888",
-    productIP = "api.richer.net.cn:8888",
+test = "192.168.1.47:8888",
+productIP = "api.richer.net.cn:8888",
     -- productIP = "139.196.109.3:8080",
     productDomain = "",
 }
 P.Channel = {
     loginHost = P.IPSet.productIP,
-   --loginHost = P.IPSet.test,
+    --loginHost = P.IPSet.test,
     downloadHost = "139.196.109.3:8000",
     pid = 1,
     minAccLen = 6,
@@ -60,19 +60,19 @@ P.HTTPSet = {
 
 function P.try_test()
     local HttpParams = {
-        action = "test",
-    }
+    action = "test",
+}
 
-    local function on_call_back(resp, isDone, err)
-        libunity.LogD("Test: {0}", resp)
-    end
-    NW.http_get("Test", "http://localhost:8080/TestServer_ll/api.jsp", HttpParams)
+local function on_call_back(resp, isDone, err)
+    libunity.LogD("Test: {0}", resp)
+end
+NW.http_get("Test", "http://localhost:8080/TestServer_ll/api.jsp", HttpParams)
 end
 
 function P.try_socket_test()
     NW.connect("127.0.0.1", "8080", function (nm)
-        
-    end)
+
+        end)
 end
 
 -- 1尝试登陆
@@ -115,11 +115,11 @@ function P.try_login(acc, pass, on_call_back)
     -- P.LogicedAcc = { acc = acc, pass = CMD5.MD5String(pass)}
     P.LogicedAcc = { acc = acc, pass = pass}
     local HttpParams = {
-        phone = acc,
-        password = pass,
-    }
-    NW.http_post("LOGIN", P.HTTPSet.loginInterface(), "", HttpParams, "", on_login_back)
-    _G.UI.Waiting.show()
+    phone = acc,
+    password = pass,
+}
+NW.http_post("LOGIN", P.HTTPSet.loginInterface(), "", HttpParams, "", on_login_back)
+_G.UI.Waiting.show()
 end
 
 -- 2督导验证
@@ -142,12 +142,12 @@ end
 function P.try_bind_supervisor(supname, name, code, on_call_back)
     on_wnd_bind_supervisor = on_call_back
     local HttpParams = {
-        supname = supname,
-        salename = name,
-        code = code,
-    }
-    NW.http_post("SUPERVISOR", P.HTTPSet.supInterface(), "", HttpParams, "", on_bind_supervisor_back)
-    _G.UI.Waiting.show()
+    supname = supname,
+    salename = name,
+    code = code,
+}
+NW.http_post("SUPERVISOR", P.HTTPSet.supInterface(), "", HttpParams, "", on_bind_supervisor_back)
+_G.UI.Waiting.show()
 end
 
 -- 3获取验证码
@@ -170,11 +170,11 @@ end
 function P.try_get_verify(phone, type, on_call_back)
     on_wnd_get_verify = on_call_back
     local HttpParams = {
-        phone = phone,
-        type = type,
-    }
-    NW.http_get("CAPTCHA", P.HTTPSet.captchaInterface(), HttpParams, on_get_verify_back)
-    _G.UI.Waiting.show()
+    phone = phone,
+    type = type,
+}
+NW.http_get("CAPTCHA", P.HTTPSet.captchaInterface(), HttpParams, on_get_verify_back)
+_G.UI.Waiting.show()
 end
 
 -- 4尝试验证手机
@@ -197,12 +197,12 @@ end
 function P.try_bind_phone(phone, idf, on_call_back)
     on_wnd_bind_phone = on_call_back
     local HttpParams = {
-        phone = phone,
-        idf = idf,
-    }
-    
-    NW.http_post("VALIDATE", P.HTTPSet.validateInterface(), "", HttpParams, "", on_bind_phone_back)
-    _G.UI.Waiting.show()
+    phone = phone,
+    idf = idf,
+}
+
+NW.http_post("VALIDATE", P.HTTPSet.validateInterface(), "", HttpParams, "", on_bind_phone_back)
+_G.UI.Waiting.show()
 end
 
 -- 5验证个人信息
@@ -235,11 +235,11 @@ end
 function P.try_validatenum(idnumber, cardno, on_call_back)
     on_wnd_validatenum = on_call_back
     local HttpParams = {
-        idnumber = idnumber,
-        cardno = cardno,
-    }
-    NW.http_post("validatenum", P.HTTPSet.validatenumInterface(), "", HttpParams, "", on_validatenum_back)
-    _G.UI.Waiting.show()
+    idnumber = idnumber,
+    cardno = cardno,
+}
+NW.http_post("validatenum", P.HTTPSet.validatenumInterface(), "", HttpParams, "", on_validatenum_back)
+_G.UI.Waiting.show()
 end
 
 -- 6尝试注册，上传个人信息
@@ -273,24 +273,24 @@ end
 function P.try_regist(lisInfo, on_call_back)
     on_wnd_regist = on_call_back
     local HttpParams = {
-        user_phone = lisInfo.phone,
-        user_password = lisInfo.password,
-        user_name = lisInfo.name,
-        user_age = lisInfo.age,
-        user_sex = lisInfo.sex,
-        user_height = lisInfo.height,
-        user_weight = lisInfo.weight,
-        user_qq = lisInfo.qq,
-        user_email = lisInfo.email,
-        user_wechat = lisInfo.wechat,
-        user_idnumber = lisInfo.idnumber,
-        user_cardNo = lisInfo.cardNo,
-        user_city = lisInfo.city,
-        supname = lisInfo.supname,
-    }
-    local PhotoList = lisInfo.PhotoList
-    NW.http_upmorephoto("INSERT", P.HTTPSet.insertInterface(), "", HttpParams, PhotoList,"", on_regist_back)
-    _G.UI.Waiting.show()
+    user_phone = lisInfo.phone,
+    user_password = lisInfo.password,
+    user_name = lisInfo.name,
+    user_age = lisInfo.age,
+    user_sex = lisInfo.sex,
+    user_height = lisInfo.height,
+    user_weight = lisInfo.weight,
+    user_qq = lisInfo.qq,
+    user_email = lisInfo.email,
+    user_wechat = lisInfo.wechat,
+    user_idnumber = lisInfo.idnumber,
+    user_cardNo = lisInfo.cardNo,
+    user_city = lisInfo.city,
+    supname = lisInfo.supname,
+}
+local PhotoList = lisInfo.PhotoList
+NW.http_upmorephoto("INSERT", P.HTTPSet.insertInterface(), "", HttpParams, PhotoList,"", on_regist_back)
+_G.UI.Waiting.show()
 end
 
 -- 尝试设置密码
@@ -312,11 +312,11 @@ end
 function P.try_update_password(phone, pass, on_call_back)
     on_wnd_update_password = on_call_back
     local HttpParams = {
-        phone = phone,
-        password = pass,
-    }
-    NW.http_post("UpdatePass", P.HTTPSet.updatepwdInterface(), "", HttpParams, "", on_uodate_password_back) 
-    _G.UI.Waiting.show()
+    phone = phone,
+    password = pass,
+}
+NW.http_post("UpdatePass", P.HTTPSet.updatepwdInterface(), "", HttpParams, "", on_uodate_password_back) 
+_G.UI.Waiting.show()
 end
 
 local on_wnd_uploadphoto
@@ -343,24 +343,24 @@ end
 function P.try_uploadphoto(userid, typeid, stid, Image, on_call_back)
     on_wnd_uploadphoto = on_call_back
     local HttpParams = {
-        UserID = userid,
-        Typeid = typeid,
-        Stid = stid,
-    }
-    NW.http_upphoto("uploadphoto", P.HTTPSet.uploadInterface(), "", HttpParams, Image, "", on_uploadphoto_back)
-    _G.UI.Waiting.show()
+    UserID = userid,
+    Typeid = typeid,
+    Stid = stid,
+}
+NW.http_upphoto("uploadphoto", P.HTTPSet.uploadInterface(), "", HttpParams, Image, "", on_uploadphoto_back)
+_G.UI.Waiting.show()
 end
 
 
 function P.try_uploadphotoforreport(userid, Image, on_call_back)
     on_wnd_uploadphoto = on_call_back
     local HttpParams = {
-        UserID = userid,
-        Typeid = typeid,
-        Stid = stid,
-    }
-    NW.http_upphoto("uploadphoto", P.HTTPSet.uploadInterface(), "", HttpParams, Image, "", on_uploadphoto_back)
-    _G.UI.Waiting.show()
+    UserID = userid,
+    Typeid = typeid,
+    Stid = stid,
+}
+NW.http_upphoto("uploadphoto", P.HTTPSet.uploadInterface(), "", HttpParams, Image, "", on_uploadphoto_back)
+_G.UI.Waiting.show()
 end
 -- local on_wnd_getqrcode
 -- local function on_getqrcode_back(tex, isDone, err)
@@ -447,7 +447,7 @@ function P.do_logout()
     UI_DATA.clear()
     _G.PKG["libmgr/dytimer"].clear()
     _G.PKG["global/scenemgr"].load_login_level()
-   
+
 end
 
 

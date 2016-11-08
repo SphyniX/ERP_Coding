@@ -10,11 +10,16 @@ local ipairs, pairs
 local libugui = require "libugui.cs"
 local libunity = require "libunity.cs"
 local UIMGR = MERequire "ui/uimgr"
+local UI_DATA = MERequire "datamgr/uidata.lua"
+local NW= MERequire "network/networkmgr"
+local DY_DATA = MERequire "datamgr/dydata.lua"
+	-- body
 local Ref
 --!*以下：自动生成的回调函数*--
 
-local function on_subproject_grpproject_entproject_click(btn)
-	
+local function on_subproject_grpproject_entproject_btnbutton_click(btn)
+	WNDSupWork.btnName=btn.name
+	UIMGR.create_window( "UI/WNDsuoWorkSelectStore")
 end
 
 local function on_subtop_btnbrand_click(btn)
@@ -40,17 +45,41 @@ local function on_subbtm_btnuser_click(btn)
 	UIMGR.create_window("UI/WNDSupUser")
 end
 
+local function on_ui_init()
+	 local ProjectList = DY_DATA.WorkProjectList
+	 if ProjectList==nil then
+	 	print("<color=#0f0> lc_wndsupwork.lua   项目列表获取失败</color>")
+	 else
+print("<color=#0f0> lc_wndsupwork.lua   项目列表获取成功</color>")
+	 end
+
+	Ref.SubProject.GrpProject:dup( #ProjectList, function (i, Ent, isNew)
+	local Project = ProjectList[i]
+	local obj = libunity.FindGameObject(Ent,"btnButton")
+	if obj then
+		print("<color=#0f0> 查找物体成功</color>"..obj.name)
+
+		obj.name=Project.projectId
+		else
+			print("<color=#0f0> 查找物体失败</color>")		
+		end
+	Ent.lbText.text=Project.productName
+
+	end)
+
+	-- body
+end 
 
 
 local function init_view()
-	Ref.SubProject.GrpProject.Ent.btn.onAction = on_subproject_grpproject_entproject_click
+	Ref.SubProject.GrpProject.Ent.btnButton.onAction = on_subproject_grpproject_entproject_btnbutton_click
 	Ref.SubTop.btnBrand.onAction = on_subtop_btnbrand_click
 	Ref.SubBtm.spAtt.onAction = on_subbtm_spatt_click
 	Ref.SubBtm.btnSch.onAction = on_subbtm_btnsch_click
 	Ref.SubBtm.btnMsg.onAction = on_subbtm_btnmsg_click
 	Ref.SubBtm.btnUser.onAction = on_subbtm_btnuser_click
 	UIMGR.make_group(Ref.SubProject.GrpProject, function (New, Ent)
-		New.btn.onAction = Ent.btn.onAction
+		New.btnButton.onAction = Ent.btnButton.onAction
 	end)
 	--!*以上：自动注册的回调函数*--
 end

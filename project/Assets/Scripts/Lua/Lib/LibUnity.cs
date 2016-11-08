@@ -28,6 +28,7 @@ public static class LibUnity
             new NameFuncPair("IsActive", IsActive),
             new NameFuncPair("Destroy", Destroy),
             new NameFuncPair("Delete", Delete),
+            new NameFuncPair("GetGameObject", GetGameObject),
             new NameFuncPair("FindGameObject", FindGameObject),
             new NameFuncPair("FindComponent", FindComponent),
             new NameFuncPair("AddChild", AddChild),
@@ -219,8 +220,24 @@ public static class LibUnity
         }
         return 0;
     }
+    [MonoPInvokeCallback(typeof(LuaCSFunction))]
+    private static int GetGameObject(ILuaState lua)
+    {
+        Debug.Log("<color=#0f0>获取对象</color>");
+        GameObject obj = lua.ToGameObject(1);
+        if (obj != null)
+        {
+            Debug.Log("<color=#0f0>获取对象成功</color>");
+            lua.PushLightUserData(obj);
+        }
+        else {
+            Debug.Log("<color=#0f0>获取对象失败</color>");
+            lua.PushNil();
+        }
+        return 1;
+    }
 
-	[MonoPInvokeCallback(typeof(LuaCSFunction))]
+    [MonoPInvokeCallback(typeof(LuaCSFunction))]
     private static int FindGameObject(ILuaState lua)
     {
         Transform trans = lua.ToComponent<Transform>(1);

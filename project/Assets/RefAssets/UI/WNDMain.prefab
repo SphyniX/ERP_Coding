@@ -53,7 +53,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &11406900
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -318,6 +318,10 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: LocalMethods.Array.data[2]
       value: on_recycle
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

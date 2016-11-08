@@ -29,6 +29,10 @@ local function on_substore_grpstore_entstore_click(btn)
 	UIMGR.create_window("UI/WNDSubmitSchedule")
 end
 
+local function on_substore_grpstore_entstore_btnbutton_click(btn)
+	
+end
+
 local function on_subtop_btnback_click(btn)
 	UIMGR.close_window(Ref.root)
 end
@@ -56,9 +60,11 @@ end
 
 local function init_view()
 	Ref.SubStore.GrpStore.Ent.btn.onAction = on_substore_grpstore_entstore_click
+	Ref.SubStore.GrpStore.Ent.btnButton.onAction = on_substore_grpstore_entstore_btnbutton_click
 	Ref.SubTop.btnBack.onAction = on_subtop_btnback_click
 	UIMGR.make_group(Ref.SubStore.GrpStore, function (New, Ent)
 		New.btn.onAction = Ent.btn.onAction
+		New.btnButton.onAction = Ent.btnButton.onAction
 	end)
 	--!*以上：自动注册的回调函数*--
 end

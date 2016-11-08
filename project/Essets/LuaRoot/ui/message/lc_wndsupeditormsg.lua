@@ -6,7 +6,7 @@
 --
 
 local ipairs, pairs
-    = ipairs, pairs
+= ipairs, pairs
 local libugui = require "libugui.cs"
 local libunity = require "libunity.cs"
 local UIMGR = MERequire "ui/uimgr"
@@ -16,19 +16,19 @@ local Ref
 
 local function on_subtop_btnnext_click(btn)
 	if Ref.MsgInput.text~=nil and Ref.MsgInput.text~="" then
-	UI_DATA.WNDSupEditorMsg.InputText=Ref.MsgInput.text
+		UI_DATA.WNDSupEditorMsg.InputText=Ref.MsgInput.text
 
-	print("--------"..Ref.MsgInput.text)
+		print("--------"..Ref.MsgInput.text)
 
-	UIMGR.create_window("UI/WNDSupReceiveMsg")
+		UIMGR.create_window("UI/WNDSupReceiveMsg")
 	else
-	_G.UI.Toast:make(nil, "请输入内容"):show()
+		_G.UI.Toast:make(nil, "请输入内容"):show()
 	end
 end
 
 local function on_subtop_btnprevious_click(btn)
-print("关闭UI/WNDSupEditorMsg ")
-	UIMGR.create_window("UI/WNDSupMsg")
+	print("关闭UI/WNDSupEditorMsg ")
+	UIMGR.close_window(Ref.root)
 end
 
 local function init_view()
@@ -38,7 +38,7 @@ local function init_view()
 end
 
 local function init_logic()
-Ref.MsgInput.text=""
+	Ref.MsgInput.text=""
 end
 
 local function start(self)
@@ -52,15 +52,14 @@ end
 local function update_view()
 	
 end
-
 local function on_recycle()
 	
 end
 
 local P = {
-	start = start,
-	update_view = update_view,
-	on_recycle = on_recycle,
+start = start,
+update_view = update_view,
+on_recycle = on_recycle,
 }
 return P
 
