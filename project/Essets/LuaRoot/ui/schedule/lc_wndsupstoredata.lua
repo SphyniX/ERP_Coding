@@ -1,8 +1,8 @@
 --
 -- @file    ui/schedule/lc_wndsupstoredata.lua
 -- @authors zl
--- @date    2016-11-08 08:02:34
--- @desc    WndsupStoreData
+-- @date    2016-11-09 01:41:54
+-- @desc    WNDSupStoreData
 --
 
 local ipairs, pairs
@@ -14,36 +14,36 @@ local Ref
 --!*以下：自动生成的回调函数*--
 
 local function on_subtop_btnback_click(btn)
+	UIMGR.close_window(Ref.root)
+end
+
+local function on_sublist_btncellimg_click(btn)
+	UIMGR.create_window("UI/WNDSupDataUpLoadPhoto")
+end
+
+local function on_sublist_btncellmsg_click(btn)
+	UIMGR.create_window("UI/WNDSupDataMsgInput")
+end
+
+local function on_sublist_btncell_click(btn)
+	UIMGR.create_window("UI/WNDSupDataGoodAnalysis")
+end
+
+local function on_btncheck_click(btn)
 	
 end
 
-local function on_sublist_subcellimg_click(btn)
-	
-end
-
-local function on_sublist_subcellmsg_click(btn)
-	
-end
-
-local function on_sublist_subcell_click(btn)
-	
-end
-
-local function on_subcheck_click(btn)
-	
-end
-
-local function on_subprogress_click(btn)
-	
+local function on_btnprogress_click(btn)
+	UIMGR.create_window("UI/WNDSupDataProgress")
 end
 
 local function init_view()
 	Ref.SubTop.btnBack.onAction = on_subtop_btnback_click
-	Ref.SubList.SubCellImg.btn.onAction = on_sublist_subcellimg_click
-	Ref.SubList.SubCellMsg.btn.onAction = on_sublist_subcellmsg_click
-	Ref.SubList.SubCell.btn.onAction = on_sublist_subcell_click
-	Ref.SubCheck.btn.onAction = on_subcheck_click
-	Ref.SubProgress.btn.onAction = on_subprogress_click
+	Ref.SubList.btnCellImg.onAction = on_sublist_btncellimg_click
+	Ref.SubList.btnCellMsg.onAction = on_sublist_btncellmsg_click
+	Ref.SubList.btnCell.onAction = on_sublist_btncell_click
+	Ref.btnCheck.onAction = on_btncheck_click
+	Ref.btnProgress.onAction = on_btnprogress_click
 	--!*以上：自动注册的回调函数*--
 end
 

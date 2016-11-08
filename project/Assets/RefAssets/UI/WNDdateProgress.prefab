@@ -77,6 +77,7 @@ GameObject:
   - 224: {fileID: 22488546}
   - 222: {fileID: 22263046}
   - 114: {fileID: 11499024}
+  - 114: {fileID: 11407918}
   m_Layer: 5
   m_Name: WNDdateProgress
   m_TagString: Untagged
@@ -623,6 +624,22 @@ MonoBehaviour:
   m_Text: "\u9500\u91CF"
   localize: 1
   textFormat: '{0}'
+--- !u!114 &11407918
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 116558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 002a0f4a9ef6b448481d248763a099dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  luaScript: schedule
+  LocalMethods:
+  - start
+  - update_view
+  - on_recycle
 --- !u!114 &11417474
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -36,11 +36,14 @@ local P = {
     WNDSelectPerson = {},
     WNDSupChangeTask = {},
     WNDSetComPhoto = {},
-    WNDSupEditorMsg={},
+    WNDSupEditorMsg = {},
     WNDSelectPlace = {},
     WNDSUPSENDEESELECT={},
     WNDsupmsgData={},
     WNDSupWork={},
+    WNDSUPSENDEESELECT = {},
+    WNDsupmsgData = {},
+    
     WNDSelectBrand = {},
     WNDSupStoreData = {},
 }
