@@ -306,6 +306,7 @@ end
 -- ============================================================================
 -- 创建一个消息对象
 function P.msg(code, size)   
+    print("创建消息对象："..tostring(code))
     local id = chk_msg_type(code)
     if id == nil then return end
 
@@ -315,6 +316,7 @@ end
 
 -- 客户端发送消息
 function P.send(nm, only)
+    print("<color=#00ff00>发送消息："..tostring(JSON.encode(nm)).."</color>")
     if P.connected() then
         local post = NtfNmList[nm.type]
         if not post then MsgQueue:enqueue({nm = nm, only = only == true}) end
@@ -323,6 +325,7 @@ function P.send(nm, only)
         else
             log("Enqueue: {0}", nm)
         end
+        print("<color=#00ff00>发送消息结束："..tostring(JSON.encode(nm)).."</color>")
     end
 end
 

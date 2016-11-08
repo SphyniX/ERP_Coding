@@ -14,19 +14,20 @@ local Ref
 --!*以下：自动生成的回调函数*--
 
 local function on_subproject_grpproject_entproject_subworkproject_click(btn)
-	
+	UIMGR.create_window("UI/WorkSupPopup")
 end
+
 
 local function on_subbtm_spatt_click(btn)
 	
 end
 
 local function on_subbtm_btnwork_click(btn)
-	
+		UIMGR.create_window("UI/WNDSupWork")
 end
 
 local function on_subbtm_btnsch_click(btn)
-	
+		UIMGR.create_window("UI/WNDSupSchedule")
 end
 
 local function on_subbtm_btnmsg_click(btn)
@@ -34,7 +35,7 @@ local function on_subbtm_btnmsg_click(btn)
 end
 
 local function on_subbtm_btnuser_click(btn)
-	
+	UIMGR.create_window("UI/WNDSupUser")
 end
 
 local function on_btndata_click(btn)

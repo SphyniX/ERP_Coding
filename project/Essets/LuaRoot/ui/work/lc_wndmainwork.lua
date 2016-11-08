@@ -19,6 +19,7 @@ local ProjectList
 --!*以下：自动生成的回调函数*--
 
 local function on_subproject_grpproject_entproject_click(btn)
+	print("<color=#00ff00>DY_DATA.ProjectList2"..JSON:encode(DY_DATA.ProjectList).."</color>")
 	local index = tonumber(btn.name:sub(11))
 	local Project = ProjectList[index]
 	print(index, JSON:encode(Project))
@@ -84,14 +85,18 @@ end
 local function init_logic()
 	NW.subscribe("WORK.SC.GETPROJECT", on_ui_init)
 
+	print("<color=#00ff00>DY_DATA.ProjectList1"..JSON:encode(DY_DATA.ProjectList).."</color>")
+print("<color=#00ff00>DY_DATA.ProjectList1</color>")
 	if DY_DATA.ProjectList == nil or next(DY_DATA.ProjectList) == nil then
 		if NW.connected() then
 			local nm = NW.msg("WORK.CS.GETPROJECT")
 			nm:writeU32(DY_DATA.User.id)
 			NW.send(nm)
 		end
+			print("<color=#00ff00>DY_DATA.ProjectList2"..JSON:encode(DY_DATA.ProjectList).."</color>")
 		return
 	end
+
 	on_ui_init()
 end
 

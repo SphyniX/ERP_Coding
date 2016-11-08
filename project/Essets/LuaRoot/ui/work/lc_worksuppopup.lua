@@ -14,11 +14,11 @@ local Ref
 --!*以下：自动生成的回调函数*--
 
 local function on_subbg_btndate_click(btn)
-	
+	UIMGR.create_window("UI/WNDSupWorkPage")
 end
 
 local function on_subbg_btntask_click(btn)
-	
+	UIMGR.create_window("UI/WNDSelectStore")
 end
 
 local function init_view()

@@ -43,7 +43,6 @@ local function sc_attence_gettask(nm)
     -- DY_DATA.get_attendance_list(true)
 end
 NW.regist("ATTENCE.SC.GETWORK", sc_attence_gettask)
-print("<color=#00ff00>NW.regist(ATTENCE.SC.GETWORK, sc_attence_gettask)</color>")
 local function sc_attence_getleavelist(nm)
     local n = tonumber(nm:readString())
     local List = {}
@@ -641,10 +640,15 @@ end
 NW.regist("PROJECT.SC.GETSTOREINFOR", sc_project_getstoreinfor)
 
 local function sc_work_getproject(nm)
+    print("<color=#00ff00>sc_work_getproject"..JSON:encode(nm).."</color>")
+      print("<color=#00ff00>sc_work_getproject--DY_DATA.ProjectList"..JSON:encode(DY_DATA.ProjectList).."</color>")
     local n = tonumber(nm:readString())
     local List = DY_DATA.ProjectList
     for i=1,n do
+
         local id = tonumber(nm:readString())
+              local x = id
+              print("<color=#00ff00>sc_work_getproject--x"..tostring(x).."</color>")
         if List[id] == nil then List[id] = {} end
         List[id].id = id
         List[id].name = nm:readString()
@@ -860,7 +864,13 @@ end
 NW.regist("WORK.SC.GETASSIGNMENT",sc_work_getassignment)
 
 local function sc_message_getlower(nm)
+        if nm==nil then
+     print("<color=#00ff00>回调信息列表MESSAGE.SC.GETLOWER-no-</color>")
+ else
+    print("<color=#00ff00>回调信息列表MESSAGE.SC.GETLOWER-yes-</color>")
+ end
     local n = tonumber(nm:readString())
+        print("<color=#00ff00>回调信息列表MESSAGE.SC.GETLOWER-yes----n-:</color>"..tostring(n))
     local List = {}
     for i=1,n do
         local limit = tonumber(nm:readString())
@@ -873,10 +883,11 @@ local function sc_message_getlower(nm)
             qq = nm:readString(),
             wechat = nm:readString(), 
             email = nm:readString(),
+            cityid=nm:readString(),
         }
         local icon = nm:readString()
         People.icon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
-        List[id] = People
+        table.insert(List, People)
     end
     DY_DATA.LowerList = List
     -- DY_DATA.get_lower_list(true)
@@ -907,6 +918,22 @@ local function sc_message_getmessagelist(nm)
     DY_DATA.MsgList = List
 end
 NW.regist("MESSAGE.SC.GETMESSAGELIST", sc_message_getmessagelist)
+--------------------zzg-add----------------------------------
+
+local function sc_message_upstatu(nm)
+
+end
+NW.regist("MESSAGE.SC.UPSTATU", sc_message_upstatu)
+
+local function sc_message_sendmessage(nm)
+print("发送信息 注册回调")
+if nm ~=nil then
+DY_DATA.SENDMESSAGESTATE=tonumber(nm:readString())
+print("发送信息 注册回调值"..DY_DATA.SENDMESSAGESTATE)
+end
+end
+NW.regist("MESSAGE.SC.SENDMESSAGE", sc_message_sendmessage)
+----------------------------zzg-end-------------------------------------------
 
 
 local function sc_districtmag_get_dmag(nm)

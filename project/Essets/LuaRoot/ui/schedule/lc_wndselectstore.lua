@@ -19,21 +19,8 @@ local StoreList
 --!*以下：自动生成的回调函数*--
 
 local function on_substore_grpstore_entstore_click(btn)
-	local index = tonumber(btn.name:sub(9))
-	local Store = StoreList[index]
-	local on_selected = UI_DATA.WNDSelectStore.on_selected
-	if on_selected then on_selected(Store.id) return end
-
-	local type = UI_DATA.WNDSelectStore.type
-	if type == 1 then
-		UI_DATA.WNDWorkProject.projectId = Store.projectId
-		UI_DATA.WNDWorkProject.storeId = Store.id
-		UIMGR.create_window("UI/WNDWorkProject")
-	else
-		UI_DATA.WNDSubmitSchedule.projectId = Store.projectId
-		UI_DATA.WNDSubmitSchedule.storeId = Store.id
-		UIMGR.create_window("UI/WNDSubmitSchedule")
-	end
+	print("<color=#00ff00>on_substore_grpstore_entstore_click</color>")
+   UIMGR.create_window("UI/WNDSupGetTaskList")
 end
 
 local function on_subtop_btnback_click(btn)
@@ -88,18 +75,18 @@ local function init_view()
 end
 
 local function init_logic()
-	NW.subscribe("WORK.SC.GETSTORE", on_ui_init)
-	local projectId = UI_DATA.WNDSelectStore.projectId
-	local Project = DY_DATA.ProjectList[projectId]
-	print(JSON:encode(Project))
-	if Project.StoreList == nil or #Project.StoreList == 0 then
-		local nm = NW.msg("WORK.CS.GETSTORE")
-		nm:writeU32(projectId)
-		nm:writeU32(DY_DATA.User.id)
-		NW.send(nm)
-		return
-	end
-	on_ui_init()
+	-- NW.subscribe("WORK.SC.GETSTORE", on_ui_init)
+	-- local projectId = UI_DATA.WNDSelectStore.projectId
+	-- local Project = DY_DATA.ProjectList[projectId]
+	-- print(JSON:encode(Project))
+	-- if Project.StoreList == nil or #Project.StoreList == 0 then
+	-- 	local nm = NW.msg("WORK.CS.GETSTORE")
+	-- 	nm:writeU32(projectId)
+	-- 	nm:writeU32(DY_DATA.User.id)
+	-- 	NW.send(nm)
+	-- 	return
+	-- end
+	-- on_ui_init()
 end
 
 local function start(self)

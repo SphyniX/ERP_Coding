@@ -42,19 +42,16 @@ local function on_subbtm_btnuser_click(btn)
 end
 
 local function on_submsg_grpmsg_entmsg_subcontext_btncontext_click(btn)
-	local index = tonumber(btn.transform.parent.parent.name:sub(7))
-	local MsgList = DY_DATA.MsgList
-	local Msg = MsgList[index]
-	print(JSON:encode(Msg))
-	if Msg.type == 1 then
-		UIMGR.create_window("UI/WNDMainWork")
-	elseif Msg.type == 2 then
-		UI_DATA.WNDMsgContext.Msg = Msg
-		UIMGR.create_window("UI/WNDMsgContext")
-	elseif Msg.type == 3 then
-		UI_DATA.WNDMsgContext.Msg = Msg
-		UIMGR.create_window("UI/WNDMsgLeaveAudit")
-	end
+	print("<color=#00ff00>on_submsg_grpmsg_entmsg_subcontext_btncontext_click 订阅回调"..tostring(btn.name).."</color>")
+   -- WNDsupmsg
+   local listdata={}
+    listdata.MsgIndex= tonumber(btn.name)
+    UI_DATA.WNDsupmsgData=listdata
+	UIMGR.create_window("UI/WNDSupMsgcontent")
+end
+
+local function on_tgltoggle_change(tgl)
+		print("<color=#00ff00>on_submsg_grpmsg_entmsg_subcontext_btncontext_click 订阅回调</color>")
 end
 
 local function on_subcontext_btncontext_click(btn)
@@ -113,7 +110,6 @@ local function on_subtop_subcontact_btnsale_click(btn)
 end
 
 local function on_ui_init()
-	print("<color=#00ff00>订阅消息 回调</color>")
 	local MsgList = DY_DATA.MsgList
 	if MsgList == nil then 
 		print("<color=#00ff00>获取信息数据失败</color>")
@@ -131,12 +127,15 @@ else
 	Ref.SubMsg.GrpMsg:dup( #MsgList, function (i, Ent, isNew)
 		local Msg = MsgList[i]
 		print(JSON:encode(Msg))
-
-		UIMGR.get_photo(Ent.SubContext.spIcon, Msg.icon)
 		print(" Msg people ")
 		print(Msg.people)
 		print(JSON:encode(LowerList[Msg.people]))
-		
+		local obj = libunity.FindGameObject(Ent.SubContext,"btnContext")
+		if obj then
+			obj.name=tostring(i);
+		else
+			print("<color=#00ffff>按钮查找失败</color>")
+		end
 		Ent.SubContext.lbTitle.text = Msg.people--LowerList[Msg.people] and LowerList[Msg.people].name or Msg.people
 		Ent.SubContext.lbText.text = Msg.context
 		Ent.SubContext.lbTime.text = Msg.time
@@ -151,6 +150,7 @@ local function init_view()
 	Ref.SubBtm.btnMsg.onAction = on_subbtm_btnmsg_click
 	Ref.SubBtm.btnUser.onAction = on_subbtm_btnuser_click
 	Ref.SubMsg.GrpMsg.Ent.SubContext.btnContext.onAction = on_submsg_grpmsg_entmsg_subcontext_btncontext_click
+	Ref.tglToggle.onAction = on_tgltoggle_change
 	UIMGR.make_group(Ref.SubMsg.GrpMsg, function (New, Ent)
 		New.SubContext.btnContext.onAction = Ent.SubContext.btnContext.onAction
 	end)
@@ -159,21 +159,13 @@ end
 
 local function init_logic()
 	NW.subscribe("MESSAGE.SC.GETMESSAGELIST", on_ui_init)
-	--NW.subscribe("MESSAGE.SC.GETLOWER", on_ui_init)
-	--libunity.SetActive(Ref.SubTop.SubContact.root, false)             ---zzg
-	-- if DY_DATA.LowerList == nil or next(DY_DATA.LowerList) == nil then
-	-- 	local nm = NW.msg("MESSAGE.CS.GETLOWER")
-	-- 	nm:writeU32(DY_DATA.User.id)
-	-- 	NW.send(nm)
-	-- end
-print("<color=#00ff00>获取数据失败2</color>")
+
 	if DY_DATA.MsgList == nil or next(DY_DATA.MsgList) == nil then
 		local nm = NW.msg("MESSAGE.CS.GETMESSAGELIST")
 		nm:writeU32(DY_DATA.User.id)
 		NW.send(nm)
 		return
 	end
-	print("<color=#00ff00>获取数据失败3</color>")
 	on_ui_init()
 end
 

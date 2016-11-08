@@ -10,6 +10,9 @@ local ipairs, pairs
 local libugui = require "libugui.cs"
 local libunity = require "libunity.cs"
 local UIMGR = MERequire "ui/uimgr"
+local DY_DATA = MERequire "datamgr/dydata.lua"
+local UI_DATA = MERequire "datamgr/uidata.lua"
+local NW = MERequire "network/networkmgr"
 local Ref
 --!*以下：自动生成的回调函数*--
 
@@ -18,7 +21,27 @@ local function on_subtop_btnprevious_click(btn)
 end
 
 local function on_subtop_sendmsg_click(btn)
-	
+	if Ref.SubMsg.SubSendee.lbText.text~="" then
+	--local UserID = 1
+	local UserConcent = Ref.SubMsg.SubTest.lbText.text
+	local UserReceive
+	print(UserConcent.."------------")
+	local nm = NW.msg("MESSAGE.CS.SENDMESSAGE")
+	nm:writeU32(DY_DATA.User.id)
+	nm:writeString(UserConcent)
+	nm:writeU32(#UI_DATA.WNDSUPSENDEESELECT)
+	for i=1,#UI_DATA.WNDSUPSENDEESELECT do
+		UserReceive = UI_DATA.WNDSUPSENDEESELECT[i].id
+		print("UserReceive-------------"..UserReceive)
+		nm:writeU32(UserReceive)
+	end
+
+	--nm:writeString(UserID)
+	NW.send(nm)
+	UIMGR.create_window("UI/WNDSupEditorMsg")
+	else
+	_G.UI.Toast:make(nil, "请选择收件人"):show()
+	end
 end
 
 local function on_submsg_subsendee_btnbutton_click(btn)
@@ -46,6 +69,17 @@ local function init_view()
 end
 
 local function init_logic()
+	Ref.SubMsg.SubTest.lbText.text=UI_DATA.WNDSupEditorMsg.InputText
+	if UI_DATA.WNDSUPSENDEESELECT~=nil and #UI_DATA.WNDSUPSENDEESELECT>0 then
+	local  names =""
+	for i=1,#UI_DATA.WNDSUPSENDEESELECT do
+	
+	names=names.. UI_DATA.WNDSUPSENDEESELECT[i].name
+	end
+	Ref.SubMsg.SubSendee.lbText.text=names
+else
+	Ref.SubMsg.SubSendee.lbText.text=""
+	end
 	
 end
 
