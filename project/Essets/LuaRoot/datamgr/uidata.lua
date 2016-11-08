@@ -41,6 +41,8 @@ local P = {
     WNDSUPSENDEESELECT={},
     WNDsupmsgData={},
     
+    WNDSelectBrand = {},
+    WNDSupStoreData = {},
 }
 
 local LocalDB = {}

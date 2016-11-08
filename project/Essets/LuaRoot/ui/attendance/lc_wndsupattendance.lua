@@ -42,10 +42,10 @@ local on_project_init
 --                 `-...-'  
 
 ---proj Select callback Func ----
-local function on_select_project(id,inAttendanceList)
+local function on_select_project(id)
 	print("Start Making Project :" .. id)
 	projectId = id
-	AttendanceList = inAttendanceList
+	
 	on_project_init()
 end
 
@@ -110,9 +110,7 @@ local function time_to_string(Time)
 	return string.format("%d-%d-%d %d:%d", Time.year, Time.month, Time.day, Time.hour, Time.minute)
 end
 
-local function on_select_project(id)
-	projectId = id
-end
+
 
 local function on_punch_on_callback(Photolist)
    	local nPhoto = 0
@@ -337,6 +335,9 @@ on_project_init = function ()
 		Ref.SubMain.SubProject.lbText.text = "请选择项目"
 		return
 	end
+	AttendanceList = DY_DATA.get_attendance_list(false)
+	print("UI_DATA.AttendanceList is :" .. JSON:encode(AttendanceList))
+
 	local AttendanceProject = AttendanceList[projectId]
 	print("AttendanceProject in MainAttance :" .. JSON:encode(AttendanceProject))
 	Ref.SubMain.SubProject.lbText.text = AttendanceProject.name
@@ -357,7 +358,10 @@ local function on_ui_init()
 	-- Ref_SubLeave.SubStartTime.lbText.text = ""
 	-- Ref_SubLeave.SubEndTime.lbText.text = ""
 	
-	on_project_init()
+	if projectId == nil then
+		Ref.SubMain.SubProject.lbText.text = "请选择项目"
+		return
+	end
 
 	-- local Ref_SubLeave = Ref_SubMain_SubScroll_SubContent.SubLeave.SubInfo
 	-- Ref_SubLeave.lbName.text = User.name

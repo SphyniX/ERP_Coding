@@ -56,19 +56,39 @@ local function init_view()
 end
 
 local function init_logic()
-	NW.subscribe("ATTENCE.SC.GETWORK",on_ui_init)
 
-	if DY_DATA.AttendanceList == nil or next(DY_DATA.AttendanceList) == nil then
-		print("AttendanceList is nil")
-		if NW.connected() then
-			local nm = NW.msg("ATTENCE.CS.GETWORK")
-		    nm:writeU32(DY_DATA.User.id)
-		    NW.send(nm)
-		    return
-		else
-			DY_DATA.AttendanceList = {}
+	if DY_DATA.User.limit == 1 then
+		NW.subscribe("ATTENCE.SC.GETWORK",on_ui_init)
+
+		if DY_DATA.AttendanceList == nil or next(DY_DATA.AttendanceList) == nil then
+			print("AttendanceList is nil")
+			if NW.connected() then
+				local nm = NW.msg("ATTENCE.CS.GETWORK")
+			    nm:writeU32(DY_DATA.User.id)
+			    NW.send(nm)
+			    return
+			else
+				DY_DATA.AttendanceList = {}
+			end
 		end
 	end
+	if DY_DATA.User.limit == 2 then 
+		NW.subscribe("WORK.SC.GETPROJECT",on_ui_init)
+
+		if DY_DATA.AttendanceList == nil or next(DY_DATA.AttendanceList) == nil then
+			print("AttendanceList is nil")
+			if NW.connected() then
+				local nm = NW.msg("WORK.CS.GETPROJECT")
+			    nm:writeU32(DY_DATA.User.id)
+			    NW.send(nm)
+			    return
+			end
+
+		else
+			on_ui_init()
+		end
+	end
+	
 end
 
 local function start(self)

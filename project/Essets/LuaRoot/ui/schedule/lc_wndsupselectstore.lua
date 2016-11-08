@@ -15,105 +15,74 @@ local UI_DATA = MERequire "datamgr/uidata.lua"
 local NW = MERequire "network/networkmgr"
 local Ref
 
-local Project, StoreList
+local Project, StoreList,CityList,TempStoreList
 --!*以下：自动生成的回调函数*--
 
-local function on_substore_grpstore_entstore_click(btn)
-	
-end
 
-local function on_subtop _btnback_click(btn)
-	
-end
 
-local function on_subtop _btncity_click(btn)
-	
-end
 
-local function on_substore_grpstore_entstore_btnschedule_click(btn)
-	local index = tonumber(btn.transform.parent.name:sub(9))
-	local Store = StoreList[index]
-	UI_DATA.WNDSelectStore.storeId = Store.id
-	UI_DATA.WNDSelectStore.day = nil
-	UIMGR.create_window("UI/WNDSupShowSchedule")
-end
-
-local function on_substore_grpstore_entstore_btnmechanism_click(btn)
-	
-	local index = tonumber(btn.transform.parent.name:sub(9))
-	local Store = StoreList[index]
-	UI_DATA.WNDSelectStore.storeId = Store.id
-	UI_DATA.WNDSelectStore.day = nil
-	UIMGR.create_window("UI/WNDShowMechanism")
-end
-
-local function on_substore_grpstore_entstore_btnperson_click(btn)
-	local index = tonumber(btn.transform.parent.name:sub(9))
-	local Store = StoreList[index]
-	UI_DATA.WNDSelectStore.storeId = Store.id
-	UI_DATA.WNDSelectStore.day = nil
-	UIMGR.create_window("UI/WNDShowAttendance")
-end
-
-local function on_substore_grpstore_entstore_btnshowcompare_click(btn)
-	local index = tonumber(btn.transform.parent.name:sub(9))
-	local Store = StoreList[index]
-	UI_DATA.WNDSelectStore.storeId = Store.id
-	UI_DATA.WNDSelectStore.day = nil
-	UIMGR.create_window("UI/WNDShowCompeteProduct")
-end
-
-local function on_substore_grpstore_entstore_btnsubmitcompare_click(btn)
-	local index = tonumber(btn.transform.parent.name:sub(9))
-	local Store = StoreList[index]
-	UI_DATA.WNDSubmitSchedule.projectId = Store.projectId
-	UI_DATA.WNDSubmitSchedule.storeId = Store.id
-	UI_DATA.WNDSetCompeteProduct.type = 2
-	UI_DATA.WNDSetCompeteProduct.callback = function (SubmitList)
-		local nm = NW.msg("REPORTED.CS.COM")
-
-		nm:writeU32(1)
-	end
-	UIMGR.create_window("UI/WNDSetCompeteProduct")
-end
-
-local function on_substore_grpstore_entstore_btninfo_click(btn)
-	local index = tonumber(btn.transform.parent.name:sub(9))
-	local Store = StoreList[index]
-	UI_DATA.WNDSelectStore.storeId = Store.id
-	UI_DATA.WNDSelectStore.day = nil
-	UIMGR.create_window("UI/WNDShowInfo")
-end
-
-local function on_subtop_btnback_click(btn)
-	UIMGR.close_window(Ref.root)
-end
-
-local function on_ui_init()
+local function on_ui_init(cityid)
+	if cityid == nil then cityid = 0 end
 	local projectId = UI_DATA.WNDSelectStore.projectId
-	local Project = DY_DATA.ProjectList[projectId]
+	local Project = DY_DATA.SchProjectList[projectId]
 	StoreList = Project.StoreList
 	if StoreList == nil then
 		libunity.SetActive(Ref.SubStore.spNil, true)
 		return 
 	end
 	libunity.SetActive(Ref.SubStore.spNil, #StoreList == 0)
-	print(JSON:encode(StoreList))
-	Ref.SubStore.GrpStore:dup(#StoreList, function ( i, Ent, isNew)
-		local Store = StoreList[i]
+	print("StoreList in WNDSelectStore" .. JSON:encode(StoreList))
+	TempStoreList = {}
+	if cityid == 0 then
+		TempStoreList = StoreList
+	else
+		for i=1,#StoreList do
+			if StoreList[i].cityid == cityid then
+				table.insert(TempStoreList,StoreList[i])
+			end
+		end
+	end
+	Ref.SubStore.GrpStore:dup(#TempStoreList, function ( i, Ent, isNew)
+		local Store = TempStoreList[i]
 		Ent.lbName.text = Store.name
 		UIMGR.get_photo(Ent.spIcon, Store.icon)
-		local clr = i % 3
-		libunity.SetActive(Ent.spRed, clr == 1)
-		libunity.SetActive(Ent.spBlue, clr == 2)
-		libunity.SetActive(Ent.spYellow, clr == 0)
+
 	end)
 end
 
+local function on_select_city_callback( cityid )
+	on_ui_init(cityid)
+	-- body
+end
+
+local function on_substore_grpstore_entstore_click(btn)
+	local index = tonumber(btn.name:sub(9))
+	UI_DATA.WNDSupStoreData.projectId = UI_DATA.WNDSelectStore.projectId
+	UI_DATA.WNDSupStoreData.storeId = TempStoreList[index].id
+	UIMGR.create_window("UI/WNDSupStoreData")
+end
+
+
+
+local function on_subtop_btnback_click(btn)
+	UIMGR.close_window(Ref.root)
+end
+
+local function on_subtop_btncity_click(btn)
+		UI_DATA.WNDSelectPlace.FromWhere = "fromserver"
+		UI_DATA.WNDSelectPlace.NeedGetCityList = true
+		UI_DATA.WNDSelectPlace.projectId = UI_DATA.WNDSelectStore.projectId
+		UI_DATA.WNDSelectPlace.callbackfunc = on_select_city_callback
+		UIMGR.create("UI/WNDSelectPlace")
+end
+
+
+
+
 local function init_view()
 	Ref.SubStore.GrpStore.Ent.btn.onAction = on_substore_grpstore_entstore_click
-	Ref.SubTop .btnBack.onAction = on_subtop _btnback_click
-	Ref.SubTop .BtnCity.onAction = on_subtop _btncity_click
+	Ref.SubTop.btnBack.onAction = on_subtop_btnback_click
+	Ref.SubTop.BtnCity.onAction = on_subtop_btncity_click
 	UIMGR.make_group(Ref.SubStore.GrpStore, function (New, Ent)
 		New.btn.onAction = Ent.btn.onAction
 	end)
@@ -121,13 +90,13 @@ local function init_view()
 end
 
 local function init_logic()
-	NW.subscribe("WORK.SC.GETSTORE", on_ui_init)
+	NW.subscribe("ATTENCE.SC.GETATTSTORE", on_ui_init)
 	local projectId = UI_DATA.WNDSelectStore.projectId
 	local Project = DY_DATA.ProjectList[projectId]
 	if Project.StoreList == nil or #Project.StoreList == 0 then
-		local nm = NW.msg("WORK.CS.GETSTORE")
-		nm:writeU32(projectId)
+		local nm = NW.msg("ATTENCE.CS.GETATTSTORE")
 		nm:writeU32(DY_DATA.User.id)
+		nm:writeU32(projectId)
 		NW.send(nm)
 		return
 	end
@@ -148,6 +117,7 @@ end
 
 local function on_recycle()
 	NW.unsubscribe("WORK.SC.GETSTORE", on_ui_init)
+	
 end
 
 local P = {

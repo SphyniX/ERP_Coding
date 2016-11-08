@@ -60,8 +60,7 @@ local function on_select_place_callback( id )
 end
 
 local function on_submain_subinfo_subcity_click(btn)
-	UI_DATA.WNDSelectPlace.FromWhere = "1"
-	UI_DATA.WNDSelectPlace.cityid = {1,10,11,12}
+	UI_DATA.WNDSelectPlace.FromWhere = "formlocal"
 	UI_DATA.WNDSelectPlace.callbackfunc = on_select_place_callback
 	UIMGR.create("UI/WNDSelectPlace")
 	-- libunity.SetActive(Ref.SubMain.SubSelect.root,true)

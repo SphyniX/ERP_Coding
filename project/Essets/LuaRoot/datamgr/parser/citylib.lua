@@ -65,9 +65,9 @@ P.get_province_list_fromserver = function (cityid_list)
 	local ProvinceListFromServer
 	ProvinceListFromServer = {}
 	for i=1,#cityid_list do
-		print(P.ProvinceList[Citys[cityid_list[i]].province].name)
+		print(P.ProvinceList[Citys[cityid_list[i].id].province].name)
 		for _,v in ipairs(P.ProvinceList) do
-			if v.name == P.ProvinceList[Citys[cityid_list[i]].province].name then
+			if v.name == P.ProvinceList[Citys[cityid_list[i].id].province].name then
 				local flag = true
 				for i=1,#ProvinceListFromServer do
 					if ProvinceListFromServer[i].name == v.name then 
@@ -91,9 +91,9 @@ P.get_city_list_fromserver = function (cityid_list,name)
 	if name == nil then return nil end
 	if P.ProvinceList == nil then return nil end
 	for i=1,#cityid_list do
-		print(Citys[cityid_list[i]].province)
-		if P.ProvinceList[Citys[cityid_list[i]].province].name == name then
-			table.insert(CityListFromServer,Citys[cityid_list[i]])
+		print(Citys[cityid_list[i].id].province)
+		if P.ProvinceList[Citys[cityid_list[i].id].province].name == name then
+			table.insert(CityListFromServer,Citys[cityid_list[i].id])
 		end
 	end
 	print("CityList in P.get_city_list_fromserver is :" .. JSON:encode(CityListFromServer))

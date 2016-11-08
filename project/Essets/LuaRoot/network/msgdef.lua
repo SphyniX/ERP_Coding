@@ -27,6 +27,9 @@ do
             PHUNCH = ID_BASE + 9,
             VERIFY = ID_BASE + 10,
             GETATTENCE = ID_BASE + 11,
+            GETPROJECT = ID_BASE + 12,
+            GETATTSTORE = ID_BASE + 13,
+            GETCITY = ID_BASE + 14,
         }
     end
     function  Funcs.attence_sc()
@@ -43,6 +46,9 @@ do
             PHUNCH = ID_BASE + 9,
             VERIFY = ID_BASE + 10,
             GETATTENCE = ID_BASE + 11,
+            GETPROJECT = ID_BASE + 12,
+            GETATTSTORE = ID_BASE + 13,
+            GETCITY = ID_BASE + 14,
         }
     end
 
@@ -163,6 +169,8 @@ do
             GETASSIGNMENT = ID_BASE + 10,
             UPDATEASS = ID_BASE + 11,
             DELETEASS = ID_BASE + 12,
+            GETSELLPHOTO = ID_BASE + 13,
+            GETBRAND = ID_BASE + 14,
         }
     end
     function Funcs.work_sc()
@@ -180,6 +188,8 @@ do
             GETASSIGNMENT = ID_BASE + 10,
             UPDATEASS = ID_BASE + 11,
             DELETEASS = ID_BASE + 12,
+            GETSELLPHOTO = ID_BASE + 13,
+            GETBRAND = ID_BASE + 14,
         }
     end
 
