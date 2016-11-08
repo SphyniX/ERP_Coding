@@ -112,6 +112,18 @@ do
             GETPRODUCT = ID_BASE + 13,
             GETSAMPLE = ID_BASE + 14,
             GETGIFT = ID_BASE + 15,
+            GETSUPMATTER = ID_BASE + 16,
+            GETSUPMECHANISM = ID_BASE + 17,
+            GETSUPGFTRE = ID_BASE + 18,
+            GETSUPSAMPLERE = ID_BASE + 19,
+            GETSUPGETFEEDBACK = ID_BASE + 20,
+            GETSUPGETPHOTO = ID_BASE + 21,
+            GETSUPGETCOMPETING = ID_BASE + 22,
+            GETSUPGETAGGREGATE = ID_BASE + 23,
+            GETSUPGETPROAGGREGATE = ID_BASE + 24,
+            GETSUPGUPLOADPHOTO = ID_BASE + 25,
+            GETSUPUPLOADFEEDBACK = ID_BASE + 26,
+            GETSUPUPLOADCOMANALYSIS = ID_BASE + 27,
         }
     end
 
@@ -133,6 +145,18 @@ do
             GETPRODUCT = ID_BASE + 13,
             GETSAMPLE = ID_BASE + 14,
             GETGIFT = ID_BASE + 15,
+            GETSUPMATTER = ID_BASE + 16,
+            GETSUPMECHANISM = ID_BASE + 17,
+            GETSUPGFTRE = ID_BASE + 18,
+            GETSUPSAMPLERE = ID_BASE + 19,
+            GETSUPGETFEEDBACK = ID_BASE + 20,
+            GETSUPGETPHOTO = ID_BASE + 21,
+            GETSUPGETCOMPETING = ID_BASE + 22,
+            GETSUPGETAGGREGATE = ID_BASE + 23,
+            GETSUPGETPROAGGREGATE = ID_BASE + 24,
+            GETSUPGUPLOADPHOTO = ID_BASE + 25,
+            GETSUPUPLOADFEEDBACK = ID_BASE + 26,
+            GETSUPUPLOADCOMANALYSIS = ID_BASE + 27,
         }
     end
 
