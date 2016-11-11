@@ -409,7 +409,14 @@ public static class LibUnity
     private static int SelfActive(ILuaState lua)
     {
         GameObject go = lua.ToGameObject(1);
-        lua.PushBoolean(go.activeSelf);
+        Debug.Log(go.activeSelf);
+        if (go.activeSelf){
+            lua.PushBoolean(true);
+        }
+        else{
+            lua.PushBoolean(false);
+        }
+        
 
         return 0;
     }

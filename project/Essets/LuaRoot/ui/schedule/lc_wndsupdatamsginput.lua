@@ -10,19 +10,39 @@ local ipairs, pairs
 local libugui = require "libugui.cs"
 local libunity = require "libunity.cs"
 local UIMGR = MERequire "ui/uimgr"
+local DY_DATA = MERequire "datamgr/dydata.lua"
+local UI_DATA = MERequire "datamgr/uidata.lua"
+local NW = MERequire "network/networkmgr"
 local Ref
+
+local StoreId
 --!*以下：自动生成的回调函数*--
 
 local function on_subtop_btnclean_click(btn)
-	
+	Ref.inpInput.text = nil
 end
 
 local function on_subtop_btnback_click(btn)
-	
+	Ref.inpInput.text = nil
+	UIMGR.close_window(Ref.root)
 end
 
 local function on_btnsave_click(btn)
-	
+
+	local feedbackstr = Ref.inpInput.text
+	if feedbackstr ~= nil or feedbackstr ~= "" then
+
+		local nm = NW.msg("REPORTED.CS.GETSUPUPLOADFEEDBACK")
+			nm:writeU32(StoreId)
+			nm:writeU32(DY_DATA.User.id)
+			nm:writeString(feedbackstr)
+			NW.send(nm)
+
+		else
+
+			_G.UI.Toast:make(nil, "请填写情报"):show()
+		end
+		UIMGR.close_window(Ref.root)
 end
 
 local function init_view()
@@ -33,7 +53,7 @@ local function init_view()
 end
 
 local function init_logic()
-	
+	StoreId = UI_DATA.WNDSupStoreData.storeId
 end
 
 local function start(self)

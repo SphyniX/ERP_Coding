@@ -30,6 +30,7 @@ do
             GETPROJECT = ID_BASE + 12,
             GETATTSTORE = ID_BASE + 13,
             GETCITY = ID_BASE + 14,
+            GETKAO = ID_BASE + 15,
         }
     end
     function  Funcs.attence_sc()
@@ -49,6 +50,7 @@ do
             GETPROJECT = ID_BASE + 12,
             GETATTSTORE = ID_BASE + 13,
             GETCITY = ID_BASE + 14,
+            GETKAO = ID_BASE + 15,
         }
     end
 
@@ -114,7 +116,7 @@ do
             GETGIFT = ID_BASE + 15,
             GETSUPMATTER = ID_BASE + 16,
             GETSUPMECHANISM = ID_BASE + 17,
-            GETSUPGFTRE = ID_BASE + 18,
+            GETSUPGIFTRE = ID_BASE + 18,
             GETSUPSAMPLERE = ID_BASE + 19,
             GETSUPGETFEEDBACK = ID_BASE + 20,
             GETSUPGETPHOTO = ID_BASE + 21,
@@ -147,7 +149,7 @@ do
             GETGIFT = ID_BASE + 15,
             GETSUPMATTER = ID_BASE + 16,
             GETSUPMECHANISM = ID_BASE + 17,
-            GETSUPGFTRE = ID_BASE + 18,
+            GETSUPGIFTRE = ID_BASE + 18,
             GETSUPSAMPLERE = ID_BASE + 19,
             GETSUPGETFEEDBACK = ID_BASE + 20,
             GETSUPGETPHOTO = ID_BASE + 21,

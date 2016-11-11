@@ -1,5 +1,6 @@
 -- File Name: datamgr/uidata.lua
 local P = {
+<<<<<<< HEAD
 QTE = {},
 WNDLaunch = {},
 WNDLogin = {},
@@ -49,6 +50,54 @@ WNDSupStoreData = {},
 WNDsupWorkSelectShop = {},
 WNDSupWorkSelectShopTask={},
 WNDSupWorkSelectShopTaskSetSelPeople = {},
+=======
+    QTE = {},
+    WNDLaunch = {},
+    WNDLogin = {},
+    WNDRegist = {
+        UserInfo = {},
+    },
+    WNDPatch = {},
+    WNDMain = {},
+    WNDDialog = {},
+    WNDUserSupervisor = {},
+    WNDPhoto = {},
+    WNDShowPhoto = {},
+    WNDSetTime = {},
+    WNDSetSex = {},
+    WNDSelectProject = {},
+    WNDSelectStore = {},
+    WNDSelectProvince = {},
+    WNDSelectCity = {},
+    WNDSubmitSchedule = {},
+    WNDWorkProject = {},
+    WNDUserSupervisor = {},
+    WNDMsgContext = {},
+    WNDChangePassword = {},
+    WNDSupTask = {},
+    WNDSupTaskList = {},
+    WNDSupChangeTask = {},
+    WNDSupNewTask = {},
+    WNDSelectStore = {},
+    WNDSupWorkProject = {},
+    WNDSetCompeteProduct = {},
+    WNDMsgLower = {},
+    WNDBindPhone = {},
+    WNDVerifyPhone = {},
+    WNDSelectPerson = {},
+    WNDSupChangeTask = {},
+    WNDSetComPhoto = {},
+    WNDSupEditorMsg = {},
+    WNDSelectPlace = {},
+    WNDSupWork={},
+    WNDSupDataProgerssComData = {},
+    WNDSelectBrand = {},
+    WNDSupStoreData = {},
+
+    WNDSUPSENDEESELECT={},
+    WNDsupmsgData={},
+
+>>>>>>> 8a82e607803c4a830f24f8ac71a8463cc2a41f20
 }
 
 local LocalDB = {}

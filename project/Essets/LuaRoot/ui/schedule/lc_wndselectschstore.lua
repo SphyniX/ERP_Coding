@@ -18,8 +18,8 @@ local Ref
 local StoreList
 --!*以下：自动生成的回调函数*--
 
-local function on_substore_grpstore_entstore_click(btn)
-	local index = tonumber(btn.name:sub(9))
+local function on_substore_grpstore_entstore_btnbutton_click(btn)
+	local index = tonumber(btn.transform.parent.name:sub(9))
 	local Store = StoreList[index]
 	local on_selected = UI_DATA.WNDSelectStore.on_selected
 	if on_selected then on_selected(Store.id) return end
@@ -29,13 +29,10 @@ local function on_substore_grpstore_entstore_click(btn)
 	UIMGR.create_window("UI/WNDSubmitSchedule")
 end
 
-local function on_substore_grpstore_entstore_btnbutton_click(btn)
-	
-end
-
 local function on_subtop_btnback_click(btn)
 	UIMGR.close_window(Ref.root)
 end
+
 
 local function on_ui_init()
 	local projectId = UI_DATA.WNDSelectStore.projectId
@@ -59,11 +56,9 @@ local function on_ui_init()
 end
 
 local function init_view()
-	Ref.SubStore.GrpStore.Ent.btn.onAction = on_substore_grpstore_entstore_click
 	Ref.SubStore.GrpStore.Ent.btnButton.onAction = on_substore_grpstore_entstore_btnbutton_click
 	Ref.SubTop.btnBack.onAction = on_subtop_btnback_click
 	UIMGR.make_group(Ref.SubStore.GrpStore, function (New, Ent)
-		New.btn.onAction = Ent.btn.onAction
 		New.btnButton.onAction = Ent.btnButton.onAction
 	end)
 	--!*以上：自动注册的回调函数*--

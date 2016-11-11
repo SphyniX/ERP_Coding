@@ -66,7 +66,7 @@ local function on_submain_about_click(btn)
 end
 
 local function on_submain_btnlogout_click(btn)
-	
+	_G.PKG["libmgr/login"].do_logout()
 end
 
 local function on_subbtm_btnatt_click(btn)

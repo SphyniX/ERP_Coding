@@ -20,8 +20,14 @@ productIP = "api.richer.net.cn:8888",
     productDomain = "",
 }
 P.Channel = {
+<<<<<<< HEAD
     loginHost = P.IPSet.productIP,
     loginHost = P.IPSet.test,
+=======
+    loginHost = P.IPSet.test,
+    --loginHost = P.IPSet.test,
+   --loginHost = P.IPSet.test,
+>>>>>>> 8a82e607803c4a830f24f8ac71a8463cc2a41f20
     downloadHost = "139.196.109.3:8000",
     pid = 1,
     minAccLen = 6,
@@ -54,7 +60,7 @@ P.HTTPSet = {
 
     getversionInterface = function () return "http://"..P.Channel.loginHost.."/api/user/getversion" end,
 
-    downloadPhotoInterface = function () return "http://"..P.Channel.downloadHost.."/Photo" end,
+    downloadPhotoInterface = function () return "http://"..P.Channel.loginHost.."/Photo" end,
 
 }
 
@@ -347,19 +353,19 @@ function P.try_uploadphoto(userid, typeid, stid, Image, on_call_back)
     Typeid = typeid,
     Stid = stid,
 }
+-- function P.http_upphoto(tag, url, param, form, Image, headers, cbf)
 NW.http_upphoto("uploadphoto", P.HTTPSet.uploadInterface(), "", HttpParams, Image, "", on_uploadphoto_back)
 _G.UI.Waiting.show()
 end
+
 
 
 function P.try_uploadphotoforreport(userid, Image, on_call_back)
     on_wnd_uploadphoto = on_call_back
     local HttpParams = {
     UserID = userid,
-    Typeid = typeid,
-    Stid = stid,
 }
-NW.http_upphoto("uploadphoto", P.HTTPSet.uploadInterface(), "", HttpParams, Image, "", on_uploadphoto_back)
+NW.http_upphoto("uploadphoto", P.HTTPSet.uploadphotoForReport(), "", HttpParams, Image, "", on_uploadphoto_back)
 _G.UI.Waiting.show()
 end
 -- local on_wnd_getqrcode

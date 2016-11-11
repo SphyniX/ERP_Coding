@@ -11,12 +11,22 @@ local libugui = require "libugui.cs"
 local libunity = require "libunity.cs"
 local UIMGR = MERequire "ui/uimgr"
 local UI_DATA = MERequire "datamgr/uidata.lua"
+local DY_DATA = MERequire "datamgr/dydata.lua"
+local LOGIN = MERequire "libmgr/login.lua"
 local Ref
 local PhotoId
 local ComListForUpdate
 local callback, PhotoList
-local PhotoName 
+local PhotoName
 --!*以下：自动生成的回调函数*--
+
+local function on_upload_photo_callback( Ret )
+	-- body
+	if Ret.ret == 1 then
+		PhotoName = Ret.photoid[1]
+		_G.UI.Toast:make(nil, "成功"):show()
+	end
+end
 
 local function on_submain_sptex_click(btn)
 
@@ -25,9 +35,18 @@ local function on_submain_sptex_click(btn)
 	-- local tex = Ent.spPhoto
 	UIMGR.on_sdk_take_photo(name, tex, function (succ, name, image)
 		if succ then
-			PhotoName = name
+			LOGIN.try_uploadphotoforreport(DY_DATA.User.id,image,on_upload_photo_callback)
 		else
 			PhotoName = nil
+		end
+	end)
+
+	-----test ----
+	UIMGR.load_photo(tex, "1.png", function (succ, name, image)
+		if succ then
+			LOGIN.try_uploadphotoforreport(DY_DATA.User.id,image,on_upload_photo_callback)
+		else
+			-- PhotoList[i].image = nil
 		end
 	end)
 end
