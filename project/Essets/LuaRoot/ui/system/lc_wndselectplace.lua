@@ -206,7 +206,9 @@ end
 local function init_logic()
 	NW.subscribe("ATTENCE.SC.GETCITY", on_get_city)
 	NeedGetCityList = UI_DATA.WNDSelectPlace.NeedGetCityList
+	UI_DATA.WNDSelectPlace.NeedGetCityList = nil
 	projectId = UI_DATA.WNDSelectPlace.projectId
+	UI_DATA.WNDSelectPlace.projectId = nil
 	
 	FromWhere = ""
 	FromWhere = UI_DATA.WNDSelectPlace.FromWhere

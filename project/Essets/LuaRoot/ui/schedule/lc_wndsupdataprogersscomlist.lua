@@ -10,11 +10,18 @@ local ipairs, pairs
 local libugui = require "libugui.cs"
 local libunity = require "libunity.cs"
 local UIMGR = MERequire "ui/uimgr"
+local UI_DATA = MERequire "datamgr/uidata.lua"
+local DY_DATA = MERequire "datamgr/dydata.lua"
+local NW = MERequire "network/networkmgr"
 local Ref
+local ComListRe
+local StoreId
 --!*以下：自动生成的回调函数*--
 
 local function on_subproject_grpproject_entproject_click(btn)
-	UIMGR.create_window("UIMGR/WNDSupDataProgerssComData")
+	local index = tonumber(btn.name:sub(11))
+	UI_DATA.WNDSupDataProgerssComData.Comid = index
+	UIMGR.create_window("UI/WNDSupDataProgerssComData")
 end
 
 local function on_subtop_back_click(btn)
@@ -22,6 +29,31 @@ local function on_subtop_back_click(btn)
 end
 
 
+local function on_ui_init( )
+	-- body
+	ComListRe = DY_DATA.StoreData.ComListRe
+	if ComListRe == nil then
+		local nm = NW.msg("REPORTED.CS.GETSUPGETCOMPETING")
+			nm:writeU32(StoreId)
+			NW.send(nm)
+		return
+	end
+
+	local TempComListRe = {}
+	for i=1,#ComListRe do
+		if ComListRe[i].value ~= "nil" then 
+			table.insert(TempComListRe,ComListRe[i])
+		end
+	end
+
+	Ref.SubProject.GrpProject:dup(#TempComListRe, function (i, Ent, isNew)
+		local ComLis = TempComListRe[i]
+		Ent.lbName.text = ComLis.name
+		Ent.lbPeople.text = ComLis.username
+		-- UIMGR.get_photo(Ent.spImage,ComLis.icon)
+	end)
+
+end
 
 local function init_view()
 	Ref.SubProject.GrpProject.Ent.btn.onAction = on_subproject_grpproject_entproject_click
@@ -33,7 +65,18 @@ local function init_view()
 end
 
 local function init_logic()
-	
+	NW.subscribe("REPORTED.SC.GETSUPGETCOMPETING", on_ui_init)
+
+	ComListRe = DY_DATA.StoreData.ComListRe
+	StoreId = UI_DATA.WNDSupStoreData.storeId
+	if ComListRe == nil then
+		local nm = NW.msg("REPORTED.CS.GETSUPGETCOMPETING")
+			nm:writeU32(StoreId)
+			NW.send(nm)
+		return
+	end
+	on_ui_init()
+
 end
 
 local function start(self)
@@ -49,7 +92,7 @@ local function update_view()
 end
 
 local function on_recycle()
-	
+	NW.unsubscribe("REPORTED.SC.GETSUPGETCOMPETING", on_ui_init)
 end
 
 local P = {

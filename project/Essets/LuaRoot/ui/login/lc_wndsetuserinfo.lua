@@ -153,6 +153,9 @@ local function init_logic()
 	local Ref_Info = Ref.SubMain.SubContext.SubInfo
 	Ref_Info.SubContact.SubPhone.lbText.text = UserInfo.phone
 	UserInfo.PhotoList = {}
+
+
+
 end
 
 local function start(self)

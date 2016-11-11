@@ -38,14 +38,14 @@ local P = {
     WNDSetComPhoto = {},
     WNDSupEditorMsg = {},
     WNDSelectPlace = {},
-    WNDSUPSENDEESELECT={},
-    WNDsupmsgData={},
     WNDSupWork={},
-    WNDSUPSENDEESELECT = {},
-    WNDsupmsgData = {},
-    
+    WNDSupDataProgerssComData = {},
     WNDSelectBrand = {},
     WNDSupStoreData = {},
+
+    WNDSUPSENDEESELECT={},
+    WNDsupmsgData={},
+
 }
 
 local LocalDB = {}

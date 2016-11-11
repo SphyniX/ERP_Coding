@@ -10,12 +10,14 @@ local ipairs, pairs
 local libugui = require "libugui.cs"
 local libunity = require "libunity.cs"
 local UIMGR = MERequire "ui/uimgr"
+local DY_DATA = MERequire "datamgr/dydata.lua"
+local UI_DATA = MERequire "datamgr/uidata.lua"
+local NW = MERequire "network/networkmgr"
 local Ref
---!*以下：自动生成的回调函数*--
 
-local function on_subproject_grpproject_entproject_click(btn)
-	
-end
+local MechanismList
+local StoreId
+--!*以下：自动生成的回调函数*--
 
 local function on_subtop_back_click(btn)
 	UIMGR.close_window(Ref.root)
@@ -23,16 +25,56 @@ end
 
 
 
-local function init_view()
-	Ref.SubProject.GrpProject.Ent.btn.onAction = on_subproject_grpproject_entproject_click
-	Ref.SubTop.Back.onAction = on_subtop_back_click
-	UIMGR.make_group(Ref.SubProject.GrpProject, function (New, Ent)
-		New.btn.onAction = Ent.btn.onAction
+
+
+local function on_ui_init( )
+	-- body
+	MechanismList = DY_DATA.StoreData.MechanismList
+	if MechanismList == nil then
+		local nm = NW.msg("REPORTED.CS.GETSUPMECHANISM")
+			nm:writeU32(StoreId)
+			NW.send(nm)
+		return
+	end
+
+	local TempMechanismList = {}
+	for i=1,#MechanismList do
+		if MechanismList[i].value ~= "nil" then 
+			table.insert(TempMechanismList,MechanismList[i])
+		end
+	end
+
+	Ref.SubProject.GrpProject:dup(#TempMechanismList, function (i, Ent, isNew)
+		local Mechanism = TempMechanismList[i]
+		Ent.lbName.text = Mechanism.name
+		Ent.lbPeople.text = Mechanism.username
+		Ent.lbValue.text = Mechanism.value
+		-- UIMGR.get_photo(Ent.spImage,Mechanism.name)
 	end)
+
+end
+
+local function init_view()
+	Ref.SubTop.Back.onAction = on_subtop_back_click
+	UIMGR.make_group(Ref.SubProject.GrpProject)
 	--!*以上：自动注册的回调函数*--
 end
 
 local function init_logic()
+
+	NW.subscribe("REPORTED.SC.GETSUPMECHANISM", on_ui_init)
+
+	MechanismList = DY_DATA.StoreData.MechanismList
+	StoreId = UI_DATA.WNDSupStoreData.storeId
+	if MechanismList == nil then
+		local nm = NW.msg("REPORTED.CS.GETSUPMECHANISM")
+			nm:writeU32(StoreId)
+			NW.send(nm)
+		return
+	end
+	on_ui_init()
+
+
 	
 end
 
@@ -49,7 +91,7 @@ local function update_view()
 end
 
 local function on_recycle()
-	
+	NW.unsubscribe("REPORTED.SC.GETSUPMECHANISM", on_ui_init)
 end
 
 local P = {

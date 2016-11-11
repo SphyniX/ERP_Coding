@@ -44,7 +44,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 22420020}
   - 222: {fileID: 22255684}
-  - 114: {fileID: 11419360}
+  - 114: {fileID: 11420398}
   m_Layer: 5
   m_Name: spImage
   m_TagString: Untagged
@@ -54,7 +54,7 @@ GameObject:
   m_IsActive: 1
 --- !u!1 &122156
 GameObject:
-  m_ObjectHideFlags: 1
+  m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
@@ -63,7 +63,7 @@ GameObject:
   - 222: {fileID: 22292018}
   - 114: {fileID: 11462156}
   m_Layer: 5
-  m_Name: lbNumber
+  m_Name: lbPrice
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -89,7 +89,7 @@ GameObject:
   m_IsActive: 1
 --- !u!1 &151462
 GameObject:
-  m_ObjectHideFlags: 1
+  m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
@@ -234,7 +234,7 @@ MonoBehaviour:
   m_Text: "\u4FC3\u9500\u673A\u5236"
   localize: 0
   textFormat: '{0}'
---- !u!114 &11419360
+--- !u!114 &11420398
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -242,7 +242,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 109990}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4acda8210242ffa46b3fece7c2ddf771, type: 3}
+  m_Script: {fileID: 11500000, guid: d20d599cb52c4cc4abfd76574dd882ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
@@ -253,14 +253,14 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 792cc113450098648ad7f157f1a2dd9d, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
+  m_Texture: {fileID: 2800000, guid: 6378b839cfe01be4dbb55b5367732c25, type: 3}
+  m_UVRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  m_Type: 1
 --- !u!114 &11440080
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -618,7 +618,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 22420020}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -75.4, y: -377.29996}
@@ -635,10 +635,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 22465390}
-  - {fileID: 22455692}
   - {fileID: 22419860}
   - {fileID: 22494870}
-  - {fileID: 22423606}
   m_Father: {fileID: 22498330}
   m_RootOrder: 1
   m_AnchorMin: {x: 0.5, y: 1}
@@ -673,11 +671,11 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 22420020}
-  m_RootOrder: 4
+  m_Father: {fileID: 22498330}
+  m_RootOrder: 2
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -90.8, y: -473}
+  m_AnchoredPosition: {x: -87.8, y: -283.00006}
   m_SizeDelta: {x: 160, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &22455692
@@ -690,11 +688,11 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 22420020}
-  m_RootOrder: 1
+  m_Father: {fileID: 22498330}
+  m_RootOrder: 3
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -129.5, y: -377.3}
+  m_AnchoredPosition: {x: -126.500015, y: -187.29999}
   m_SizeDelta: {x: 71, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &22462368
@@ -761,7 +759,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 22420020}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -245, y: -473}
@@ -779,6 +777,8 @@ RectTransform:
   m_Children:
   - {fileID: 22494502}
   - {fileID: 22420020}
+  - {fileID: 22423606}
+  - {fileID: 22455692}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 0}

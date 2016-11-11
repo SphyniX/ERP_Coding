@@ -10,10 +10,12 @@ local ipairs, pairs
 local libugui = require "libugui.cs"
 local libunity = require "libunity.cs"
 local UIMGR = MERequire "ui/uimgr"
+local DY_DATA = MERequire "datamgr/dydata.lua"
 local Ref
 --!*以下：自动生成的回调函数*--
 
 local function on_subtop_btnback_click(btn)
+	DY_DATA.StoreData = {}
 	UIMGR.close_window(Ref.root)
 end
 
@@ -30,7 +32,7 @@ local function on_sublist_btncell_click(btn)
 end
 
 local function on_btncheck_click(btn)
-	
+	UIMGR.create_window("UI/WNDSupDataAttLog")
 end
 
 local function on_btnprogress_click(btn)
@@ -48,7 +50,8 @@ local function init_view()
 end
 
 local function init_logic()
-	
+	if DY_DATA.StoreData == nil then DY_DATA.StoreData = {} end
+
 end
 
 local function start(self)

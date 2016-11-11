@@ -10,8 +10,40 @@ local ipairs, pairs
 local libugui = require "libugui.cs"
 local libunity = require "libunity.cs"
 local UIMGR = MERequire "ui/uimgr"
+local DY_DATA = MERequire "datamgr/dydata.lua"
+local UI_DATA = MERequire "datamgr/uidata.lua"
+local NW = MERequire "network/networkmgr"
 local Ref
+
+local MatterListRe
+local StoreId
 --!*以下：自动生成的回调函数*--
+
+local function on_ui_init( )
+	-- body
+	MatterListRe = DY_DATA.StoreData.MatterListRe
+	if MatterListRe == nil then
+		local nm = NW.msg("REPORTED.CS.GETSUPMATTER")
+			nm:writeU32(StoreId)
+			NW.send(nm)
+		return
+	end
+
+	local TempMatterListRe = {}
+	for i=1,#MatterListRe do
+		if MatterListRe[i].value ~= "nil" then 
+			table.insert(TempMatterListRe,MatterListRe[i])
+		end
+	end
+
+	Ref.SubProject.GrpProject:dup(#TempMatterListRe, function (i, Ent, isNew)
+		local MetterRe = TempMatterListRe[i]
+		Ent.lbName.text = MetterRe.name
+		Ent.lbPeople.text = MetterRe.username
+		Ent.lbValue.text = MetterRe.value
+	end)
+
+end
 
 local function on_subtop_back_click(btn)
 	UIMGR.close_window(Ref.root)
@@ -31,7 +63,17 @@ local function init_view()
 end
 
 local function init_logic()
-	
+	NW.subscribe("REPORTED.SC.GETSUPMATTER", on_ui_init)
+
+	MatterListRe = DY_DATA.StoreData.MatterListRe
+	StoreId = UI_DATA.WNDSupStoreData.storeId
+	if MatterListRe == nil then
+		local nm = NW.msg("REPORTED.CS.GETSUPMATTER")
+			nm:writeU32(StoreId)
+			NW.send(nm)
+		return
+	end
+	on_ui_init()
 end
 
 local function start(self)
@@ -47,7 +89,7 @@ local function update_view()
 end
 
 local function on_recycle()
-	
+	NW.unsubscribe("REPORTED.SC.GETSUPMATTER", on_ui_init)
 end
 
 local P = {
