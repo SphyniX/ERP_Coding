@@ -16,6 +16,8 @@ local NW= MERequire "network/networkmgr"
 local WorkTEXT = _G.ENV.WorkTEXT--TEXT
 local Project = {}
 local Ref
+
+local Store
 --!*以下：自动生成的回调函数*--
 
 local function on_subtop_btnback_click(btn)
