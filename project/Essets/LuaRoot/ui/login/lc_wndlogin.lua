@@ -57,8 +57,11 @@ local function on_btnenter_click(btn)
 	print("lc_wndlogin------> on_btnenter_click")
 	--UIMGR.create_window("UI/WNDLaunch11")
 	--UIMGR.create_window("UI/WNDsuptest1111")
+
+
 	local inpAccount = Ref.SubAccount.inpAccount.text
 	local inpPassword = Ref.SubPassword.inpPassword.text
+
 	--判断是否使用端口登录
 	if inpAccount == debug_account and inpPassword == debug_password then
 		UIMGR.create_window("UI/WNDLaunch")
@@ -74,6 +77,7 @@ local function on_btnenter_click(btn)
 end
 
 local function on_btnregist_click(btn)
+		--UIMGR.create("UI/WNDSupWorkSelectPageMsg")
 	UIMGR.create_window("UI/WNDRegist")
 end
 

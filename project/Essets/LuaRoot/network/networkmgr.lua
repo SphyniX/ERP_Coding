@@ -306,8 +306,9 @@ end
 -- ============================================================================
 -- 创建一个消息对象
 function P.msg(code, size)   
-    print("networkmgr.msg创建消息对象："..tostring(code))
+   
     local id = chk_msg_type(code)
+     print("<color=#00ff00>networkmgr.msg创建消息对象：</color>"..tostring(code).."id"..id)
     if id == nil then return end
 
     local NetMsg = import("clientlib.net.NetMsg")    
@@ -316,7 +317,7 @@ end
 
 -- 客户端发送消息
 function P.send(nm, only)
-    print("<color=#00ff00>networkmgr.send发送消息：</color>")
+    print("<color=#00ff00>networkmgr.send发送消息：<color=#00ff00>")
     if P.connected() then
         local post = NtfNmList[nm.type]
         if not post then MsgQueue:enqueue({nm = nm, only = only == true}) end

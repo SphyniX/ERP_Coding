@@ -4,6 +4,8 @@ using System.Collections;
 using LuaInterface;
 using NameFuncPair = LuaMethod;
 using ILuaState = System.IntPtr;
+using UnityEngine.UI;
+
 
 public static class LibUnity
 {
@@ -40,6 +42,8 @@ public static class LibUnity
             new NameFuncPair("SendMessage", SendMessage),
             new NameFuncPair("SetActive", SetActive),
             new NameFuncPair("SelfActive",SelfActive),
+            new NameFuncPair("ToggleActive",ToggleAcitve),
+            new NameFuncPair("ToggleSelfActive",ToggleSelfActive),
             new NameFuncPair("ReActive", ReActive),
             new NameFuncPair("SetEnable", SetEnable),
             new NameFuncPair("SetParent", SetParent),
@@ -408,6 +412,29 @@ public static class LibUnity
         lua.PushBoolean(go.activeSelf);
 
         return 0;
+    }
+    [MonoPInvokeCallback(typeof(LuaCSFunction))]
+    private static int ToggleAcitve(ILuaState lua)
+    {
+        GameObject go = lua.ToGameObject(1);
+        bool active = lua.ToBoolean(2);
+        go.GetComponent<Toggle>().isOn = active;
+
+        return 0;
+    }
+    [MonoPInvokeCallback(typeof(LuaCSFunction))]
+    private static int ToggleSelfActive(ILuaState lua)
+    {
+        GameObject go = lua.ToGameObject(1);
+        if (go.GetComponent<Toggle>().isOn)
+        {
+            lua.PushInteger(1);
+        }
+        else {
+            lua.PushInteger(0);
+        }
+
+        return 1;
     }
 
     [MonoPInvokeCallback(typeof(LuaCSFunction))]

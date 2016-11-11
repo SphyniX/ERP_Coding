@@ -1,8 +1,8 @@
 --
--- @file    ui/work/lc_workpopup.lua
+-- @file    ui/work/lc_wndsupworkselect.lua
 -- @authors cks
--- @date    2016-11-04 01:19:25
--- @desc    WorkPopup
+-- @date    2016-11-09 05:05:37
+-- @desc    WNDSupWorkSelect
 --
 
 local ipairs, pairs
@@ -14,19 +14,13 @@ local Ref
 --!*以下：自动生成的回调函数*--
 
 local function on_subbg_btndate_click(btn)
-	
+	UIMGR.create_window("UI/WNDSupWorkSelectPageMsg")
+	UIMGR.close(Ref.root)
 end
 
 local function on_subbg_btntask_click(btn)
-	
-end
-
-local function on_spimage_subpage_click(btn)
-	
-end
-
-local function on_spimage_subtask_click(btn)
-	
+	UIMGR.create_window("UI/WNDSupWorkSelectShop")
+	UIMGR.close(Ref.root) 
 end
 
 local function init_view()
@@ -36,7 +30,7 @@ local function init_view()
 end
 
 local function init_logic()
-	
+	 
 end
 
 local function start(self)

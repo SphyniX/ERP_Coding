@@ -140,6 +140,53 @@ on_project_init = function ()
 	Ref.SubMain.SubAttOff.lbText.text = AttendanceProject.endtime
 end
 
+local function on_ui_init()
+	-- Ref.SubMain.SubTime.lbTime.text = libsystem.DateTime()
+	-- Ref.SubMain.SubTime.lbDay.text = ""
+
+	local User = DY_DATA.User
+	if User.workstate == 1 then
+		Ref.SubMain.SubUnder.btnButton:SetInteractable(false)
+		Ref.SubMain.SubLeave.lbText.text = "离岗"
+	elseif User.workstate == 2 then
+		Ref.SubMain.SubUnder.btnButton:SetInteractable(true)
+		Ref.SubMain.SubLeave.lbText.text = "离岗"
+	elseif User.workstate == 3 then
+		Ref.SubMain.SubUnder.btnButton:SetInteractable(true)
+		Ref.SubMain.SubLeave.lbText.text = "复岗"
+	end
+
+	on_project_init()
+end
+
+local function init_view()
+	Ref.SubMain.SubProject.btn.onAction = on_submain_subproject_click
+	Ref.SubMain.SubAttOn.btnButton.onAction = on_submain_subatton_btnbutton_click
+	Ref.SubMain.SubAttOff.btnButton.onAction = on_submain_subattoff_btnbutton_click
+	Ref.SubMain.SubLeave.btnButton.onAction = on_submain_subleave_btnbutton_click
+	Ref.SubMain.SubUnder.btnButton.onAction = on_submain_subunder_btnbutton_click
+	Ref.SubTop.btnLog.onAction = on_subtop_btnlog_click
+	Ref.SubBtm.btnWork.onAction = on_subbtm_btnwork_click
+	Ref.SubBtm.btnSch.onAction = on_subbtm_btnsch_click
+	Ref.SubBtm.btnMsg.onAction = on_subbtm_btnmsg_click
+	Ref.SubBtm.btnUser.onAction = on_subbtm_btnuser_click
+	--!*以上：自动注册的回调函数*--
+end
+
+local function init_logic()
+	print("Test DY_DATA.ProjectList is :"  .. JSON:encode(DY_DATA.ProjectList))
+	DY_DATA.Work.NowTime = nil
+	NW.subscribe("ATTENCE.SC.VERIFYLATLNG", on_try_punch)
+	NW.subscribe("USER.SC.GETUSERINFOR", on_ui_init)
+	NW.subscribe("ATTENCE.SC.GETTIME",refreshtime)
+
+	-- libsystem.StartGps()
+	on_ui_init()
+	refreshtime()
+end
+
+
+
 local function refreshtime()
 	TimeInfo = os.date("*t",os.time())
 	
@@ -196,53 +243,6 @@ local function refreshtime_onupdate()
 
 end 
 
-local function on_ui_init()
-	-- Ref.SubMain.SubTime.lbTime.text = libsystem.DateTime()
-	-- Ref.SubMain.SubTime.lbDay.text = ""
-
-	local User = DY_DATA.User
-	if User.workstate == 1 then
-		Ref.SubMain.SubUnder.btnButton:SetInteractable(false)
-		Ref.SubMain.SubLeave.lbText.text = "离岗"
-	elseif User.workstate == 2 then
-		Ref.SubMain.SubUnder.btnButton:SetInteractable(true)
-		Ref.SubMain.SubLeave.lbText.text = "离岗"
-	elseif User.workstate == 3 then
-		Ref.SubMain.SubUnder.btnButton:SetInteractable(true)
-		Ref.SubMain.SubLeave.lbText.text = "复岗"
-	end
-
-	on_project_init()
-end
-
-local function init_view()
-	Ref.SubMain.SubProject.btn.onAction = on_submain_subproject_click
-	Ref.SubMain.SubAttOn.btnButton.onAction = on_submain_subatton_btnbutton_click
-	Ref.SubMain.SubAttOff.btnButton.onAction = on_submain_subattoff_btnbutton_click
-	Ref.SubMain.SubLeave.btnButton.onAction = on_submain_subleave_btnbutton_click
-	Ref.SubMain.SubUnder.btnButton.onAction = on_submain_subunder_btnbutton_click
-	Ref.SubTop.btnLog.onAction = on_subtop_btnlog_click
-	Ref.SubBtm.btnWork.onAction = on_subbtm_btnwork_click
-	Ref.SubBtm.btnSch.onAction = on_subbtm_btnsch_click
-	Ref.SubBtm.btnMsg.onAction = on_subbtm_btnmsg_click
-	Ref.SubBtm.btnUser.onAction = on_subbtm_btnuser_click
-	--!*以上：自动注册的回调函数*--
-end
-
-local function init_logic()
-	print("Test DY_DATA.ProjectList is :"  .. JSON:encode(DY_DATA.ProjectList))
-	DY_DATA.Work.NowTime = nil
-	NW.subscribe("ATTENCE.SC.VERIFYLATLNG", on_try_punch)
-	NW.subscribe("USER.SC.GETUSERINFOR", on_ui_init)
-	NW.subscribe("ATTENCE.SC.GETTIME",refreshtime)
-
-	-- libsystem.StartGps()
-	on_ui_init()
-	refreshtime()
-end
-
-
-
 local function start(self)
 	if Ref == nil or Ref.root ~= self then
 		Ref = libugui.GenLuaTable(self, "root")
@@ -269,7 +269,6 @@ local P = {
 	start = start,
 	update_view = update_view,
 	on_recycle = on_recycle,
-	update = update,
 }
 return P
 

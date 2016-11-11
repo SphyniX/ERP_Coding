@@ -30,12 +30,12 @@ GameObject:
   - 114: {fileID: 11414862}
   - 114: {fileID: 11467392}
   m_Layer: 5
-  m_Name: WorkPopup
+  m_Name: WNDSupWorkSelect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &170204
 GameObject:
   m_ObjectHideFlags: 1
@@ -358,7 +358,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 002a0f4a9ef6b448481d248763a099dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  luaScript: ui/work/lc_workpopup.lua
+  luaScript: ui/work/lc_wndsupworkselect.lua
   LocalMethods:
   - start
   - update_view

@@ -64,6 +64,8 @@ local function on_project_init()
 	for k,v in pairs(Info.ProductList) do
 		product = product.."、"..v
 	end
+	Ref.SubMain.SubContent.lbName=Project.name
+		--Ref.SubMain.SubContent.lbName
 	Ref_SubMain_SubContent.SubOne.lbText.text = string.format(TEXT.fmtInfo, Info.brand, product) -- 品牌， 产品 /projectinfo
 	Ref_SubMain_SubContent.SubTwo.lbText.text = string.format(TEXT.fmtType, Info.act_form, Info.act_calendar, Info.act_goal, Info.goal_sale, Info.goal_expvolume, Info.goal_exppeople) -- 活动形式， 
 	Ref_SubMain_SubContent.SubThree.lbText.text = string.format(TEXT.fmtProduct, Info.product_info, Info.selling_point) 
