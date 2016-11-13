@@ -49,7 +49,8 @@ local function on_subtop_btnback_click(btn)
 end
 
 local function on_subtop_nextweek_click(btn)	
-	UI_DATA.WNDSupWorkSelectShopTaskSetSelPeople.dateState=false												
+	UI_DATA.WNDSupWorkSelectShopTaskSetSelPeople.dateState=true
+	--UI_DATA.WNDSupWorkSelectShopTaskSetSelPeople.dateState=false												
 	for i=1,#PersonListForUpdateCallBack do
 		if PersonListForUpdateCallBack[i].StateNumber == 0 then
 			if PersonListForUpdateCallBack[i].starttime ~= Ref.SubStartTime.data.text or PersonListForUpdateCallBack[i].endtime ~= Ref.SubEndTime.data.text then
@@ -57,7 +58,6 @@ local function on_subtop_nextweek_click(btn)
 			end
 		end
 	end
-
 
 	print("_++++++++++++++++++++++++" .. JSON:encode(PersonListForUpdateCallBack))
 
@@ -135,6 +135,8 @@ local function on_subselectpeople_btnbutton_click(btn)
 
 	UI_DATA.WNDSupWorkSelectShopTaskSetSelPeople.callbackfunc = on_set_sel_people_callback
 	UI_DATA.WNDSupWorkSelectShopTaskSetSelPeople.PersonListForUpdate = PersonListForUpdateCallBack
+	print("on_subselectpeople_btnbutton_click--------------------PersonListForUpdateCallBack"..JSON:encode(PersonListForUpdateCallBack))
+	print("on_subselectpeople_btnbutton_click------------------111111--PersonListForUpdateCallBack"..JSON:encode(UI_DATA.WNDSupWorkSelectShopTaskSetSelPeople.PersonListForUpdate))
 	UIMGR.create_window("UI/WNDSupWorkSelectShopTaskSetSelPeople")
 end
 
@@ -148,17 +150,19 @@ local function init_view()
 end
 local function init_logic()
 
-			storeId = UI_DATA.WNDSubmitSchedule.storeId
-		    local TaskList = UI_DATA.WNDSupWorkSelectShopTask.TaskList
-		    local Tempn = UI_DATA.WNDSupWorkSelectShopTask.index
-		    local n = tonumber(Tempn)
-		    print("--------".. n)
-		    print(JSON:encode(TaskList[n].PersonList))
-		    local namelist = ""
-		    PersonListForUpdateCallBack = PersonListForUpdate
+		storeId = UI_DATA.WNDSubmitSchedule.storeId
+	    local TaskList = UI_DATA.WNDSupWorkSelectShopTask.TaskList
+	    local Tempn = UI_DATA.WNDSupWorkSelectShopTask.index
+	    local n = tonumber(Tempn)
+	    print("--------".. n)
+	    print(JSON:encode(TaskList[n].PersonList))
+	    local namelist = ""
+
 		if UI_DATA.WNDSupWorkSelectShopTaskSetSelPeople.dateState then
+			PersonListForUpdateCallBack = TaskList[n].PersonList--PersonListForUpdate
 			print("第一次登录界面")
 			PersonListForUpdate = TaskList[n].PersonList
+			print("第一次登录界面------------PersonListForUpdateCallBack----"..JSON:encode( PersonListForUpdateCallBack).."///"..JSON:encode( PersonListForUpdate))
 		    for i=1,#PersonListForUpdate do
 				if PersonListForUpdate[i].StateNumber == nil then
 					PersonListForUpdate[i].StateNumber = 0
@@ -172,49 +176,35 @@ local function init_logic()
 				end
 			end
 			if TaskList[n].starttime ~= "" then
-			
+				print("初始化任务安排")
 			    Ref.SubStartTime.data.text = TaskList[n].starttime
 			    Ref.SubEndTime.data.text = TaskList[n].endtime
 			    Ref.SubSelectPeople.data.text = namelist
+			 else
+			 	Ref.SubStartTime.data.text = "请输入时间"
+			    Ref.SubEndTime.data.text = "请输入时间"
+			    Ref.SubSelectPeople.data.text = "请选择人员"
 			end
-			print("function init_logic---storeId-----------")
-
-
-
-			
+			print("function init_logic---storeId-----------")			
 		else
 
 			print("第二次登录界面")
 
-			if UI_DATA.WNDSupWorkSelectShopTaskSetSelPeople.PersonListForUpdate ~= nil then
-				local PersonList = UI_DATA.WNDSupWorkSelectShopTaskSetSelPeople.PersonListForUpdate
-				if PersonList ~= nil then 
-					 if PersonList ~= {} then 
-						for i =1,#PersonList do
-							namelist = namelist..PersonList[i].name..";"
-						end
-					end
-				end
-				Ref.SubStartTime.data.text = TaskList[n].starttime
-			    Ref.SubEndTime.data.text = TaskList[n].endtime
-			    Ref.SubSelectPeople.data.text = namelist
-			end
-			
-
-
-			-- if TaskList[n].starttime ~= "" then
-			
-			--     Ref.SubStartTime.data.text = TaskList[n].starttime
+			-- if UI_DATA.WNDSupWorkSelectShopTaskSetSelPeople.PersonListForUpdate ~= nil then
+			-- 	local PersonList = UI_DATA.WNDSupWorkSelectShopTaskSetSelPeople.PersonListForUpdate
+			-- 	if PersonList ~= nil then 
+			-- 		 if PersonList ~= {} then 
+			-- 			for i =1,#PersonList do
+			-- 				namelist = namelist..PersonList[i].name..";"
+			-- 			end
+			-- 		end
+			-- 	end
+			-- 	Ref.SubStartTime.data.text = TaskList[n].starttime
 			--     Ref.SubEndTime.data.text = TaskList[n].endtime
 			--     Ref.SubSelectPeople.data.text = namelist
 			-- end
 		end
 
-		
-
-
-	
-		
 	-- NW.subscribe("WORK.SC.GETASSIGNMENT",on_store_init)
 
 

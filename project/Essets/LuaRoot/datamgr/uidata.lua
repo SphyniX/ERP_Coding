@@ -1,6 +1,5 @@
 -- File Name: datamgr/uidata.lua
 local P = {
-<<<<<<< HEAD
 QTE = {},
 WNDLaunch = {},
 WNDLogin = {},
@@ -50,7 +49,6 @@ WNDSupStoreData = {},
 WNDsupWorkSelectShop = {},
 WNDSupWorkSelectShopTask={},
 WNDSupWorkSelectShopTaskSetSelPeople = {},
-=======
     QTE = {},
     WNDLaunch = {},
     WNDLogin = {},
@@ -96,8 +94,9 @@ WNDSupWorkSelectShopTaskSetSelPeople = {},
 
     WNDSUPSENDEESELECT={},
     WNDsupmsgData={},
+    WNDsupShopSelect = {},
+    WNDsupShopSelectPunch = {},
 
->>>>>>> 8a82e607803c4a830f24f8ac71a8463cc2a41f20
 }
 
 local LocalDB = {}

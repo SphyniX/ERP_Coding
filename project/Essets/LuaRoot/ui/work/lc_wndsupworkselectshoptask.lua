@@ -40,8 +40,8 @@ local function on_subtasklist_grp_ent_btnbutton_click(btn)
 		Ent.TaskConcent.text = "无任务"
 	end)
 	UI_DATA.WNDSupWorkSelectShopTask.TaskList=NewTaskList
-	print("点击按钮"..btn.name)
-	UI_DATA.WNDSupWorkSelectShopTask.index=tostring(btn.transform.parent.name:sub(4))
+	print("点击按钮"..btn.transform.parent.name)
+	UI_DATA.WNDSupWorkSelectShopTask.index=tonumber(btn.transform.parent.name:sub(4))
 	--UI_DATA.WNDSupWorkSelectShopTaskSetSelPeople.PersonListForUpdate=TaskListUI_DATA.WNDSupWorkSelectShopTask.index
 	-- print("UI_DATA.WNDSupWorkSelectShopTask.index"..tostring(UI_DATA.WNDSupWorkSelectShopTask.index))
 	-- print("name"..UI_DATA.WNDSupWorkSelectShopTask.PersonList[1].name)

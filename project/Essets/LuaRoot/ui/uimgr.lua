@@ -162,6 +162,7 @@ function P.load_photo(go, name, callBack)
 	end)
 end
 function P.on_sdk_take_photo(name, tex, callBack)
+	print("开始拍照")
 	if name == nil or name == "" then 
 		if callBack then callBack(false, nil, nil) end 
 		return 
@@ -170,7 +171,7 @@ function P.on_sdk_take_photo(name, tex, callBack)
 		P.load_photo(tex, name, callBack)
 		return
 	end
-	
+		print("开始拍照1")
 	local UI_DATA = MERequire "datamgr/uidata.lua"
 	UI_DATA.WNDPhoto.on_get_photo_callback = function (name)
 		P.load_photo(tex, name, callBack)

@@ -77,104 +77,76 @@ local function on_btbsave_click(btn)
 	UIMGR.close_window(Ref.root)
 
 end
-local function on_ui_init()
+--------------------弃用函数
+local function findUIToggle(id)
+local UIToggles = {}
+local GrpMsg = libunity.FindComponent(id,"GrpMsg","RectTransform")
+if GrpMsg~=nil then
+	print("<color=#0f0>物体找到-----GrpMsg--yes-------</color>"..GrpMsg.name)
 
-	if UI_DATA.WNDSupWorkSelectShopTaskSetSelPeople.dateState then
+	for  i=0,GrpMsg.childCount-1 do
+			local entMsg=GrpMsg:GetChild(i)--:GetComponent("UIToggle")
+			if entMsg then
+				local UIToggle=entMsg:GetChild(0)
+				if UIToggle then
+					local  UITogglecomponent=UIToggle:GetComponent("UIToggle")
+					if UITogglecomponent then
+						UITogglecomponent.isOn=false
+						UIToggles[i]=UITogglecomponent
+						print("UITogglecomponent------------yes---------"..UITogglecomponent.name)
+					else
+						print("UITogglecomponent--------------------------------no--------")
+					end
+				else
+					print("UIToggle-------------------------no-------------------------")
+				end
+				--UIToggleGet.isOn=true
+				--gameobj[i]=UIToggleGet
+				print("entMsg----------------------yes-------------"..entMsg.name)
+			else
+				print("entMsg----------------------------no--------")
+
+			end
+		end
+	else
+		print("<color=#ff0>物体未找到--no--GrpMsg----------</color>")
+	end
+	if UIToggles~=nil and next(UIToggles)~=next then
+		return UIToggles
+	else
+		return nil
+	end
+end
+
+local function on_ui_init()
 		print("第一册登陆")
 		PromoterList = DY_DATA.get_promoter_List()
-		UI_DATA.WNDSupWorkSelectShopTaskSetSelPeople.dateState=false
-	else
-		print("第二册登陆")
-		PromoterList=UI_DATA.WNDSupWorkSelectShopTaskSetSelPeople.PersonListForUpdate
-	end
-	--PromoterList = DY_DATA.get_promoter_List()
 	print("PersonListForUpdate is------------------------------------- :" .. JSON:encode(PersonListForUpdate))
 	print("PromoterList is ----------------------------:" .. JSON:encode(PromoterList))
-	-- local Tgl = {}
-	-- Ref.SubMsg.GrpMsg:dup(#PromoterList,function (i,Ent,IsNew)
-	-- 	local obj=libunity.FindComponent(Ent,"SubtglToggle","UIToggle")
-	-- 	Tgl[i] = obj
-	-- end)
 	Ref.SubMsg.GrpMsg:dup(#PromoterList,function (i,Ent,IsNew)
 		Ent.SubtglToggle.lbName.text = PromoterList[i].name
-			if UI_DATA.WNDSupWorkSelectShopTaskSetSelPeople.PersonListForUpdate ~= nil then
-				print("PromoterList is ----------------UI_DATA.WNDSupWorkSelectShopTaskSetSelPeople.PersonListForUpdate------------:" .. JSON:encode(PromoterList))
-				for j=1,#UI_DATA.WNDSupWorkSelectShopTaskSetSelPeople.PersonListForUpdate do
-					if PersonListForUpdate[j].name == PromoterList[i].name then
-						print("SubtglToggle " .. i)
-						
-						--obj.isOn=true
+					print("PromoterList is ----------------UI_DATA.WNDSupWorkSelectShopTaskSetSelPeople.PersonListForUpdate------------:"..i .. JSON:encode(PromoterList))
+		if PersonListForUpdate ~= nil then
 
-
+			for j=1,#PersonListForUpdate do
+				if PersonListForUpdate[j].name == PromoterList[i].name  then
+					if PersonListForUpdate[j].StateNumber~=2 then
 						libunity.ToggleActive(Ent.SubtglToggle.root,true)
+						print("SubtglToggle " .. i)
 					else
 						libunity.ToggleActive(Ent.SubtglToggle.root,false)
 					end
-				end	
-			end
-
-
-
-
-		-- if PersonListForUpdate ~= nil then
-		-- 		print("PromoterList is ----------------UI_DATA.WNDSupWorkSelectShopTaskSetSelPeople.PersonListForUpdate------------:" .. JSON:encode(PromoterList))
-		-- 		for j=1,#PersonListForUpdate do
-		-- 			if PersonListForUpdate[j].name == PromoterList[i].name then
-		-- 				print("SubtglToggle " .. i)
+				else
 						
-
-		-- 				libunity.ToggleActive(Ent.SubtglToggle.root,true)
-		-- 			else
-		-- 				libunity.ToggleActive(Ent.SubtglToggle.root,false)
-		-- 			end
-		-- 		end	
-		-- end
-		-- if UI_DATA.WNDSupWorkSelectShopTaskSetSelPeople.PersonListForUpdate ~= nil then
-		-- 				print("PromoterList is ----------------UI_DATA.WNDSupWorkSelectShopTaskSetSelPeople.PersonListForUpdate------------:" .. JSON:encode(PromoterList))
-		-- 				for j=1,#UI_DATA.WNDSupWorkSelectShopTaskSetSelPeople.PersonListForUpdate do
-		-- 					if PersonListForUpdate[j].name == PromoterList[i].name then
-		-- 						print("SubtglToggle " .. i)
-								
-		-- 						--obj.isOn=true
-
-
-		-- 						libunity.ToggleActive(Ent.SubtglToggle.root,true)
-		-- 					else
-		-- 						libunity.ToggleActive(Ent.SubtglToggle.root,false)
-		-- 					end
-		-- 				end	
-		-- end
-
-
-
-
-
-
-		-- else
-		-- 	if UI_DATA.WNDSupWorkSelectShopTaskSetSelPeople.PersonListForUpdate ~= nil then
-		-- 		print("PromoterList is ----------------UI_DATA.WNDSupWorkSelectShopTaskSetSelPeople.PersonListForUpdate------------:" .. JSON:encode(PromoterList))
-		-- 		for j=1,#PersonListForUpdate do
-		-- 			if UI_DATA.WNDSupWorkSelectShopTaskSetSelPeople.PersonListForUpdate[j].name == PromoterList[i].name then
-		-- 				print("SubtglToggle " .. i)
-						
-		-- 				--obj.isOn=true
-
-
-		-- 				libunity.ToggleActive(Ent.SubtglToggle.root,true)
-		-- 			else
-		-- 				libunity.ToggleActive(Ent.SubtglToggle.root,false)
-		-- 			end
-		-- 		end	
-		-- 	end
-		-- end
+				end
+			end	
+		end
 	end)
 
 end
 
 
 local function init_view()
-
-	
 
 	Ref.SubTop.citySelect.onAction = on_subtop_cityselect_click
 	Ref.SubTop.btnPrevious.onAction = on_subtop_btnprevious_click
@@ -187,13 +159,17 @@ local function init_view()
 end
 
 local function init_logic()			-----------------------------zzg
-		print("初始化界面--------------------------------------------------------")
+	print("初始化界面--------------------------------------------------------")
 	print(os.date("%w",os.time()))
+
+	UI_DATA.WNDSupWorkSelectShopTaskSetSelPeople.dateState=false
 	PersonListForUpdate = UI_DATA.WNDSupWorkSelectShopTaskSetSelPeople.PersonListForUpdate
+	print("wndsupworkselectshoptasksetselpeople----UI_DATA.WNDSupWorkSelectShopTaskSetSelPeople.PersonListForUpdate"..JSON:encode(PersonListForUpdate))
 	if UI_DATA.WNDSupWorkSelectShopTaskSetSelPeople.dateState then
-		print("selectpeople  第一次进入界面")
-	UI_DATA.WNDSupWorkSelectShopTaskSetSelPeople.PersonListForUpdate = nil
+	print("selectpeople  第一次进入界面")
+
 	end
+	--UI_DATA.WNDSupWorkSelectShopTaskSetSelPeople.PersonListForUpdate = nil	
 	callbackfunc = UI_DATA.WNDSupWorkSelectShopTaskSetSelPeople.callbackfunc
 	UI_DATA.WNDSupWorkSelectShopTaskSetSelPeople.callbackfunc = nil
 	NW.subscribe("WORK.SC.GETSALES",on_ui_init)

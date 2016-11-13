@@ -227,15 +227,15 @@ public static class LibUnity
     [MonoPInvokeCallback(typeof(LuaCSFunction))]
     private static int GetGameObject(ILuaState lua)
     {
-        Debug.Log("<color=#0f0>获取对象</color>");
         GameObject obj = lua.ToGameObject(1);
+
         if (obj != null)
         {
-            Debug.Log("<color=#0f0>获取对象成功</color>");
+            Debug.Log("<color=#0f0>GetGameObject--获取对象成功</color>");
             lua.PushLightUserData(obj);
         }
         else {
-            Debug.Log("<color=#0f0>获取对象失败</color>");
+            Debug.Log("<color=#0f0>GetGameObject--获取对象失败--查看你是否忘记添加或者删除“root”</color>");
             lua.PushNil();
         }
         return 1;
@@ -426,7 +426,6 @@ public static class LibUnity
         GameObject go = lua.ToGameObject(1);
         bool active = lua.ToBoolean(2);
         go.GetComponent<Toggle>().isOn = active;
-
         return 0;
     }
     [MonoPInvokeCallback(typeof(LuaCSFunction))]

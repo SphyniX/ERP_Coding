@@ -84,6 +84,7 @@ local function init_view()
 end
 
 local function init_logic()
+	UI_DATA.WNDSupWorkSelectShopTaskSetSelPeople.dateState=true
 		NW.subscribe("WORK.SC.GETSTORE", on_ui_init)
 	local projectId = UI_DATA.WNDSelectStore.projectId
 	local Project = DY_DATA.SchProjectList[projectId]

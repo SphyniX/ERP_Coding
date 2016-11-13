@@ -20,14 +20,8 @@ productIP = "api.richer.net.cn:8888",
     productDomain = "",
 }
 P.Channel = {
-<<<<<<< HEAD
     loginHost = P.IPSet.productIP,
-    loginHost = P.IPSet.test,
-=======
-    loginHost = P.IPSet.test,
     --loginHost = P.IPSet.test,
-   --loginHost = P.IPSet.test,
->>>>>>> 8a82e607803c4a830f24f8ac71a8463cc2a41f20
     downloadHost = "139.196.109.3:8000",
     pid = 1,
     minAccLen = 6,

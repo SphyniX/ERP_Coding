@@ -12,10 +12,10 @@ local libunity = require "libunity.cs"
 local libsystem = require "libsystem.cs"
 local UIMGR = MERequire "ui/uimgr"
 local DY_DATA = MERequire "datamgr/dydata.lua"
-local TEXT = _G.ENV.TEXT
 local UI_DATA = MERequire "datamgr/uidata.lua"
 local NW = MERequire "network/networkmgr"
 local LOGIN = MERequire "libmgr/login.lua"
+local TEXT = _G.ENV.TEXT
 local Ref
 local x = 1
 local TimeInfo = {}
@@ -159,7 +159,7 @@ end
 --!*以下：自动生成的回调函数*--
 
 local function on_subtop_btnbutton_click(btn)
-	
+	UIMGR.create_window("UI/WNDSupPunchTabb")
 end
 
 local function on_subbtm_btnwork_click(btn)
@@ -188,7 +188,8 @@ local function on_submain_subproject_click(btn)
 end
 
 local function on_submain_subpunch_btnbutton_click(btn)
-	
+	DY_DATA.WNDsupShopSelect.projectId = projectId
+	UIMGR.create_window("UI/WNDSupshopSelect")
 end
 
 local function on_submain_subunder_btnbutton_click(btn)
@@ -333,7 +334,10 @@ end
 on_project_init = function ()
 	if projectId == nil then
 		Ref.SubMain.SubProject.lbText.text = "请选择项目"
+		libunity.SetActive(Ref.SubMain.SubPunch.btnButton,false)
 		return
+	else
+		libunity.SetActive(Ref.SubMain.SubPunch.btnButton,true)
 	end
 	AttendanceList = DY_DATA.get_attendance_list(false)
 	print("UI_DATA.AttendanceList is :" .. JSON:encode(AttendanceList))
@@ -360,6 +364,7 @@ local function on_ui_init()
 	
 	if projectId == nil then
 		Ref.SubMain.SubProject.lbText.text = "请选择项目"
+		libunity.SetActive(Ref.SubMain.SubPunch.btnButton,false)
 		return
 	end
 
