@@ -42,13 +42,13 @@ local function on_submain_sptex_click(btn)
 	end)
 
 	-----test ----
-	UIMGR.load_photo(tex, "1.png", function (succ, name, image)
-		if succ then
-			LOGIN.try_uploadphotoforreport(DY_DATA.User.id,image,on_upload_photo_callback)
-		else
-			-- PhotoList[i].image = nil
-		end
-	end)
+	-- UIMGR.load_photo(tex, "1.png", function (succ, name, image)
+	-- 	if succ then
+	-- 		LOGIN.try_uploadphotoforreport(DY_DATA.User.id,image,on_upload_photo_callback)
+	-- 	else
+	-- 		-- PhotoList[i].image = nil
+	-- 	end
+	-- end)
 end
 
 local function on_submain_btnsave_click(btn)

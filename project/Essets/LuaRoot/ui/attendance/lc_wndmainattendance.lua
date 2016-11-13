@@ -173,17 +173,7 @@ local function init_view()
 	--!*以上：自动注册的回调函数*--
 end
 
-local function init_logic()
-	print("Test DY_DATA.ProjectList is :"  .. JSON:encode(DY_DATA.ProjectList))
-	DY_DATA.Work.NowTime = nil
-	NW.subscribe("ATTENCE.SC.VERIFYLATLNG", on_try_punch)
-	NW.subscribe("USER.SC.GETUSERINFOR", on_ui_init)
-	NW.subscribe("ATTENCE.SC.GETTIME",refreshtime)
 
-	-- libsystem.StartGps()
-	on_ui_init()
-	refreshtime()
-end
 
 
 
@@ -210,7 +200,17 @@ local function refreshtime()
 
 end
 
+local function init_logic()
+	print("Test DY_DATA.ProjectList is :"  .. JSON:encode(DY_DATA.ProjectList))
+	DY_DATA.Work.NowTime = nil
+	NW.subscribe("ATTENCE.SC.VERIFYLATLNG", on_try_punch)
+	NW.subscribe("USER.SC.GETUSERINFOR", on_ui_init)
+	NW.subscribe("ATTENCE.SC.GETTIME",refreshtime)
 
+	-- libsystem.StartGps()
+	on_ui_init()
+	refreshtime()
+end
 
 
 local function refreshtime_onupdate()

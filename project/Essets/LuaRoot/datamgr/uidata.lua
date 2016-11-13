@@ -41,8 +41,8 @@ WNDSelectPlace = {},
 WNDSUPSENDEESELECT={},
 WNDsupmsgData={},
 WNDSupWork={},
-WNDSUPSENDEESELECT = {},
-WNDsupmsgData = {},
+
+WNDSupDataProgerssComData = {},
 
 WNDSelectBrand = {},
 WNDSupStoreData = {},

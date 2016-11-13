@@ -22,6 +22,8 @@ productIP = "api.richer.net.cn:8888",
 P.Channel = {
     loginHost = P.IPSet.productIP,
     --loginHost = P.IPSet.test,
+
+    loginHost = P.IPSet.productIP,
     downloadHost = "139.196.109.3:8000",
     pid = 1,
     minAccLen = 6,
@@ -340,12 +342,12 @@ local function on_uploadphoto_back(resp, isDone, err)
     
 end
 
-function P.try_uploadphoto(userid, typeid, stid, Image, on_call_back)
+function P.try_uploadphoto(userid, typeid, storeid, Image, on_call_back)
     on_wnd_uploadphoto = on_call_back
     local HttpParams = {
     UserID = userid,
     Typeid = typeid,
-    Stid = stid,
+    Stid = storeid,
 }
 -- function P.http_upphoto(tag, url, param, form, Image, headers, cbf)
 NW.http_upphoto("uploadphoto", P.HTTPSet.uploadInterface(), "", HttpParams, Image, "", on_uploadphoto_back)
