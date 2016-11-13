@@ -30,7 +30,6 @@ local GETCITYDONE
 --!*以下：自动生成的回调函数*--
 
 local function on_submain_subselect_subprovince_grp_ent_click(btn)
-
 	local index = tonumber(btn.name:sub(4))
 	local province_name
 	if NeedGetCityList then
@@ -146,6 +145,7 @@ local function on_submain_subselect_btncancle_click(btn)
 	ProvinceNow = nil
 	UIMGR.close(Ref.root)
 end
+
 
 local function on_place_init()
 	if NeedGetCityList then
