@@ -514,6 +514,32 @@ local function sc_reported_getstore(nm)
 end
 NW.regist("REPORTED.SC.GETSTORE", sc_reported_getstore)
 
+
+local function sc_reported_getstore(nm)
+    
+    local PhotoList = {}
+    local  storeId = nm:readString()
+    local n = tonumber(nm:readString())
+    for i=1,n do
+        local userid = tonumber(nm:readString())
+        local username = nm:readString()
+        local j = tonumber(nm:readString())
+        for k=1,j do
+            local Photo = {
+            id = tonumber(nm:readString()),
+            name = nm:readString(),
+            photo = nm:readString(),
+        }
+        end
+        
+        table.insert(PhotoList,{userid = userid, username = username, Photo = Photo})
+    end
+    DY_DATA.StoreData.PhotoList = PhotoList
+    print("PhotoList is " .. JSON:encode(DY_DATA.StoreData.PhotoList))
+end
+NW.regist("REPORTED.SC.GETSUPGETPHOTO", sc_reported_getstore)
+
+
 local function sc_reported_getstoreinfor(nm)
     local projectId = tonumber(nm:readString())
     local Project = DY_DATA.SchProjectList[projectId]
@@ -1194,8 +1220,12 @@ local function sc_work_getsellphoto(nm)
     for i=1, n do
         local id = tonumber(nm:readString())
         local name = nm:readString()
-        table.insert(SellPhoto, {id = id, name = name})
+        local state = tonumber(nm:readString())
+        table.insert(SellPhoto, {id = id, name = name,state = state})
     end
+    Project.SellPhoto = SellPhoto
+    print("SellPhoto is :" .. JSON:encode(SellPhoto))
+    print("SellPhoto is :" .. JSON:encode(Project.SellPhoto))
 end
 NW.regist("WORK.SC.GETSELLPHOTO", sc_work_getsellphoto)
 

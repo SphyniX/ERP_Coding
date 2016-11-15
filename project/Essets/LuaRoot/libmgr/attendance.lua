@@ -61,10 +61,6 @@ local function on_try_punch_off()
    	UI_DATA.WNDShowPhoto.tip = ""
    	UI_DATA.WNDShowPhoto.photolist = {
    		{ title = "门头照和人像", name = "sub_8.png" , typeId = 8, need = true },
-   		{ title = "婴儿纸尿裤", name = "sub_9.png" , typeId = 9 },
-   		{ title = "端架或地堆", name = "sub_10.png" , typeId = 10 },
-   		{ title = "湿巾", name = "sub_11.png" , typeId = 11 },
-   		{ title = "纸巾", name = "sub_12.png" , typeId = 12 },
    	}
    	UI_DATA.WNDShowPhoto.callback = on_punch_callback
    	UIMGR.create_window("UI/WNDSubmitPhoto")

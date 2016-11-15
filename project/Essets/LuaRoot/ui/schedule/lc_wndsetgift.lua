@@ -61,6 +61,8 @@ local function on_btnsave_click(btn)
 		local id = GiftList[i].id
 		local volume = Ent.lbVolume.text:sub(1,string.len(Ent.lbVolume.text)-3)
 		-- local number = Ent.lbNumber.text
+		if volume == "   " then volume = 0 end
+		local volumeNumber = tonumber(volume)
 		table.insert(ProductListForUpdate,{id = id ,volume = volume})
 
 		end)

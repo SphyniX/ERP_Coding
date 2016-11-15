@@ -42,6 +42,7 @@ local function on_submain_subcontent_btnbutton_click(btn)
 	local TempProductList = UI_DATA.WNDSubmitSchedule.ProductList
 	local TempProductListInfo = UI_DATA.WNDSubmitSchedule.ProductListInfo
 	local TempProductListForetaste = UI_DATA.WNDSubmitSchedule.ProductListForetaste
+	local TempPhotoListForUpDate = UI_DATA.WNDSubmitSchedule.PhotoListForUpdate
 	local TempProductListGift = UI_DATA.WNDSubmitSchedule.ProductListGift
 	local TempComList = UI_DATA.WNDSubmitSchedule.ComList
 	local TempMaterList = DY_DATA.WNDSubmitSchedule.MaterList
@@ -72,6 +73,13 @@ local function on_submain_subcontent_btnbutton_click(btn)
 		print("WNDSubmitSchedule.ProductListForetaste is :" .. JSON:encode(TempProductListForetaste))
 	else
 		_G.UI.Toast:make(nil,"体验品数据不能全为空"):show()
+		return
+	end
+
+	if TempPhotoListForUpDate ~= nil then 
+		print("WNDSubmitSchedule.PhotoListForUpdate is :" .. JSON:encode(TempPhotoListForUpDate))
+	else
+		_G.UI.Toast:make(nil,"请上传必传图片"):show()
 		return
 	end
 
@@ -130,8 +138,12 @@ local function on_submain_subcontent_btnbutton_click(btn)
 			-- print(JSON:encode(v))
 		end
 
-		nm:writeU32(0)
-
+		nm:writeU32(#TempPhotoListForUpDate)
+		for _,v in ipairs(TempPhotoListForUpDate) do
+			nm:writeU32(v.id == "" and 0 or tonumber(v.id))
+			nm:writeString(v.photo)
+			-- print(JSON:encode(v))
+		end
 		nm:writeU32(#TempProductListGift)
 		for _,v in ipairs(TempProductListGift) do
 			nm:writeU32(v.id == "" and 0 or tonumber(v.id))
@@ -174,8 +186,8 @@ end
 
 -- 照片
 local function on_submain_subproduct_btn2_click(btn)
-	
 	libunity.SetActive(Ref.SubMain.SubProduct.root, false)
+	UIMGR.create_window("UI/WNDSubmitPhotoForReport")
 end
 
 -- 促销机制
