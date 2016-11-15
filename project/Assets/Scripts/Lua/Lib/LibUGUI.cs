@@ -391,6 +391,10 @@ public static class LibUGUI
                 if (disposer != null) disposer.Dispose();
             };
         }
+        if (tex != null)
+        {
+            Debug.Log("UITexture组件存在");
+        }
         SDKMgr.Instance.OnLoadPhoto(tex, name, onLoaded);
         return 0;
     }

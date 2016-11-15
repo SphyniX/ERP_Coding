@@ -729,6 +729,7 @@ local function sc_reported_getcomlistre ( nm )
     if DY_DATA.StoreData.ComListRe == nil then DY_DATA.StoreData.ComListRe = {} end
 
     local n = tonumber(nm:readString())
+    print("REPORTED.SC.GETSUPGETCOMPETING---------"..n)
     local ComListRe = {}
     for i=1,n do
         local ComRe = {
@@ -1293,7 +1294,13 @@ for i=1,n do
 end
 NW.regist("MESSAGE.SC.GETMESSAGELIST", sc_message_getmessagelist)
 --------------------zzg-add----------------------------------
-
+local function sc_reported_getsupuploadcomanalysis(nm)
+    local WNDsupShopSelect = {}
+    DY_DATA.WNDsupShopSelect=WNDsupShopSelect
+    DY_DATA.WNDsupShopSelect.UploadComAnalysisState = nm:readString()
+    print("REPORTED.SC.GETSUPUPLOADCOMANALYSIS-----DY_DATA.WNDsupShopSelect.UploadComAnalysisState------"..DY_DATA.WNDsupShopSelect.UploadComAnalysisState)
+end
+NW.regist("REPORTED.SC.GETSUPUPLOADCOMANALYSIS", sc_reported_getsupuploadcomanalysis)
 
 
 -- local function sc_message_Issued(nm)

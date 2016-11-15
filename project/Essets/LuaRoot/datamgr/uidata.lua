@@ -43,6 +43,7 @@ WNDsupmsgData={},
 WNDSupWork={},
 
 WNDSupDataProgerssComData = {},
+WNDSupDataGoodAnalysis = {},
 
 WNDSelectBrand = {},
 WNDSupStoreData = {},
