@@ -524,12 +524,14 @@ local function sc_reported_getstore(nm)
         local userid = tonumber(nm:readString())
         local username = nm:readString()
         local j = tonumber(nm:readString())
+        local Photo = {}
         for k=1,j do
-            local Photo = {
+            local PhotoOne = {
             id = tonumber(nm:readString()),
             name = nm:readString(),
-            photo = nm:readString(),
+            photo = nm:readString() .. ".png",
         }
+        table.insert(Photo,PhotoOne)
         end
         
         table.insert(PhotoList,{userid = userid, username = username, Photo = Photo})

@@ -21,14 +21,17 @@ local PhotoList
 
 local function on_ui_init()
 	-- body
+	PhotoList =  DY_DATA.StoreData.PhotoList
 	if PhotoList ~= nil then
 		Ref.SubProject.GrpProject:dup(#PhotoList, function (i, Ent, isNew)
 			local PhotoUser = PhotoList[i]
 			Ent.lbName.text = PhotoUser.username
 			local Photo = PhotoUser.Photo
 			UIMGR.make_group(Ent.GrpPhoto)
-			Ent.GrpPhoto:dup(#Photo, function (i, Ent, isNew)
-				UIMGR.get_photo(Ent,Photo.photo)
+			Ent.GrpPhoto:dup(#Photo, function (j, Ent, isNew)
+				print("get_photo :" .. Photo[j].photo )
+				Ent.lbName.text = Photo[j].name
+				UIMGR.get_photo(Ent.spTex,Photo[j].photo)
 				end)
 			
 		end)
