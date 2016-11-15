@@ -23,7 +23,6 @@ P.Channel = {
     loginHost = P.IPSet.productIP,
     --loginHost = P.IPSet.test,
 
-    loginHost = P.IPSet.productIP,
     downloadHost = "139.196.109.3:8000",
     pid = 1,
     minAccLen = 6,
