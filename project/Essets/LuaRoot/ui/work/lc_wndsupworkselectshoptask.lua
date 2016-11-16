@@ -222,7 +222,7 @@ local function update_view()
 end
 
 local function on_recycle()
-	
+	NW.unsubscribe("WORK.SC.GETASSIGNMENT",on_ui_init)
 end
 
 local P = {
