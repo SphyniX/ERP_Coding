@@ -35,6 +35,7 @@ local function on_btnsave_click(btn)
 		local nm = NW.msg("REPORTED.CS.GETSUPUPLOADFEEDBACK")
 			nm:writeU32(StoreId)
 			nm:writeU32(DY_DATA.User.id)
+			-- nm:writeU32(748932)
 			nm:writeString(feedbackstr)
 			NW.send(nm)
 
