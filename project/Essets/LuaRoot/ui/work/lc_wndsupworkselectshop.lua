@@ -127,7 +127,7 @@ local function init_logic()
 	end
 
 	local function on_recycle()
-	NW.unsubscribe("WORK.SC.GETSTORE", on_ui_init)
+	--NW.unsubscribe("WORK.SC.GETSTORE", on_ui_init)
 	end
 
 	local P = {

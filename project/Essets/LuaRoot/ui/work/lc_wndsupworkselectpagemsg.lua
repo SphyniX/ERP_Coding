@@ -100,7 +100,7 @@ end
 
 local function init_logic()
 --defualUIData ()
-NW.subscribe("PROJECT.SC.GETPROINFOR", on_project_init)
+	NW.subscribe("PROJECT.SC.GETPROINFOR", on_project_init)
 	NW.subscribe("PROJECT.SC.GETSTOREINFOR",on_store_init)
 	-- NW.subscribe("ATTENCE.SC.GETWORK",on_work_init)
 	
@@ -160,7 +160,8 @@ local function update_view()
 end
 
 local function on_recycle()
-	
+	NW.unsubscribe("PROJECT.SC.GETPROINFOR", on_project_init)
+	NW.unsubscribe("PROJECT.SC.GETSTOREINFOR",on_store_init)
 end
 
 local P = {

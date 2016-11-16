@@ -119,8 +119,8 @@ if GrpMsg~=nil then
 end
 
 local function on_ui_init()
-		print("第一册登陆")
-		PromoterList = DY_DATA.get_promoter_List()
+	print("第一册登陆")
+	PromoterList = DY_DATA.get_promoter_List()
 	print("PersonListForUpdate is------------------------------------- :" .. JSON:encode(PersonListForUpdate))
 	print("PromoterList is ----------------------------:" .. JSON:encode(PromoterList))
 	Ref.SubMsg.GrpMsg:dup(#PromoterList,function (i,Ent,IsNew)
