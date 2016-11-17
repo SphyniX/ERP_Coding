@@ -188,6 +188,7 @@ on_relogin_fail = function ()
     P.clear()
     MB:make("", TEXT.tipPleaseReloginLong, true):set_event(function ()      
         local UI_DATA_WNDLogin = UI_DATA.WNDLogin
+        local LOGIN = MERequire "libmgr/login.lua"
         try_login_account(LOGIN.LoginedAcc, on_account_relogined)
     end):show()
 end
@@ -317,13 +318,15 @@ end
 
 -- 客户端发送消息
 function P.send(nm, only)
-    print("<color=#00ff00>networkmgr.send发送消息：<color=#00ff00>")
+    print("<color=#00ff00>networkmgr.send发送消息：</color>")
     if P.connected() then
         local post = NtfNmList[nm.type]
         if not post then MsgQueue:enqueue({nm = nm, only = only == true}) end
         if post or MsgQueue:count() == 1 then
             GameCli:send(nm, post, only == true)
+            -- print("<color=#00ff00>消息内容" .. nm)
         else
+            -- print("<color=#00ff00>消息内容" .. nm)
             log("Enqueue: {0}", nm)
         end
     end

@@ -27,7 +27,7 @@ local function sc_attence_gettask(nm)
         local Assignmentid = tonumber(nm:readString())
         local Attendance = {
         Assignmentid = Assignmentid,
-
+        id = Assignmentid,
         name = nm:readString(),
         supervisor = nm:readString(),
         starttime = nm:readString(),
@@ -39,6 +39,7 @@ local function sc_attence_gettask(nm)
         table.insert(AttendanceList,Attendance)
     end
     DY_DATA.AttendanceList = AttendanceList
+    DY_DATA.get_attendance_list(true)
     printf("AttendanceList : " .. JSON:encode(AttendanceList))
     -- DY_DATA.get_attendance_list(true)
 end
