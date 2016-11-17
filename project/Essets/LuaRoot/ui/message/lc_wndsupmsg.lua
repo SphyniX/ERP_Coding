@@ -20,7 +20,7 @@ local function on_subtop_btnwrite_click(btn)
 	UIMGR.create_window("UI/WNDSupEditorMsg")
 end
 
-local function on_subbtm_spatt_click(btn)
+local function on_subbtm_btnspatt_click(btn)
 	UIMGR.create_window("UI/WNDSupAttendance")
 end
 
@@ -45,7 +45,7 @@ local function on_subbtm_btnuser_click(btn)
 UIMGR.create_window("UI/WNDSupUser")
 end
 
-local function on_submsg_grpmsg_entmsg_subcontext_btncontext_click(btn)
+local function on_submsg_grp_ent_subcontext_btncontext_click(btn)
 	print("<color=#00ff00>on_submsg_grpmsg_entmsg_subcontext_btncontext_click 订阅回调"..tostring(btn.name).."</color>")
    -- WNDsupmsg
    local listdata={}
@@ -128,7 +128,7 @@ local function on_ui_init()
 	local LowerList = DY_DATA.LowerList
 	print(JSON:encode(LowerList))
 	print(#MsgList)
-	Ref.SubMsg.GrpMsg:dup( #MsgList, function (i, Ent, isNew)
+	Ref.SubMsg.Grp:dup( #MsgList, function (i, Ent, isNew)
 		local Msg = MsgList[i]
 		print(JSON:encode(Msg))
 		print(" Msg people ")
@@ -150,13 +150,13 @@ end
 
 local function init_view()
 	Ref.SubTop.btnWrite.onAction = on_subtop_btnwrite_click
-	Ref.SubBtm.spAtt.onAction = on_subbtm_spatt_click
+	Ref.SubBtm.btnSpAtt.onAction = on_subbtm_btnspatt_click
 	Ref.SubBtm.btnWork.onAction = on_subbtm_btnwork_click
 	Ref.SubBtm.btnSch.onAction = on_subbtm_btnsch_click
 	Ref.SubBtm.btnMsg.onAction = on_subbtm_btnmsg_click
 	Ref.SubBtm.btnUser.onAction = on_subbtm_btnuser_click
-	Ref.SubMsg.GrpMsg.Ent.SubContext.btnContext.onAction = on_submsg_grpmsg_entmsg_subcontext_btncontext_click
-	UIMGR.make_group(Ref.SubMsg.GrpMsg, function (New, Ent)
+	Ref.SubMsg.Grp.Ent.SubContext.btnContext.onAction = on_submsg_grp_ent_subcontext_btncontext_click
+	UIMGR.make_group(Ref.SubMsg.Grp, function (New, Ent)
 		New.SubContext.btnContext.onAction = Ent.SubContext.btnContext.onAction
 		end)
 	--!*以上：自动注册的回调函数*--

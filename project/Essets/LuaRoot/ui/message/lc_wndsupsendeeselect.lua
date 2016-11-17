@@ -57,7 +57,7 @@ local function on_subtop_btnprevious_click(btn)
 			end
 		end
 	UI_DATA.WNDSUPSENDEESELECT={}
-	UIMGR.create_window("UI/WNDSupReceiveMsg")
+	UIMGR.close_window(Ref.root)
 end
 
 

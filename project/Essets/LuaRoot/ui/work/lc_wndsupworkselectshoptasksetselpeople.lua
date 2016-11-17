@@ -20,10 +20,6 @@ local PersonListForUpdate
 local callbackfunc
 --!*以下：自动生成的回调函数*--
 
-local function on_subtop_cityselect_click(btn)
-	
-end
-
 local function on_subtop_btnprevious_click(btn)
 	UIMGR.close_window(Ref.root)
 end
@@ -147,8 +143,6 @@ end
 
 
 local function init_view()
-
-	Ref.SubTop.citySelect.onAction = on_subtop_cityselect_click
 	Ref.SubTop.btnPrevious.onAction = on_subtop_btnprevious_click
 	Ref.SubMsg.GrpMsg.Ent.SubtglToggle.tgl.onAction = on_submsg_grpmsg_entmsg_subtgltoggle_change
 	Ref.BtbSave.onAction = on_btbsave_click

@@ -35,7 +35,7 @@ local function init_logic()
             local data = DY_DATA.MsgList[UI_DATA.WNDsupmsgData.MsgIndex]
             print("data.context -----------is:"..data.context)
             Ref.lbText.text=data.context
-            Ref.SubTop.date.text=data.day.." "..data.time
+            Ref.SubTitle.date.text=data.day.." "..data.time
 end
 
 local function start(self)

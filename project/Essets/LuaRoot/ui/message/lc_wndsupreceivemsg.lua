@@ -17,7 +17,7 @@ local Ref
 --!*以下：自动生成的回调函数*--
 
 local function on_subtop_btnprevious_click(btn)
-	UIMGR.create_window("UI/WNDSupEditorMsg")
+	UIMGR.close_window(Ref.root)
 end
 
 local function on_subtop_sendmsg_click(btn)

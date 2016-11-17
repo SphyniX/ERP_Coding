@@ -32,7 +32,7 @@ local function on_subtop_btnbrand_click(btn)
 	
 end
 
-local function on_subbtm_spatt_click(btn)
+local function on_subbtm_btnatt_click(btn)
 	UIMGR.create_window("UI/WNDSupAttendance")
 end
 
@@ -77,7 +77,7 @@ end
 local function init_view()
 	Ref.SubProject.GrpProject.Ent.btnButton.onAction = on_subproject_grpproject_entproject_btnbutton_click
 	Ref.SubTop.btnBrand.onAction = on_subtop_btnbrand_click
-	Ref.SubBtm.spAtt.onAction = on_subbtm_spatt_click
+	Ref.SubBtm.btnAtt.onAction = on_subbtm_btnatt_click
 	Ref.SubBtm.btnSch.onAction = on_subbtm_btnsch_click
 	Ref.SubBtm.btnMsg.onAction = on_subbtm_btnmsg_click
 	Ref.SubBtm.btnUser.onAction = on_subbtm_btnuser_click

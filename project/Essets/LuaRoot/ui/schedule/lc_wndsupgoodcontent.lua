@@ -20,7 +20,7 @@ local Ref
 --!*以下：自动生成的回调函数*--
 
 local function on_subtop_back_click(btn)
-	
+	UIMGR.close_window(Ref.root)
 end
 
 local function on_subtop_clear_click(btn)
