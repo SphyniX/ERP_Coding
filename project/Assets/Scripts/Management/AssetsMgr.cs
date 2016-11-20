@@ -7,7 +7,7 @@ using ZFrame;
 public class AssetsMgr : MonoSingleton<AssetsMgr> 
 {
     public const int VER = 0x3F7A0;
-
+    public bool FpsCtrl=true;
     public static AssetsMgr A { get { return Instance; } }
 
 #if UNITY_EDITOR
@@ -187,15 +187,19 @@ public class AssetsMgr : MonoSingleton<AssetsMgr>
 #if UNITY_EDITOR || UNITY_STANDALONE || RY_DEBUG
     private void OnGUI()
     {
-        var fps = (1.0f / Time.unscaledDeltaTime);
+        if (FpsCtrl)
+        {
+            var fps = (1.0f / Time.unscaledDeltaTime);
         var color = Color.white;
         if (fps < 15) color = Color.red;
         if (fps < 20) color = Color.yellow;
         GUI.color = color;
         string text = string.Format("FPS: {0}", (int)fps);
-        GUILayout.Label(text);
+     
+            GUILayout.Label(text);
         GUI.color = Color.white;
-        
+        }
+
     }
 #endif
 		
