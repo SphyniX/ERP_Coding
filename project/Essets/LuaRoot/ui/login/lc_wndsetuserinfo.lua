@@ -117,7 +117,7 @@ local function on_submain_subcontext_btnenter_click(btn)
  	UserInfo.email = Ref_Info.SubContact.SubEmail.inpEmail.text
  	UserInfo.idnumber = Ref_Info.SubIDCard.inpIDCard.text
  	UserInfo.cardNo = Ref_Info.SubBankCard.inpBankCard.text
- 	if UserInfo.height == "" or UserInfo.weight == "" or UserInfo.wechat == "" or UserInfo.qq == "" or UserInfo.email == "" or UserInfo.idnumber == "" or UserInfo.cardNo == ""  then
+ 	if UserInfo.height == "" or UserInfo.weight == ""  or UserInfo.idnumber == "" or UserInfo.cardNo == ""  then
  		_G.UI.Toast:make(nil, "缺少数据"):show()
  		return
  	end

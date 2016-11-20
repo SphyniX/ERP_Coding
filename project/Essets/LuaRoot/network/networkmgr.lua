@@ -244,7 +244,7 @@ function P.check_state(tm)
 end
 
 -- ============================================================================
-local HTTP_TIMEOUT = 10
+local HTTP_TIMEOUT = 15
 
 -- 启动一个HTTP POST
 function P.http_post(tag, url, param, form, headers, cbf)
@@ -309,7 +309,7 @@ end
 function P.msg(code, size)   
    
     local id = chk_msg_type(code)
-     print("<color=#00ff00>networkmgr.msg创建消息对象：</color>"..tostring(code).."id"..id)
+     print("<color=#00aa00>networkmgr.msg创建消息对象：</color>"..tostring(code).."id"..id)
     if id == nil then return end
 
     local NetMsg = import("clientlib.net.NetMsg")    
@@ -318,7 +318,7 @@ end
 
 -- 客户端发送消息
 function P.send(nm, only)
-    print("<color=#00ff00>networkmgr.send发送消息：</color>")
+    print("<color=#00aa00>networkmgr.send发送消息：</color>")
     if P.connected() then
         local post = NtfNmList[nm.type]
         if not post then MsgQueue:enqueue({nm = nm, only = only == true}) end
@@ -355,7 +355,7 @@ end
 -- 注册消息分析器
 -- 一个消息只能注册一次
 function P.regist(code, handler, reset)
-    print("<color=#00ff00>networkmgr.regist:注册消息"..tostring(code).."</color>")
+    -- print("<color=#00aa00>networkmgr.regist:注册消息"..tostring(code).."</color>")
     local id = chk_msg_type(code)
     if id == nil then return end
 
@@ -369,13 +369,13 @@ end
 
 -- 订阅消息
 function P.subscribe(code, handler)
-    print("<color=#00ff00>networkmgr.subscribe:开始订阅消息"..tostring(code).."</color>")
+    print("<color=#00aa00>networkmgr.subscribe:开始订阅消息"..tostring(code).."</color>")
     local id = chk_msg_type(code)
     if id == nil then
-     print("<color=#00ff00>networkmgr.subscribe订阅消息{"..tostring(code).."}不存在".."</color>")
+     print("<color=#00aa00>networkmgr.subscribe订阅消息{"..tostring(code).."}不存在".."</color>")
      return
     else
-    print("<color=#00ff00>networkmgr.subscribe订阅消息{"..tostring(code).."}存在，ID："..tostring(id).."</color>")
+    print("<color=#00aa00>networkmgr.subscribe订阅消息{"..tostring(code).."}存在，ID："..tostring(id).."</color>")
      end
 
     local Subscriber = SubscriberSet[id]

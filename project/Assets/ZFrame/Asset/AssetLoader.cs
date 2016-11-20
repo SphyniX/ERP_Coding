@@ -162,17 +162,17 @@ namespace ZFrame.Asset
 		public static void Log(string fmt, params object[] Args)
 		{
 			if (LogMgr.logLevel == LogMgr.LogLevel.I) {
-				Debug.Log(string.Format("[Asset] " + fmt, Args));
+				LogMgr.I("[Asset] " + fmt, Args);
 			}
 		}
 		
 		public const string ASSET_EXT = ".unity3d";
 		public static void GetAssetpath(string path, out string assetbundleName, out string assetName)
 		{
-            Debug.Log("<color=#ff00ff>AssetLoader.cs资源名字" + path + "</color>");
+            //Debug.Log("<color=#aa00aa>AssetLoader.cs资源名字" + path + "</color>");
             assetbundleName = Path.GetDirectoryName(path) + ASSET_EXT;
 			assetName = Path.GetFileNameWithoutExtension(path);
-            Debug.Log("<color=#ffff00>AssetLoader.cs资源名字"+assetbundleName +"-----"+ assetName+"</color>");
+           // Debug.Log("<color=#aaaa00>AssetLoader.cs资源名字"+assetbundleName +"-----"+ assetName+"</color>");
             assetbundleName = assetbundleName.ToLower();
 		}
 
