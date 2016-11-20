@@ -60,15 +60,15 @@ end
 
 local function init_logic()
 	NW.subscribe("WORK.SC.GETCOMLIST",on_panel_init)
-	 local roject =   DY_DATA.SchProjectList[UI_DATA.WNDSelectStore.projectId] -- DY_DATA.StoreData.ComListRe
-	 local ComListRe = roject.ComList
-	 ComListRe=nil
-	 if ComListRe == nil or #ComListRe == 0 then
+	local roject =   DY_DATA.SchProjectList[UI_DATA.WNDSelectStore.projectId] -- DY_DATA.StoreData.ComListRe
+	local ComListRe = roject.ComList
+	ComListRe=nil
+	if ComListRe == nil or #ComListRe == 0 then
 	 	local nm = NW.msg("WORK.CS.GETCOMLIST")
 	 	print("UI_DATA.WNDSupStoreData.storeId-------------"..UI_DATA.WNDSelectStore.projectId)
 	 	nm:writeU32(UI_DATA.WNDSelectStore.projectId)
-	 	NW.send(nm)
-	 end
+		NW.send(nm)
+	end
 
 end
 

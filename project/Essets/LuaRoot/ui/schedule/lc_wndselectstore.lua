@@ -34,7 +34,6 @@ end
 local function on_subtop_btnback_click(btn)
 	UIMGR.close_window(Ref.root)
 end
-
 local function on_ui_init()
 	local projectId = UI_DATA.WNDSelectStore.projectId
 	local Project = DY_DATA.ProjectList[projectId]
