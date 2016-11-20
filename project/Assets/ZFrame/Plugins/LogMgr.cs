@@ -3,15 +3,24 @@ using System.Collections;
 
 public class LogMgr : MonoSingleton<LogMgr>
 {
-    const string PROMPT = "{0} {1}";
+    const string PROMPT1 = "{0} {1}";
+    const string PROMPT2 = "{0} {1} {2}";
+    const string PROMPT3 = "{0} {1} {2}";
+    const string PROMPTD = "<color=orange>";
+    const string PROMPTI = "<color=#ff9dabff>";
+    const string PROMPTW = "<color=yellow>";
+    const string PROMPTE = "<color=red>";
+    const string PROMPTLua = "<color=#00aaaaff>";
+    const string PROMPTEnd = "</color>";
     public enum LogLevel
     {
         I,
         D,
         W,
         E,
+        Lua,
     }
-    
+
 #if UNITY_EDITOR || RY_DEBUG
     public LogLevel setLevel = LogLevel.D;
     private static LogLevel m_Level = LogLevel.D;
@@ -27,7 +36,7 @@ public class LogMgr : MonoSingleton<LogMgr>
 
     protected override void Awaking()
     {
-		Debug.Log ("Start Using LogMgr!");
+        Debug.Log("Start Using LogMgr!");
 
         logLevel = setLevel;
 #if UNITY_EDITOR
@@ -56,30 +65,70 @@ public class LogMgr : MonoSingleton<LogMgr>
 
     static void Log(LogLevel l, string format, params object[] Args)
     {
-        if (logLevel <= l) {
-            Debug.LogFormat(PROMPT, l, string.Format(format, Args));
+
+        if (l == LogLevel.D) {
+            if (Args.Length == 1) {
+                Debug.LogFormat(PROMPTD + PROMPT1 + PROMPTEnd, l, string.Format(format, Args));
+            }
+            if (Args.Length == 2) {
+                Debug.LogFormat(PROMPTD + PROMPT1 + PROMPTEnd, l, string.Format(format, Args));
+            }
+        }
+        if (l == LogLevel.I) {
+            if (Args.Length == 1) {
+                Debug.LogFormat(PROMPTI + PROMPT1 + PROMPTEnd, l, string.Format(format, Args));
+            }
+            if (Args.Length == 2) {
+                //Debug.Log(format);
+                Debug.LogFormat(PROMPTI + PROMPT1 + PROMPTEnd, l, string.Format(format, Args));
+            }
+        }
+        if (l == LogLevel.Lua) {
+            if (Args.Length == 1) {
+                Debug.LogFormat(PROMPTLua + PROMPT1 + PROMPTEnd, l, string.Format(format, Args));
+            }
+            if (Args.Length == 2) {
+                //Debug.Log(format);
+                Debug.LogFormat(PROMPTLua + PROMPT1 + PROMPTEnd, l, string.Format(format, Args));
+            }
         }
     }
 
     static void LogWarning(string format, params object[] Args)
     {
         var l = LogLevel.W;
-        if (logLevel <= l) {
-            Debug.LogWarningFormat(PROMPT, l, string.Format(format, Args));
+        if (l == LogLevel.W) {
+            if (Args.Length == 1) {
+                Debug.LogWarningFormat(PROMPTW + PROMPT1 + PROMPTEnd, l, string.Format(format, Args));
+            }
+            if (Args.Length == 2) {
+
+                Debug.LogWarningFormat(PROMPTW + PROMPT1 + PROMPTEnd, l, string.Format(format, Args));
+            }
         }
     }
 
     static void LogError(string format, params object[] Args)
     {
         var l = LogLevel.E;
-        if (logLevel <= l) {
-            Debug.LogErrorFormat(PROMPT, l, string.Format(format, Args));
+        if (l == LogLevel.E) {
+            if (Args.Length == 1) {
+                Debug.LogErrorFormat(PROMPTE + PROMPT1 + PROMPTEnd, l, string.Format(format, Args));
+            }
+            if (Args.Length == 2) {
+                Debug.LogErrorFormat(PROMPTE + PROMPT1 + PROMPTEnd, l, string.Format(format, Args));
+            }
         }
     }
 
     static public void I(string format, params object[] Args)
     {
         Log(LogLevel.I, format, Args);
+    }
+
+    static public void Lua(string format, params object[] Args)
+    {
+        Log(LogLevel.Lua, format, Args);
     }
 
     static public void D(string format, params object[] Args)

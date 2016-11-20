@@ -177,9 +177,9 @@ end
 
 
 
+
 local function refreshtime()
 	TimeInfo = os.date("*t",os.time())
-	
 	if DY_DATA.Work.NowTime == nil then
 		local nm = NW.msg("ATTENCE.CS.GETTIME")
 		NW.send(nm)

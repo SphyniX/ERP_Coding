@@ -19,7 +19,7 @@ local MineDEF = _G.DEF.Mine
 local GoodsDEF = _G.DEF.Goods
 
 local P = {}
-print("<color=#ff0000>---------------------------------------------加载ydatactr.lua</color>")
+print("<color=#ff0000>---------------------------------------------加载dydatactr.lua</color>")
 local function sc_attence_gettask(nm)
     local n = tonumber(nm:readString())
     local AttendanceList = {}
@@ -40,11 +40,11 @@ local function sc_attence_gettask(nm)
     end
     DY_DATA.AttendanceList = AttendanceList
     DY_DATA.get_attendance_list(true)
-    printf("AttendanceList : " .. JSON:encode(AttendanceList))
+    print("<color=#EEB422>AttendanceList : " .. JSON:encode(AttendanceList)  .. "</color>")
     -- DY_DATA.get_attendance_list(true)
 end
 NW.regist("ATTENCE.SC.GETWORK", sc_attence_gettask)
-print("<color=#00ff00>NW.regist(ATTENCE.SC.GETWORK, sc_attence_gettask)</color>")
+-- print("<color=#EEB422><color=#00ff00>NW.regist(ATTENCE.SC.GETWORK, sc_attence_gettask)</color>" .. "</color>")
 
 local function sc_attence_getcity(nm)
     local GetCityList = {}
@@ -57,7 +57,7 @@ local function sc_attence_getcity(nm)
         table.insert(GetCityList,{id = cityid})
     end
     DY_DATA.GetCityList = GetCityList
-    printf("GetCityList : " .. JSON:encode(GetCityList))
+    print("<color=#EEB422>GetCityList : " .. JSON:encode(GetCityList) .. "</color>")
     -- DY_DATA.get_attendance_list(true)
 end
 NW.regist("ATTENCE.SC.GETCITY", sc_attence_getcity)
@@ -65,7 +65,7 @@ NW.regist("ATTENCE.SC.GETCITY", sc_attence_getcity)
 local function sc_attence_getsuptask(nm)
 
     local n = tonumber(nm:readString())
-    print("ProjectLength in Limit 2 is :" .. n)
+    print("<color=#EEB422>ProjectLength in Limit 2 is :" .. n .. "</color>")
     local AttendanceList = {}
     for i=1,n do
         local ProjectId = tonumber(nm:readString())
@@ -78,7 +78,7 @@ local function sc_attence_getsuptask(nm)
         table.insert(AttendanceList,Attendance)
     end
     DY_DATA.AttendanceList = AttendanceList
-    printf("AttendanceList : " .. JSON:encode(AttendanceList))
+    print("<color=#EEB422>AttendanceList : " .. JSON:encode(AttendanceList) .. "</color>")
     -- DY_DATA.get_attendance_list(true)
 end
 NW.regist("ATTENCE.SC.GETPROJECT", sc_attence_getsuptask)
@@ -109,8 +109,8 @@ local function sc_attence_getattstore(nm)
         -- table.insert(ProjectStoreList,{id = id, name = name, cityid = cityid , icon = icon, state = state})
         -- table.insert(SchStoreList,{id = id, name = name, cityid = cityid , icon = icon, state = state})
     end
-    print("ScheduleList is :" .. JSON:encode(SchStoreList))
-    print("ScheduleList in DY_DATA is :" .. JSON:encode(DY_DATA.SchProjectList.StoreList))
+    print("<color=#EEB422>ScheduleList is :" .. JSON:encode(SchStoreList) .. "</color>")
+    print("<color=#EEB422>ScheduleList in DY_DATA is :" .. JSON:encode(DY_DATA.SchProjectList.StoreList) .. "</color>")
 
     -- DY_DATA.get_attendance_list(true)
 end
@@ -137,7 +137,7 @@ NW.regist("ATTENCE.SC.GETLEAVELIST", sc_attence_getleavelist)
 local function sc_attence_gettime(nm)
     local stime = nm:readString()
     -- local NowWeek = nm:readString()
-    -- print("Time : " .. stime .. "Week : " .. NowWeek)
+    -- print("<color=#EEB422>Time : " .. stime .. "Week : " .. NowWeek .. "</color>")
     -- local st = 
     local day = stime:sub(1,10)
     local time = stime:sub(12,21)
@@ -145,17 +145,17 @@ local function sc_attence_gettime(nm)
     -- print(week)
     local TEXT = _G.ENV.TEXT
     DY_DATA.Work.NowTime = {day = day, time = time, week = TEXT.Week[week]}
-    -- print("Work.NowTime is :" .. JSON:encode(DY_DATA.Work.NowTime))
+    -- print("<color=#EEB422>Work.NowTime is :" .. JSON:encode(DY_DATA.Work.NowTime) .. "</color>")
 end
 NW.regist("ATTENCE.SC.GETTIME", sc_attence_gettime)
 
 local function sc_attence_getattence(nm)
     local stime = nm:readString()
     -- local NowWeek = nm:readString()
-    -- print("Time : " .. stime .. "Week : " .. NowWeek)
+    -- print("<color=#EEB422>Time : " .. stime .. "Week : " .. NowWeek .. "</color>")
     -- local st = 
     local n = nm:readString()
-    print("GETATTENCE n : " .. n )
+    print("<color=#EEB422>GETATTENCE n : " .. n  .. "</color>")
     local TEXT = _G.ENV.TEXT
     local WorkAttenceList = {}
     for i=1,n do
@@ -180,7 +180,7 @@ NW.regist("ATTENCE.SC.GETATTENCE", sc_attence_getattence)
 local function sc_attence_getkao(nm)
     local stime = nm:readString()
     -- local NowWeek = nm:readString()
-    -- print("Time : " .. stime .. "Week : " .. NowWeek)
+    -- print("<color=#EEB422>Time : " .. stime .. "Week : " .. NowWeek .. "</color>")
     -- local st = 
     local n = nm:readString()
     local TEXT = _G.ENV.TEXT
@@ -538,7 +538,7 @@ local function sc_reported_getstore(nm)
         table.insert(PhotoList,{userid = userid, username = username, Photo = Photo})
     end
     DY_DATA.StoreData.PhotoList = PhotoList
-    print("PhotoList is " .. JSON:encode(DY_DATA.StoreData.PhotoList))
+    print("<color=#EEB422>PhotoList is " .. JSON:encode(DY_DATA.StoreData.PhotoList) .. "</color>")
 end
 NW.regist("REPORTED.SC.GETSUPGETPHOTO", sc_reported_getstore)
 
@@ -674,7 +674,7 @@ local function sc_reported_getmechanism ( nm )
         }
         table.insert(MechanismList, Mechanism) 
     end
-    print("MechanismList is :" .. JSON:encode(MechanismList))
+    print("<color=#EEB422>MechanismList is :" .. JSON:encode(MechanismList) .. "</color>")
     DY_DATA.StoreData.MechanismList = MechanismList
 end
 NW.regist("REPORTED.SC.GETSUPMECHANISM",sc_reported_getmechanism)
@@ -698,7 +698,7 @@ local function sc_reported_getsamplere ( nm )
         }
         table.insert(SampleReList, SampleRe) 
     end
-    print("SampleReList is :" .. JSON:encode(SampleReList))
+    print("<color=#EEB422>SampleReList is :" .. JSON:encode(SampleReList) .. "</color>")
     DY_DATA.StoreData.SampleReList = SampleReList
 end
 NW.regist("REPORTED.SC.GETSUPSAMPLERE",sc_reported_getsamplere)
@@ -721,7 +721,7 @@ local function sc_reported_getggiftre ( nm )
         }
         table.insert(GiftReList, GiftRe) 
     end
-    print("GiftReList is :" .. JSON:encode(GiftReList))
+    print("<color=#EEB422>GiftReList is :" .. JSON:encode(GiftReList) .. "</color>")
     DY_DATA.StoreData.GiftReList = GiftReList
 end
 NW.regist("REPORTED.SC.GETSUPGIFTRE",sc_reported_getggiftre)
@@ -732,7 +732,7 @@ local function sc_reported_getcomlistre ( nm )
     if DY_DATA.StoreData.ComListRe == nil then DY_DATA.StoreData.ComListRe = {} end
 
     local n = tonumber(nm:readString())
-    print("REPORTED.SC.GETSUPGETCOMPETING---------"..n)
+    print("<color=#EEB422>REPORTED.SC.GETSUPGETCOMPETING---------"..n .. "</color>")
     local ComListRe = {}
     for i=1,n do
         local ComRe = {
@@ -748,7 +748,7 @@ local function sc_reported_getcomlistre ( nm )
         ComRe.icon = tempicon
         table.insert(ComListRe, ComRe) 
     end
-    print("ComListRe is :" .. JSON:encode(ComListRe))
+    print("<color=#EEB422>ComListRe is :" .. JSON:encode(ComListRe) .. "</color>")
     DY_DATA.StoreData.ComListRe = ComListRe
 end
 NW.regist("REPORTED.SC.GETSUPGETCOMPETING",sc_reported_getcomlistre)
@@ -769,7 +769,7 @@ local function sc_reported_getfeedbackre ( nm )
         }
         table.insert(FeedBcakListRe, FeedBcak) 
     end
-    print("FeedBcakListRe is :" .. JSON:encode(FeedBcakListRe))
+    print("<color=#EEB422>FeedBcakListRe is :" .. JSON:encode(FeedBcakListRe) .. "</color>")
     DY_DATA.StoreData.FeedBcakListRe = FeedBcakListRe
 end
 NW.regist("REPORTED.SC.GETSUPGETFEEDBACK",sc_reported_getfeedbackre)
@@ -796,7 +796,7 @@ local function sc_reported_getfeedbackre ( nm )
         table.insert(MatterListRe, MaterList) 
 
     end
-    print("MatterListRe is :" .. JSON:encode(MatterListRe))
+    print("<color=#EEB422>MatterListRe is :" .. JSON:encode(MatterListRe) .. "</color>")
     DY_DATA.StoreData.MatterListRe = MatterListRe
 end
 NW.regist("REPORTED.SC.GETSUPMATTER",sc_reported_getfeedbackre)
@@ -813,7 +813,7 @@ local function sc_reported_getaggregate( nm )
          number = nm:readString(),
      }
 
-    print("Aggregate is :" .. JSON:encode(Aggregate))
+    print("<color=#EEB422>Aggregate is :" .. JSON:encode(Aggregate) .. "</color>")
     DY_DATA.StoreData.Aggregate = Aggregate
 end
 NW.regist("REPORTED.SC.GETSUPGETAGGREGATE",sc_reported_getaggregate)
@@ -838,7 +838,7 @@ local function sc_reported_getproaggregate ( nm )
         table.insert(ProAggregateList, ProAggregate) 
 
     end
-    print("ProAggregateList is :" .. JSON:encode(ProAggregateList))
+    print("<color=#EEB422>ProAggregateList is :" .. JSON:encode(ProAggregateList) .. "</color>")
     DY_DATA.StoreData.ProAggregateList = ProAggregateList
 end
 NW.regist("REPORTED.SC.GETSUPGETPROAGGREGATE",sc_reported_getproaggregate)
@@ -964,7 +964,7 @@ local function sc_work_getproject(nm)
 
     if DY_DATA.User.limit == 1 then
         local List = DY_DATA.ProjectList
-        print("Length of List is" .. #List)
+        print("<color=#EEB422>Length of List is" .. #List .. "</color>")
         local n = tonumber(nm:readString())
         for i=1,n do
             local id = tonumber(nm:readString())
@@ -979,7 +979,7 @@ local function sc_work_getproject(nm)
     else    
         local List = DY_DATA.ProjectList
         local n = tonumber(nm:readString())
-        print("Length of List is" .. #List)
+        print("<color=#EEB422>Length of List is" .. #List .. "</color>")
         for i=1,n do
             local idstring = nm:readString()
             print(idstring)
@@ -1131,13 +1131,13 @@ local function sc_work_getcomlist(nm)
         icon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
         table.insert(ComList, {id = id, projectId = projectId, name = name, icon = icon})
     end
-    print("WORK.SC.GETCOMLIST-- ComList is : " .. JSON:encode(ComList))
+    print("<color=#EEB422>WORK.SC.GETCOMLIST-- ComList is : " .. JSON:encode(ComList) .. "</color>")
 end
 NW.regist("WORK.SC.GETCOMLIST", sc_work_getcomlist)
 
 local function sc_work_getsales(nm)
     local n = tonumber(nm:readString())
-    print("<color=#0f0>WORK.SC.GETSALES-----------</color>"..n)
+    print("<color=#EEB422><color=#0f0>WORK.SC.GETSALES-----------</color>"..n .. "</color>")
     local List = DY_DATA.PromoterList
     if List == nil then List = {} DY_DATA.PromoterList = List end
     for i=1,n do
@@ -1148,7 +1148,7 @@ local function sc_work_getsales(nm)
     end
 
     DY_DATA.get_promoter_List(true)
-    print("PromoterList is:"  .. JSON:encode(DY_DATA.get_promoter_List()))
+    print("<color=#EEB422>PromoterList is:"  .. JSON:encode(DY_DATA.get_promoter_List()) .. "</color>")
 end
 NW.regist("WORK.SC.GETSALES", sc_work_getsales)
 
@@ -1170,7 +1170,7 @@ end
 NW.regist("WORK.SC.GETMECHANISM", sc_work_getmechanism)
 
 local function sc_work_getassignment(nm)
-    print("<color=#0f0>WORK.SC.GETASSIGNMENT</color>")
+    print("<color=#EEB422>WORK.SC.GETASSIGNMENT</color>")
     local projectId = tonumber(nm:readString())
     local storeId = tonumber(nm:readString())
     local n = tonumber(nm:readString())
@@ -1228,8 +1228,8 @@ local function sc_work_getsellphoto(nm)
         table.insert(SellPhoto, {id = id, name = name,state = state})
     end
     Project.SellPhoto = SellPhoto
-    print("SellPhoto is :" .. JSON:encode(SellPhoto))
-    print("SellPhoto is :" .. JSON:encode(Project.SellPhoto))
+    print("<color=#EEB422>SellPhoto is :" .. JSON:encode(SellPhoto) .. "</color>")
+    print("<color=#EEB422>SellPhoto is :" .. JSON:encode(Project.SellPhoto) .. "</color>")
 end
 NW.regist("WORK.SC.GETSELLPHOTO", sc_work_getsellphoto)
 
@@ -1243,7 +1243,7 @@ local function sc_work_getbrand(nm)
         local name = nm:readString()
         table.insert(BrandList, {id = id, name = name})
     end
-    print("BrandList is :"  .. JSON:encode(BrandList))
+    print("<color=#EEB422>BrandList is :"  .. JSON:encode(BrandList) .. "</color>")
     DY_DATA.BrandList = BrandList
 end
 NW.regist("WORK.SC.GETBRAND", sc_work_getbrand)
@@ -1290,7 +1290,7 @@ for i=1,n do
             time = nm:readString(),
             state = nm:readString(), -- （1 未读，2 已读）
         }
-       -- print("<color=#00ff00>回调信息列表MESSAGE.SC.GETMESSAGELIST-yes--"..Msg.time.."-</color>")
+       -- print("<color=#EEB422><color=#00ff00>回调信息列表MESSAGE.SC.GETMESSAGELIST-yes--"..Msg.time.."-</color>")
        table.insert(List, Msg)
    end
    DY_DATA.MsgList = List
@@ -1301,7 +1301,7 @@ local function sc_reported_getsupuploadcomanalysis(nm)
     local WNDsupShopSelect = {}
     DY_DATA.WNDsupShopSelect=WNDsupShopSelect
     DY_DATA.WNDsupShopSelect.UploadComAnalysisState = nm:readString()
-    print("REPORTED.SC.GETSUPUPLOADCOMANALYSIS-----DY_DATA.WNDsupShopSelect.UploadComAnalysisState------"..DY_DATA.WNDsupShopSelect.UploadComAnalysisState)
+    print("<color=#EEB422>REPORTED.SC.GETSUPUPLOADCOMANALYSIS-----DY_DATA.WNDsupShopSelect.UploadComAnalysisState------"..DY_DATA.WNDsupShopSelect.UploadComAnalysisState)
 end
 NW.regist("REPORTED.SC.GETSUPUPLOADCOMANALYSIS", sc_reported_getsupuploadcomanalysis)
 
@@ -1324,7 +1324,7 @@ local function sc_message_sendmessage(nm)
 print("发送信息 注册回调")
 if nm ~=nil then
     DY_DATA.SENDMESSAGESTATE=tonumber(nm:readString())
-    print("发送信息 注册回调值"..DY_DATA.SENDMESSAGESTATE)
+    print("<color=#EEB422>发送信息 注册回调值"..DY_DATA.SENDMESSAGESTATE .. "</color>")
 end
 end
 NW.regist("MESSAGE.SC.SENDMESSAGE", sc_message_sendmessage)

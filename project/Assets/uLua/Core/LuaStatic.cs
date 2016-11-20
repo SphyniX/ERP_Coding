@@ -96,7 +96,7 @@ namespace LuaInterface
 
                 //LuaDLL.PrintCmd(s);
 			}
-			Debug.Log("LUA: " + s);
+			LogMgr.Lua("  :  {0} ", s);
 		    
 			return 0;
 		}

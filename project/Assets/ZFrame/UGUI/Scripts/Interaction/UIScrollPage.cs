@@ -21,15 +21,16 @@ namespace ZFrame.UGUI {
         public int nPage;
         public float MOVE_SPEED = 1F;
         public float SMOOTH_TIME = 0.2F;
-
+        
         private int currentPage;
-
+        private UIScrollView targetScrollView;
         private UIScrollView mScrollView;
         private float mTargetValue;
         private bool mNeedMove = false;
         private float mMoveSpeed = 0f;
 
         void Start() {
+            targetScrollView = this.GetComponentInParent<UIScrollView>();
             mScrollView = this.GetComponent<UIScrollView>();
             currentPage = 0;
         }

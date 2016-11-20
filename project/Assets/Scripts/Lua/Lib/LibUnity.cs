@@ -186,7 +186,7 @@ public static class LibUnity
 	[MonoPInvokeCallback(typeof(LuaCSFunction))]
     private static int IsActive(ILuaState lua)
     {
-        Debug.Log("判断对象状态");
+        //Debug.Log("判断对象状态"); 
         GameObject go = lua.ToGameObject(1);
         lua.PushBoolean(go != null && go.activeSelf);
         return 1;
