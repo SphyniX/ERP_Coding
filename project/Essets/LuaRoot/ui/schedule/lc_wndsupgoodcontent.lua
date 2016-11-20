@@ -113,7 +113,9 @@ local function init_view()
 end
 
 local function init_logic()
-
+	local roject =   DY_DATA.SchProjectList[UI_DATA.WNDSelectStore.projectId] -- DY_DATA.StoreData.ComListRe
+	local ComListRe = roject.ComList
+	Ref.SubTop.lbTitle.text=ComListRe[UI_DATA.WNDSupDataGoodAnalysis.index].name
 	-- local roject =   DY_DATA.SchProjectList[UI_DATA.WNDSelectStore.projectId] -- DY_DATA.StoreData.ComListRe
 	-- local ComListRe = roject.ComList
 	-- print("UI_DATA.WNDSupDataGoodAnalysis.index"..UI_DATA.WNDSupDataGoodAnalysis.index)  --UI_DATA.WNDSupDataGoodAnalysis.index

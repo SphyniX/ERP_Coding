@@ -45,6 +45,7 @@ local function on_ui_init()
 	local Project = DY_DATA.SchProjectList[projectId]
 	StoreList = Project.StoreList
 	if StoreList == nil then
+		print("获取StoreList失败-----------")
 		libunity.SetActive(Ref.SubStore.spNil, true)
 		return 
 	end
@@ -85,7 +86,7 @@ end
 
 local function init_logic()
 	UI_DATA.WNDSupWorkSelectShopTaskSetSelPeople.dateState=true
-		NW.subscribe("WORK.SC.GETSTORE", on_ui_init)
+	NW.subscribe("WORK.SC.GETSTORE", on_ui_init)
 	local projectId = UI_DATA.WNDSelectStore.projectId
 	local Project = DY_DATA.SchProjectList[projectId]
 	print(JSON:encode(Project))
