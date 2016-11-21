@@ -42,6 +42,8 @@ local function on_ui_init()
 	Ref.SubProject.GrpProject:dup(#AttendanceList, function ( i, Ent, isNew)
 		local Attendance = AttendanceList[i]
 		Ent.lbName.text = Attendance.name
+		Ent.SupName.text = Attendance.supervisor
+
 		UIMGR.get_photo(Ent.spIcon, Attendance.icon)
 	end)
 end

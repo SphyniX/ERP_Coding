@@ -65,12 +65,12 @@ local function init_view()
 end
 
 local function init_logic()
-	NW.subscribe("REPORTED.SC.GETSTORE", on_ui_init)
+	NW.subscribe("WORK.SC.GETSTORE", on_ui_init)
 	local projectId = UI_DATA.WNDSelectStore.projectId
 	local Project = DY_DATA.SchProjectList[projectId]
 	print(JSON:encode(Project))
 	if Project.StoreList == nil or #Project.StoreList == 0 then
-		local nm = NW.msg("REPORTED.CS.GETSTORE")
+		local nm = NW.msg("WORK.CS.GETSTORE")
 		nm:writeU32(projectId)
 		nm:writeU32(DY_DATA.User.id)
 		NW.send(nm)
@@ -92,7 +92,7 @@ local function update_view()
 end
 
 local function on_recycle()
-	NW.unsubscribe("REPORTED.SC.GETSTORE", on_ui_init)
+	NW.unsubscribe("WORK.SC.GETSTORE", on_ui_init)
 end
 
 local P = {

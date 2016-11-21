@@ -976,7 +976,9 @@ local function sc_work_getproject(nm)
             List[id].icon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
         end
         DY_DATA.ProjectList = List
+        DY_DATA.SchProjectList = List
         DY_DATA.get_project_list(true)
+        DY_DATA.get_schproject_list(true)
     else    
         local List = DY_DATA.ProjectList
         local n = tonumber(nm:readString())
@@ -1012,22 +1014,39 @@ local function sc_work_getstore(nm)
     for i=1,n do
         local projectId = tonumber(nm:readString())
         local Project = DY_DATA.ProjectList[projectId]
+        local SchProject = DY_DATA.SchProjectList[projectId]
         local StoreList = Project.StoreList
+        local SchStoreList = SchProject.StoreList
         if StoreList == nil then
             StoreList = {}
             Project.StoreList = StoreList
         end
 
         local Info = {
-        id = tonumber(nm:readString()),
-        name = nm:readString(),
-        projectId = projectId,
-    }
-    local icon = nm:readString()
-    Info.icon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
-    Info.state = tonumber(nm:readString())
-    table.insert(StoreList, Info)
-end
+            id = tonumber(nm:readString()),
+            name = nm:readString(),
+            projectId = projectId,
+        }
+        local icon = nm:readString()
+        Info.icon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
+        Info.state = tonumber(nm:readString())
+        table.insert(StoreList, Info)
+
+        if SchStoreList == nil then
+            SchStoreList = {}
+            Project.SchStoreList = SchStoreList
+        end
+
+        local Info = {
+            id = tonumber(nm:readString()),
+            name = nm:readString(),
+            projectId = projectId,
+        }
+        local icon = nm:readString()
+        Info.icon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
+        Info.state = tonumber(nm:readString())
+        table.insert(SchStoreList, Info)
+    end
 
 end
 NW.regist("WORK.SC.GETSTORE", sc_work_getstore)

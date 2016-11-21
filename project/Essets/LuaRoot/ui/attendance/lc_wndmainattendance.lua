@@ -107,7 +107,7 @@ local function on_submain_subleave_btnbutton_click(btn)
 		UIMGR.create("UI/WNDAttLeave")
 	else
 		local nm = NW.msg("ATTENCE.CS.FUGANG")
-		nm:writeU32(tonumber(Assignmentid))
+		nm:writeU32(tonumber(DY_DATA.User.taskid))
 		NW.send(nm)
 	end
 end
@@ -229,7 +229,7 @@ local function init_logic()
 	DY_DATA.Work.NowTime = nil
 	NW.subscribe("ATTENCE.SC.VERIFYLATLNG", on_try_punch)
 	NW.subscribe("USER.SC.GETUSERINFOR", on_ui_init)
-	NW.subscribe("USER.SC.BEDEMOBILIZED", on_leave_back)
+	NW.subscribe("ATTENCE.SC.BEDEMOBILIZED", on_leave_back)
 	NW.subscribe("ATTENCE.SC.GETTIME",refreshtime)
 	NW.subscribe("MESSAGE.SC.GETMESSAGELIST", on_set_red)
 

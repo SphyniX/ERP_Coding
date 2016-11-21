@@ -27,6 +27,9 @@ local function on_bind_supervisored(Ret)
 		end
 		UI_DATA.WNDBindPhone.type = 1
 		UIMGR.create_window("UI/WNDBindPhone")
+	else
+		_G.UI.Toast:make(nil, NW.get_error(Ret.ret)):show()
+		return
 	end
 end
 --!*以下：自动生成的回调函数*--
