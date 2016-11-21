@@ -41,10 +41,11 @@ end
 
 NW.regist("LOGIN.SC.LOGIN", function (nm)
 	local Ret = common_op_ret(nm)
-	-- if Ret.ret ~= 1 then
-	-- 	local LOGIN = MERequire "libmgr/login.lua"
- --        LOGIN.do_logout()
-	-- end
+	if Ret.ret ~= 1 then
+		_G.UI.Toast:make(nil, NW.get_error(Ret.ret)):show()
+		local LOGIN = MERequire "libmgr/login.lua"
+        LOGIN.do_logout()
+	end
 	return Ret
 end)
 

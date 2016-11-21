@@ -144,7 +144,7 @@ local function sc_attence_gettime(nm)
     local week = tonumber(nm:readString())
     -- print(week)
     local TEXT = _G.ENV.TEXT
-    DY_DATA.Work.NowTime = {day = day, time = time, week = TEXT.Week[week]}
+    DY_DATA.Work.NowTime = {day = day, time = time, week = "星期" .. TEXT.WeekNum[week]}
     -- print("<color=#EEB422>Work.NowTime is :" .. JSON:encode(DY_DATA.Work.NowTime) .. "</color>")
 end
 NW.regist("ATTENCE.SC.GETTIME", sc_attence_gettime)
@@ -287,6 +287,7 @@ local function sc_user_get_user_infor(nm)
         local icon = nm:readString()
         User.icon = icon == "nil" and icon == nil and "test.png" or icon..".png"
     end
+     print("<color=#EEB422>DY_DATA.User is " .. JSON:encode(DY_DATA.User) .. "</color>")
 end
 NW.regist("USER.SC.GETUSERINFOR", sc_user_get_user_infor)
 
@@ -1255,19 +1256,21 @@ local function sc_message_getlower(nm)
         local limit = tonumber(nm:readString())
         local id = tonumber(nm:readString())
         local People = {
-        id = id,
-        limit = limit,
-        name = nm:readString(),
-        phone = nm:readString(),
-        qq = nm:readString(),
-        wechat = nm:readString(), 
-        email = nm:readString(),
-    }
-    local icon = nm:readString()
-    People.icon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
-    List[id] = People
-end
+            id = id,
+            limit = limit,
+            name = nm:readString(),
+            phone = nm:readString(),
+            qq = nm:readString(),
+            wechat = nm:readString(), 
+            email = nm:readString(),
+            cityid = tonumber(nm:readString()),
+        }
+        local icon = nm:readString()
+        People.icon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
+        table.insert(List,People)
+    end
 DY_DATA.LowerList = List
+ print("<color=#EEB422>LowerList is :"  .. JSON:encode(DY_DATA.LowerList) .. "</color>")
     -- DY_DATA.get_lower_list(true)
 end
 NW.regist("MESSAGE.SC.GETLOWER", sc_message_getlower)
@@ -1294,6 +1297,12 @@ for i=1,n do
        table.insert(List, Msg)
    end
    DY_DATA.MsgList = List
+   -------设置消息小红点 -------
+   if #DY_DATA.MsgList == 0 then
+        DY_DATA.SetRed = false
+    else
+        DY_DATA.SetRed = true
+    end
 end
 NW.regist("MESSAGE.SC.GETMESSAGELIST", sc_message_getmessagelist)
 --------------------zzg-add----------------------------------
@@ -1320,14 +1329,7 @@ NW.regist("REPORTED.SC.GETSUPUPLOADCOMANALYSIS", sc_reported_getsupuploadcomanal
 -- end
 -- NW.regist("MESSAGE.SC.ISSUED", sc_message_Issued)
 
-local function sc_message_sendmessage(nm)
-print("发送信息 注册回调")
-if nm ~=nil then
-    DY_DATA.SENDMESSAGESTATE=tonumber(nm:readString())
-    print("<color=#EEB422>发送信息 注册回调值"..DY_DATA.SENDMESSAGESTATE .. "</color>")
-end
-end
-NW.regist("MESSAGE.SC.SENDMESSAGE", sc_message_sendmessage)
+
 ----------------------------zzg-end-------------------------------------------
 
 

@@ -50,6 +50,10 @@ local function on_submsg_grpmsg_entmsg_subcontext_btndel_click(btn)
 	local nm = NW.msg("MESSAGE.CS.DELETE")
 	nm:writeU32(Msg.id)
 	NW.send(nm)
+	local nm = NW.msg("MESSAGE.CS.GETMESSAGELIST")
+	nm:writeU32(DY_DATA.User.id)
+	NW.send(nm)
+	return
 end
 
 local function on_subbtm_btnatt_click(btn)
@@ -79,7 +83,11 @@ local function on_ui_init()
 		return 
 	end
 	libunity.SetActive(Ref.SubMsg.spNil, #MsgList == 0)
-		
+	if DY_DATA.SetRed then
+		libunity.SetActive(Ref.SubBtm.SetRed,true)
+	else
+		libunity.SetActive(Ref.SubBtm.SetRed,false)
+	end
 	local LowerList = DY_DATA.LowerList
 	print("LowerList :"..JSON:encode(LowerList))
 	

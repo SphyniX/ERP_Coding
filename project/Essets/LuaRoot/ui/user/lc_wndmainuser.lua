@@ -122,6 +122,15 @@ local function on_subbtm_btnmsg_click(btn)
 	UIMGR.create_window("UI/WNDMainMsg")
 end
 
+local function on_set_red()
+	if DY_DATA.SetRed then
+		libunity.SetActive(Ref.SubBtm.SetRed,true)
+	else
+		libunity.SetActive(Ref.SubBtm.SetRed,false)
+	end
+end
+
+
 local function on_ui_init()
 	local Ref_SubMain = Ref.SubMain
 	local User = DY_DATA.User
@@ -130,6 +139,13 @@ local function on_ui_init()
 	-- Ref_SubMain.SubAddress.lbText.text =_G.CFG.CityLib.get_city(User.cityid).name
 	-- Ref_SubMain.SubPhone.lbText.text = User.phone
 	UIMGR.get_photo(Ref_SubMain.SubIcon.spIcon, User.icon)
+	if DY_DATA.MsgList == nil or next(DY_DATA.MsgList) == nil then
+		local nm = NW.msg("MESSAGE.CS.GETMESSAGELIST")
+		nm:writeU32(DY_DATA.User.id)
+		NW.send(nm)
+	else
+		on_set_red()
+	end
 end
 
 local function init_view()
@@ -149,6 +165,7 @@ end
 local function init_logic()
 	on_ui_init()
 	NW.subscribe("USER.SC.GETUSERINFOR", on_ui_init)
+	NW.subscribe("MESSAGE.SC.GETMESSAGELIST", on_set_red)
 end
 
 local function start(self)
