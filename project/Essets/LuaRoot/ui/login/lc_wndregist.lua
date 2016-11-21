@@ -18,7 +18,6 @@ local ProvinceList
 local CityList
 local City
 local CityChoose
-local CityChooseID
 local ProvinceNow
 
 local function on_bind_supervisored(Ret)
@@ -57,12 +56,10 @@ local function on_submain_subselect_subcity_grp_ent_click(btn)
 
 	Ref.SubMain.SubSelect.lbCity.text = ProvinceNow .. "  -   " .. CityList[index].name
 	CityChoose = CityList[index].name
-	CityChooseID = CityList[index].id
 end
 
 local function on_select_place_callback( id )
 	Ref.SubMain.SubInfo.SubCity.lbcity.text = _G.CFG.CityLib.get_city(id).name
-	CityChooseID = id
 end
 
 local function on_submain_subinfo_subcity_click(btn)
@@ -81,7 +78,7 @@ local function on_submain_btnenter_click(btn)
 	if UI_DATA.WNDRegist.UserInfo == nil then UI_DATA.WNDRegist.UserInfo = {} end
 	local UserInfo = UI_DATA.WNDRegist.UserInfo
 	UserInfo.name = inpName
-	UserInfo.city = CityChooseID
+	UserInfo.city = inpCity
 	UserInfo.supname = inpCode
 	LOGIN.try_bind_supervisor(inpSupname, inpName, inpCode, on_bind_supervisored)
 end

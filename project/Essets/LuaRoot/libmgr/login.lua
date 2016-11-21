@@ -289,7 +289,6 @@ function P.try_regist(lisInfo, on_call_back)
     user_city = lisInfo.city,
     supname = lisInfo.supname,
 }
-print("<color = red> RegistList is :" .. JSON:encode(HttpParams) .. "</color>")
 local PhotoList = lisInfo.PhotoList
 NW.http_upmorephoto("INSERT", P.HTTPSet.insertInterface(), "", HttpParams, PhotoList,"", on_regist_back)
 _G.UI.Waiting.show()
