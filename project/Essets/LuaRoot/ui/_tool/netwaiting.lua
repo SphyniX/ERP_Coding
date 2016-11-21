@@ -30,7 +30,7 @@ local function internal_show(text, timeout)
         --     })
     end
     if timeout == false then return end
-    if timeout == nil then timeout = 5 end
+    if timeout == nil then timeout = 10 end
     local Vector3 = import("UnityEngine.Vector3")
     libugui.FreeTween(nil, Ref.tweenRotation, Vector3.zero, Vector3(0, 0, -180), {
             duration = 2,

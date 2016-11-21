@@ -673,11 +673,11 @@ public static class LuaAPI
 //	[MonoPInvokeCallback(typeof(LuaCSFunction))]
     public static void L_Register(this ILuaState self, string libname, LuaMethod[] methods)
     {
-		Debug.Log ("Start Register Mothods!");
+		Debug.Log ("<color=#FF3030>Start Register Mothods!</color>");
         if (!string.IsNullOrEmpty(libname)) {
             self.GetGlobal("package", "loaded");
             self.GetField(-1, libname);
-			Debug.Log ("Rigister System.cs Files : " + libname);
+			Debug.Log ("<color=#FF3030>Rigister System.cs Files : " + libname + "</color>");
             if (self.IsNil(-1)) {
                 self.Pop(1);
                 
@@ -691,9 +691,9 @@ public static class LuaAPI
 
         if (methods != null && methods.Length > 0) {
             for (int i = 0; i < methods.Length; i++) {
-				Debug.Log ("_____>>>>>PushString Function : " + methods[i].name);
+				//Debug.Log ("_____>>>>>PushString Function : " + methods[i].name);
                 self.PushString(methods[i].name);
-				Debug.Log ("_____>>>>>PushCSharpFunction Function : " + methods[i].func.ToString());
+				//Debug.Log ("_____>>>>>PushCSharpFunction Function : " + methods[i].func.ToString());
                 self.PushCSharpFunction(methods[i].func);
                 self.RawSet(-3);
             }
