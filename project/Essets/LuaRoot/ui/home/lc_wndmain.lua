@@ -17,6 +17,7 @@ local NW = MERequire "network/networkmgr"
 local MB = _G.UI.MessageBox
 local LOGIN = MERequire "libmgr/login.lua"
 local Ref
+local FristTime = true
 
 MERequire "datamgr/dydatactr"
 MERequire "datamgr/dydataop"
@@ -42,29 +43,17 @@ end
 
 
 local function on_get_data(Ret)
-	print(JSON:encode(Ret))
-	if Ret.ret ~= 1 then
-		MB:make("", TEXT.tipPleaseReloginLong, true):set_event(function ()      
-            LOGIN.do_logout()
-    	end):show()
-		return 
+	if FristTime then
+	else
+		libunity.LogD("on_get_data return :{0}",JSON:encode(Ret))
+		if Ret.ret ~= 1 then
+			MB:make("", TEXT.tipPleaseReloginLong, true):set_event(function ()      
+	            LOGIN.do_logout()
+	    	end):show()
+			return 
+		end
 	end
     
-	-- local nm = NW.msg("MESSAGE.CS.GETLOWER")
-	-- nm:writeU32(DY_DATA.User.id)
-	-- NW.send(nm)
-	
-	-- local nm = NW.msg("USER.CS.GETSUPERLIST")
-	-- nm:writeU32(DY_DATA.User.id)
-	-- NW.send(nm)
-
-	-- local nm = NW.msg("MESSAGE.CS.GETMESSAGELIST")
-	-- nm:writeU32(DY_DATA.User.id)
-	-- NW.send(nm)
-
-	-- local nm = NW.msg("WORK.CS.GETPROJECT")
-	-- nm:writeU32(DY_DATA.User.id)
-	-- NW.send(nm)
 	local nm = NW.msg("ATTENCE.CS.GETTIME")
 	NW.send(nm)
 	
@@ -77,9 +66,17 @@ end
 --!*以下：自动生成的回调函数*--
 
 local function on_btnrelogin_click(btn)
-	MB:make("", TEXT.tipPleaseReloginLong, true):set_event(function ()      
-        LOGIN.do_logout()
-	end):show()
+	if FristTime then
+		FristTime = false
+		local Ret = {
+			ret = 1,
+		}
+		on_get_data(Ret)
+	else
+		MB:make("", TEXT.tipPleaseReloginLong, true):set_event(function ()      
+	        LOGIN.do_logout()
+		end):show()
+	end
 end
 
 local function on_btnregisted_click(btn)

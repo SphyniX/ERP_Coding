@@ -20,15 +20,12 @@ local  ToggleTemp = {}
 local  Toggleobj={}
 local  userMsg = {}
 local tg = nil
+
+local TempCityList = {}
+local TempLowerList = {}
 --!*以下：自动生成的回调函数*--
 
-local function on_subtop_cityselect_click(btn)
-	  if cityPanel then
-    libunity.SetActive(cityPanel, true)
-    else
-    print("未找到城市界面")
-    end
-end
+
 local  function ToggleStateCtrl(id,ctrlbool)
 	local idNumer=tonumber(id)
 		if  ctrlbool then
@@ -117,7 +114,8 @@ local function on_submsg_grpmsg_entmsg_subtgltoggle_change(tgl)
 	--UIMGR.create_window("UI/WNDSupSendeeSelect")
 end
 local function on_btbsave_click(btn)
-UIMGR.create_window("UI/WNDSupReceiveMsg")
+-- UIMGR.create_window("UI/WNDSupReceiveMsg")
+	UIMGR.close_window(Ref.root)
 	--UIMGR.create_window("UI/WNDSupReceiveMsg")
 end
 
@@ -130,12 +128,38 @@ end
 local function on_editor_click(btn)
 	
 end
-local function on_ui_init()
-		local LowerList = DY_DATA.LowerList
-	print("JSON"..JSON:encode(LowerList))
-	print("size"..tostring(#LowerList))
+local function on_ui_init(cityid)
+	if cityid == nil then cityid = 0 end
 
-	Ref.SubMsg.GrpMsg:dup( #LowerList+1, function (i, Ent, isNew)
+	local LowerList = DY_DATA.LowerList
+	
+	TempCityList = {}
+
+	for i=1,#LowerList do
+		local flag = true
+		for j=1,#TempCityList do
+			if TempCityList[j].id == LowerList[i].cityid then
+				flag = false
+			end
+
+		end
+		if flag then table.insert(TempCityList,{id = LowerList[i].cityid}) end
+	end
+
+	TempLowerList = {}
+
+	if cityid == 0 then 
+		TempLowerList = LowerList
+	else
+		for i=1,#LowerList do
+			if LowerList[i].cityid == cityid then
+				table.insert(TempLowerList,LowerList[i])
+			end
+		end
+	end
+
+
+	Ref.SubMsg.GrpMsg:dup( #TempLowerList+1, function (i, Ent, isNew)
 		local obj=libunity.FindComponent(Ent,"SubtglToggle","UIToggle")
 			local  toggle = nil
 		if i==1 then
@@ -149,14 +173,14 @@ local function on_ui_init()
 			print("<color=#00ff00>on_ui_init ----------没有找到物体</color>")
 			end
 		else
-			local Lower = LowerList[i-1]
+			local Lower = TempLowerList[i-1]
 			print(JSON:encode(Lower))
 			print(" Lower people ")
 			print(Lower.name)
 			if obj then
 			obj.name=tostring(i-1)
 			Toggleobj[i-1]=obj
-			if i>=#LowerList+1 then
+			if i>=#TempLowerList+1 then
 				Toggleobj[i]=toggle
 			end
 			else
@@ -168,9 +192,26 @@ local function on_ui_init()
 			Ent.SubtglToggle.lbText.text = Lower.name--LowerList[Msg.people] and LowerList[Msg.people].name or Msg.people
 		end
 	end)
-
+	cityid = nil
 
 end 
+
+local function on_city_callback(cityid)
+	-- body
+	on_ui_init(cityid)
+end
+
+local function on_subtop_cityselect_click(btn)
+	 
+	print("TempCityList is :" .. JSON:encode(TempCityList))
+
+	UI_DATA.WNDSelectPlace.NeedGetCityList = false
+	UI_DATA.WNDSelectPlace.FromWhere = "fromserver"
+	UI_DATA.WNDSelectPlace.cityid = TempCityList
+	UI_DATA.WNDSelectPlace.callbackfunc = on_city_callback
+	UIMGR.create("UI/WNDSelectPlace")
+
+end
 local function init_view()
 	Ref.SubTop.citySelect.onAction = on_subtop_cityselect_click
 	Ref.SubTop.btnPrevious.onAction = on_subtop_btnprevious_click
@@ -185,19 +226,19 @@ end
 local function init_logic()
 	---UI_DATA.WNDSUPSENDEESELECT={}
 	NW.subscribe("MESSAGE.SC.GETLOWER", on_ui_init)
-	if DY_DATA.LowerList == nil or next(DY_DATA.LowerList) == nil then
+	-- if DY_DATA.LowerList == nil or next(DY_DATA.LowerList) == nil then
 		local nm = NW.msg("MESSAGE.CS.GETLOWER")
 		print("<color=#00ff00>on_ui_init 订阅回调消息</color>")
 		nm:writeU32(DY_DATA.User.id)
 		NW.send(nm)
-	end
+	-- end
 	
-   cityPanel= libunity.FindGameObject(nil,"/UIROOT/UICanvas/WNDSupSendeeSelect/SubCity")
-   if cityPanel then
-    libunity.SetActive(cityPanel, false)
-    else
-    print("未找到城市界面")
-    end
+   -- cityPanel= libunity.FindGameObject(nil,"/UIROOT/UICanvas/WNDSupSendeeSelect/SubCity")
+   -- if cityPanel then
+   --  libunity.SetActive(cityPanel, false)
+   --  else
+   --  print("未找到城市界面")
+   --  end
 end
 
 local function start(self)

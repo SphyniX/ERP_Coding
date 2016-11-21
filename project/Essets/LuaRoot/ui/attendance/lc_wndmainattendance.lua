@@ -97,8 +97,19 @@ local function on_submain_subattoff_btnbutton_click(btn)
 	end
 end
 
+local function on_leave_back()
+	-- body
+end
+
 local function on_submain_subleave_btnbutton_click(btn)
-	UIMGR.create("UI/WNDAttLeave")
+	if Ref.SubMain.SubLeave.lbText.text == "离岗" then
+		UI_DATA.WNDAttLeave.Assignmentid = Assignmentid
+		UIMGR.create("UI/WNDAttLeave")
+	else
+		local nm = NW.msg("ATTENCE.CS.FUGANG")
+		nm:writeU32(tonumber(Assignmentid))
+		NW.send(nm)
+	end
 end
 
 local function on_submain_subunder_btnbutton_click(btn)
@@ -146,13 +157,13 @@ local function on_ui_init()
 
 	local User = DY_DATA.User
 	if User.workstate == 1 then
-		Ref.SubMain.SubUnder.btnButton:SetInteractable(false)
+		Ref.SubMain.SubLeave.btnButton:SetInteractable(false)
 		Ref.SubMain.SubLeave.lbText.text = "离岗"
 	elseif User.workstate == 2 then
-		Ref.SubMain.SubUnder.btnButton:SetInteractable(true)
+		Ref.SubMain.SubLeave.btnButton:SetInteractable(true)
 		Ref.SubMain.SubLeave.lbText.text = "离岗"
 	elseif User.workstate == 3 then
-		Ref.SubMain.SubUnder.btnButton:SetInteractable(true)
+		Ref.SubMain.SubLeave.btnButton:SetInteractable(true)
 		Ref.SubMain.SubLeave.lbText.text = "复岗"
 	end
 
@@ -173,15 +184,28 @@ local function init_view()
 	--!*以上：自动注册的回调函数*--
 end
 
+local function on_set_red()
+	if DY_DATA.SetRed then
+		libunity.SetActive(Ref.SubBtm.SetRed,true)
+	else
+		libunity.SetActive(Ref.SubBtm.SetRed,false)
+	end
+end
 
-
-
+                      
 
 
 local function refreshtime()
 	TimeInfo = os.date("*t",os.time())
+	
 	if DY_DATA.Work.NowTime == nil then
 		local nm = NW.msg("ATTENCE.CS.GETTIME")
+		NW.send(nm)
+		return
+	end
+	if DY_DATA.MsgList == nil or next(DY_DATA.MsgList) == nil then
+		local nm = NW.msg("MESSAGE.CS.GETMESSAGELIST")
+		nm:writeU32(DY_DATA.User.id)
 		NW.send(nm)
 		return
 	end
@@ -189,7 +213,7 @@ local function refreshtime()
 	local TimeOfDay = DY_DATA.Work.NowTime
 	print("TimeOfDay is :" .. JSON:encode(TimeOfDay))
 	Ref.SubMain.SubTime.lbTime.text = TimeOfDay.time
-	Ref.SubMain.SubTime.lbDay.text = TimeOfDay.day .. " " .. TimeOfDay.week
+	Ref.SubMain.SubTime.lbDay.text = string.sub(TimeOfDay.day,1,4) .. " 年 " .. string.sub(TimeOfDay.day,6,7) .. " 月 " .. string.sub(TimeOfDay.day,9,10) .. " 日" .. "     " .. TimeOfDay.week
 	TimeInfo.hour = DY_DATA.Work.NowTime.time:sub(1,2)
 	TimeInfo.min = DY_DATA.Work.NowTime.time:sub(4,5)
 	TimeInfo.sec = DY_DATA.Work.NowTime.time:sub(7,8)
@@ -205,7 +229,9 @@ local function init_logic()
 	DY_DATA.Work.NowTime = nil
 	NW.subscribe("ATTENCE.SC.VERIFYLATLNG", on_try_punch)
 	NW.subscribe("USER.SC.GETUSERINFOR", on_ui_init)
+	NW.subscribe("USER.SC.BEDEMOBILIZED", on_leave_back)
 	NW.subscribe("ATTENCE.SC.GETTIME",refreshtime)
+	NW.subscribe("MESSAGE.SC.GETMESSAGELIST", on_set_red)
 
 	-- libsystem.StartGps()
 	on_ui_init()

@@ -48,6 +48,16 @@ local function on_subbtm_btnuser_click(btn)
 	UIMGR.create_window("UI/WNDMainUser")
 end
 
+local function on_set_red()
+	if DY_DATA.SetRed then
+		libunity.SetActive(Ref.SubBtm.SetRed,true)
+	else
+		libunity.SetActive(Ref.SubBtm.SetRed,false)
+	end
+end
+
+
+
 local function on_ui_init()
 	print("on_ui_init")
 	ProjectList = DY_DATA.get_project_list()
@@ -84,6 +94,15 @@ end
 
 local function init_logic()
 	NW.subscribe("WORK.SC.GETPROJECT", on_ui_init)
+	NW.subscribe("MESSAGE.SC.GETMESSAGELIST", on_set_red)
+	if DY_DATA.MsgList == nil or next(DY_DATA.MsgList) == nil then
+		local nm = NW.msg("MESSAGE.CS.GETMESSAGELIST")
+		nm:writeU32(DY_DATA.User.id)
+		NW.send(nm)
+		return
+	else
+		on_set_red()
+	end
 
 	print("<color=#00ff00>DY_DATA.ProjectList1"..JSON:encode(DY_DATA.ProjectList).."</color>")
 print("<color=#00ff00>DY_DATA.ProjectList1</color>")
