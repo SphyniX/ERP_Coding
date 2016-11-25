@@ -21,7 +21,7 @@ productIP = "api.richer.net.cn:8888",
 }
 P.Channel = {
     -- loginHost = P.IPSet.productIP,
-    loginHost = P.IPSet.productIP,
+    loginHost = P.IPSet.test,
 
     downloadHost = "139.196.109.3:8000",
     pid = 1,
@@ -44,17 +44,17 @@ P.HTTPSet = {
     insertInterface = function () return "http://"..P.Channel.loginHost.."/api/user/insert" end,
     -- 修改密码
     updatepwdInterface = function () return "http://"..P.Channel.loginHost.."/api/user/updatepwd" end,
-    -- 上传图片
+    -- 单张图片
     uploadInterface = function () return "http://"..P.Channel.loginHost.."/api/photo/upload" end,
-
-    uploadphotoInterface = function () return "http://"..P.Channel.loginHost.."/api/photo/uploadphoto" end,
-
+    -- 大王专用
+    --uploadphotoInterface = function () return "http://"..P.Channel.loginHost.."/api/photo/uploadphoto" end,
+    -- 上报进度专用
     uploadphotoForReport = function () return "http://"..P.Channel.loginHost.."/api/photo/uploadimage" end,
 
-    getqrcodeInterface = function () return "http://"..P.Channel.loginHost.."/api/photo/getqrcode" end,
-
+    --getqrcodeInterface = function () return "http://"..P.Channel.loginHost.."/api/photo/getqrcode" end,
+    -- 获取版本号
     getversionInterface = function () return "http://"..P.Channel.loginHost.."/api/user/getversion" end,
-
+    -- 下载图片
     downloadPhotoInterface = function () return "http://"..P.Channel.loginHost.."/Photo" end,
 
 }
@@ -288,8 +288,14 @@ function P.try_regist(lisInfo, on_call_back)
     user_cardNo = lisInfo.cardNo,
     user_city = lisInfo.city,
     supname = lisInfo.supname,
+    photo1 = lisInfo.PhotoList[1],
+    photo2 = lisInfo.PhotoList[2],
+    photo3 = lisInfo.PhotoList[3],
+    photo4 = lisInfo.PhotoList[4],
+    photo5 = lisInfo.PhotoList[5],
+    photo6 = lisInfo.PhotoList[6],
 }
-local PhotoList = lisInfo.PhotoList
+local PhotoList = {}
 NW.http_upmorephoto("INSERT", P.HTTPSet.insertInterface(), "", HttpParams, PhotoList,"", on_regist_back)
 _G.UI.Waiting.show()
 end
@@ -353,6 +359,16 @@ NW.http_upphoto("uploadphoto", P.HTTPSet.uploadInterface(), "", HttpParams, Imag
 _G.UI.Waiting.show()
 end
 
+function P.try_uploadphotoforuserinfo(typeid, Image, on_call_back)
+    on_wnd_uploadphoto = on_call_back
+    local HttpParams = {
+    UserID = 0,
+    Typeid = typeid,
+}
+-- function P.http_upphoto(tag, url, param, form, Image, headers, cbf)
+NW.http_upphoto("uploadphoto", P.HTTPSet.uploadInterface(), "", HttpParams, Image, "", on_uploadphoto_back)
+_G.UI.Waiting.show()
+end
 
 
 function P.try_uploadphotoforreport(userid, Image, on_call_back)
