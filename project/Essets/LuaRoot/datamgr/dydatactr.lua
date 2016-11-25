@@ -564,15 +564,15 @@ local function sc_reported_getstoreinfor(nm)
         if v.id == id then Store = v end
     end
     Store.Info = {
-    address = address,
-    superId = superId,
-    day = day,
-    week = week,
-    starttime = starttime,
-    endtime = endtime,
-}
-print("REPORTED.SC.GETSTOREINFOR StoreInfo : " .. JSON:encode(Store.Info))
-end
+        address = address,
+        superId = superId,
+        day = day,
+        week = week,
+        starttime = starttime,
+        endtime = endtime,
+    }
+    print("<color=#EEB422>REPORTED.SC.GETSTOREINFOR StoreInfo : " .. JSON:encode(Store.Info).. "</color>")
+    end
 NW.regist("REPORTED.SC.GETSTOREINFOR", sc_reported_getstoreinfor)
 
 local function sc_reported_getproduct(nm)
@@ -1255,18 +1255,22 @@ local function sc_message_getlower(nm)
         local limit = tonumber(nm:readString())
         local id = tonumber(nm:readString())
         local People = {
-        id = id,
-        limit = limit,
-        name = nm:readString(),
-        phone = nm:readString(),
-        qq = nm:readString(),
-        wechat = nm:readString(), 
-        email = nm:readString(),
-    }
-    local icon = nm:readString()
-    People.icon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
-    List[id] = People
-end
+            id = id,
+            limit = limit,
+            name = nm:readString(),
+            phone = nm:readString(),
+            qq = nm:readString(),
+            wechat = nm:readString(), 
+            email = nm:readString(),
+            cityid = tonumber(nm:readString()),
+        }
+        local icon = nm:readString()
+        People.icon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
+
+
+        print("<color=#EEB422>People is :" .. JSON:encode(People) .. "</color>")
+        table.insert(List,People)
+    end
 DY_DATA.LowerList = List
     -- DY_DATA.get_lower_list(true)
 end

@@ -302,15 +302,15 @@ local function init_logic()
 	if Store == nil then print("Store 为空"..storeId) return end
 	Ref.SubMain.SubContent.SubStore.lbText.text = Store.name
 
-	if Store.Info == nil then
+	-- if Store.Info == nil then
 		local nm = NW.msg("REPORTED.CS.GETSTOREINFOR")
 		nm:writeU32(projectId)
 		nm:writeU32(storeId)
 		nm:writeU32(DY_DATA.User.id)
 		NW.send(nm)
-	else
-		on_store_init()	
-	end
+	-- else
+	-- 	on_store_init()	
+	-- end
 
 
 	-- if DY_DATA.AttendanceList == nil or next(DY_DATA.AttendanceList) == nil then

@@ -25,7 +25,7 @@ end
 
 local function init_logic()
 	local LFL = UI_DATA.WNDLogin.LocalFileList
-	Ref.lbVersion.text = string.format( "Version : %s" ,LFL.version)
+	Ref.lbVersion.text = string.format( "Version  %s" ,LFL.version)
 end
 
 local function start(self)
