@@ -41,13 +41,19 @@ end
 --!*以下：自动生成的回调函数*--
 
 local function on_submain_subcontext_subicon_click(btn)
-	UIMGR.on_sdk_take_photo("1.png", Ref.SubMain.SubContext.SubIcon.spIcon, function ( succ, name, image )
+	-- UIMGR.on_sdk_take_photo("1.png", Ref.SubMain.SubContext.SubIcon.spIcon, function ( succ, name, image )
+	-- 	NowType = 1
+	-- 	if succ then
+	-- 		on_take_photo_call_back(image)
+	-- 	end
+	-- end)
+	UIMGR.load_photo(Ref.SubMain.SubContext.SubIcon.spIcon, "1.png", function (succ, name, image)
 		NowType = 1
 		if succ then
 			on_take_photo_call_back(image)
 		end
 	end)
-
+	
 end
 
 local function on_submain_subcontext_subinfo_subbaseinfo_subone_subage_click(btn)
@@ -72,7 +78,13 @@ local function on_submain_subcontext_subinfo_subbaseinfo_subone_subsex_click(btn
 end
 
 local function on_submain_subcontext_subinfo_subidcard_subphotolist_subphotofront_click(btn)
-	UIMGR.on_sdk_take_photo("2.png", Ref.SubMain.SubContext.SubInfo.SubIDCard.SubPhotoList.SubPhotoFront.spImage, function ( succ, name, image )
+	-- UIMGR.on_sdk_take_photo("2.png", Ref.SubMain.SubContext.SubInfo.SubIDCard.SubPhotoList.SubPhotoFront.spImage, function ( succ, name, image )
+	-- 	NowType = 2
+	-- 	if succ then
+	-- 		on_take_photo_call_back(image)
+	-- 	end
+	-- end)
+	UIMGR.load_photo(Ref.SubMain.SubContext.SubInfo.SubIDCard.SubPhotoList.SubPhotoFront.spImage, "2.png", function (succ, name, image)
 		NowType = 2
 		if succ then
 			on_take_photo_call_back(image)
@@ -82,28 +94,44 @@ local function on_submain_subcontext_subinfo_subidcard_subphotolist_subphotofron
 end
 
 local function on_submain_subcontext_subinfo_subidcard_subphotolist_subphotoback_click(btn)
-	UIMGR.on_sdk_take_photo("3.png", Ref.SubMain.SubContext.SubInfo.SubIDCard.SubPhotoList.SubPhotoBack.spImage, function ( succ, name, image )
+	-- UIMGR.on_sdk_take_photo("3.png", Ref.SubMain.SubContext.SubInfo.SubIDCard.SubPhotoList.SubPhotoBack.spImage, function ( succ, name, image )
+	-- 	NowType = 3
+	-- 	if succ then
+	-- 		on_take_photo_call_back(image)
+	-- 	end
+	-- end)
+	UIMGR.load_photo( Ref.SubMain.SubContext.SubInfo.SubIDCard.SubPhotoList.SubPhotoBack.spImage, "3.png", function (succ, name, image)
 		NowType = 3
 		if succ then
 			on_take_photo_call_back(image)
 		end
 	end)
-
 end
 
 local function on_submain_subcontext_subinfo_subidcard_subphotolist_subphotoall_click(btn)
 	
-	UIMGR.on_sdk_take_photo("4.png", Ref.SubMain.SubContext.SubInfo.SubIDCard.SubPhotoList.SubPhotoAll.spImage, function ( succ, name, image )
+	-- UIMGR.on_sdk_take_photo("4.png", Ref.SubMain.SubContext.SubInfo.SubIDCard.SubPhotoList.SubPhotoAll.spImage, function ( succ, name, image )
+	-- 	NowType = 4
+	-- 	if succ then
+	-- 		on_take_photo_call_back(image)
+	-- 	end
+	-- end)
+	UIMGR.load_photo( Ref.SubMain.SubContext.SubInfo.SubIDCard.SubPhotoList.SubPhotoAll.spImage, "4.png", function (succ, name, image)
 		NowType = 4
 		if succ then
 			on_take_photo_call_back(image)
 		end
 	end)
-
 end
 
 local function on_submain_subcontext_subinfo_subbankcard_subphotolist_subphotofront_click(btn)
-	UIMGR.on_sdk_take_photo("5.png", Ref.SubMain.SubContext.SubInfo.SubBankCard.SubPhotoList.SubPhotoFront.spImage, function ( succ, name, image )
+	-- UIMGR.on_sdk_take_photo("5.png", Ref.SubMain.SubContext.SubInfo.SubBankCard.SubPhotoList.SubPhotoFront.spImage, function ( succ, name, image )
+	-- 	NowType = 5
+	-- 	if succ then
+	-- 		on_take_photo_call_back(image)
+	-- 	end
+	-- end)
+	UIMGR.load_photo(Ref.SubMain.SubContext.SubInfo.SubBankCard.SubPhotoList.SubPhotoFront.spImage, "5.png", function (succ, name, image)
 		NowType = 5
 		if succ then
 			on_take_photo_call_back(image)
@@ -112,7 +140,13 @@ local function on_submain_subcontext_subinfo_subbankcard_subphotolist_subphotofr
 end
 
 local function on_submain_subcontext_subinfo_subbankcard_subphotolist_subphotoback_click(btn)
-	UIMGR.on_sdk_take_photo("6.png", Ref.SubMain.SubContext.SubInfo.SubBankCard.SubPhotoList.SubPhotoBack.spImage, function ( succ, name, image )
+	-- UIMGR.on_sdk_take_photo("6.png", Ref.SubMain.SubContext.SubInfo.SubBankCard.SubPhotoList.SubPhotoBack.spImage, function ( succ, name, image )
+	-- 	NowType = 6
+	-- 	if succ then
+	-- 		on_take_photo_call_back(image)
+	-- 	end
+	-- end)
+	UIMGR.load_photo( Ref.SubMain.SubContext.SubInfo.SubBankCard.SubPhotoList.SubPhotoBack.spImage, "6.png", function (succ, name, image)
 		NowType = 6
 		if succ then
 			on_take_photo_call_back(image)
