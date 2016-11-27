@@ -93,12 +93,23 @@ local function on_submain_subattoff_btnbutton_click(btn)
 		-- NW.send(nm)
 		on_try_punch({ret = 1})
 	else
-		_G.UI.Toast:make(nil, "当前不在上班状态"):show()
+		if workstate == 1 then
+			_G.UI.Toast:make(nil, "当前不在上班状态"):show()
+		else
+			_G.UI.Toast:make(nil, "请先复岗后方可下班"):show()
+		end
 	end
 end
 
 local function on_submain_subleave_btnbutton_click(btn)
-	UIMGR.create("UI/WNDAttLeave")
+	if Ref.SubMain.SubLeave.lbText.text == "复岗" then
+		local nm = NW.msg("ATTENCE.CS.FUGANG")
+		nm:writeU32(Assignmentid)
+		NW.send(nm)
+	else
+		UI_DATA.WNDAttLeave.Assignmentid = Assignmentid
+		UIMGR.create("UI/WNDAttLeave")
+	end
 end
 
 local function on_submain_subunder_btnbutton_click(btn)
@@ -146,17 +157,25 @@ local function on_ui_init()
 
 	local User = DY_DATA.User
 	if User.workstate == 1 then
-		Ref.SubMain.SubUnder.btnButton:SetInteractable(false)
+		Ref.SubMain.SubLeave.btnButton:SetInteractable(false)
 		Ref.SubMain.SubLeave.lbText.text = "离岗"
 	elseif User.workstate == 2 then
-		Ref.SubMain.SubUnder.btnButton:SetInteractable(true)
+		Ref.SubMain.SubLeave.btnButton:SetInteractable(true)
+		Assignmentid = User.taskid
 		Ref.SubMain.SubLeave.lbText.text = "离岗"
 	elseif User.workstate == 3 then
-		Ref.SubMain.SubUnder.btnButton:SetInteractable(true)
+		Ref.SubMain.SubLeave.btnButton:SetInteractable(true)
+		Assignmentid = User.taskid
 		Ref.SubMain.SubLeave.lbText.text = "复岗"
 	end
 
-	on_project_init()
+	if User.workstate ~= 1 then
+		Ref.SubMain.SubProject.lbText.text = User.projectName
+		Ref.SubMain.SubAttOn.lbText.text = User.starttime
+		Ref.SubMain.SubAttOff.lbText.text = User.endtime
+	else
+		on_project_init()
+	end
 end
 
 local function init_view()
@@ -252,7 +271,7 @@ local function start(self)
 end
 
 local function update_view()
-	print("1")
+	-- print("1")
 end
 
 local function on_recycle()
@@ -269,6 +288,7 @@ local P = {
 	start = start,
 	update_view = update_view,
 	on_recycle = on_recycle,
+	update = update,
 }
 return P
 

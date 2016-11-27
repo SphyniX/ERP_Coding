@@ -15,6 +15,39 @@ local UI_DATA = MERequire "datamgr/uidata.lua"
 local NW = MERequire "network/networkmgr"
 local Ref
 
+local function on_ui_init()
+	local MsgList = DY_DATA.MsgList
+	if MsgList == nil then 
+		libunity.SetActive(Ref.SubMsg.spNil, true)
+		return 
+	end
+	libunity.SetActive(Ref.SubMsg.spNil, #MsgList == 0)
+		
+	local LowerList = DY_DATA.LowerList
+	print("LowerList :"..JSON:encode(LowerList))
+	
+	Ref.SubMsg.GrpMsg:dup( #MsgList, function (i, Ent, isNew)
+		local Msg = MsgList[i]
+		
+		UIMGR.get_photo(Ent.SubContext.spIcon, Msg.icon)
+		libunity.SetActive(Ent.SubContext.spTip, Msg.state == 1)
+
+		if Msg.people == 0 then 
+			Ent.SubContext.lbTitle.text = "系统消息"
+		else
+			for i=1,#LowerList do
+				if LowerList[i].id == Msg.people then
+					Ent.SubContext.lbTitle.text = LowerList[i].name
+				end
+			end
+		end
+		Ent.SubContext.lbText.text = Msg.context
+		Ent.SubContext.lbTime.text = Msg.time:sub(0,8)
+		Ent.SubContext.lbDay.text = Msg.day
+	end)
+end
+
+
 local function on_read_msg(index)
 	local MsgList = DY_DATA.MsgList
 	local Msg = MsgList[index]
@@ -40,7 +73,6 @@ local function on_submsg_grpmsg_entmsg_subcontext_btncontext_click(btn)
 		nm:writeU32(Msg.id)
 		NW.send(nm)
 	end
-	on_read_msg(index)
 end
 
 local function on_submsg_grpmsg_entmsg_subcontext_btndel_click(btn)
@@ -50,6 +82,8 @@ local function on_submsg_grpmsg_entmsg_subcontext_btndel_click(btn)
 	local nm = NW.msg("MESSAGE.CS.DELETE")
 	nm:writeU32(Msg.id)
 	NW.send(nm)
+	Ref.SubMsg.GrpMsg:dup(0)
+	on_ui_init()
 end
 
 local function on_subbtm_btnatt_click(btn)
@@ -72,33 +106,7 @@ local function on_subbtm_btnuser_click(btn)
 	UIMGR.create_window("UI/WNDMainUser")
 end
 
-local function on_ui_init()
-	local MsgList = DY_DATA.MsgList
-	if MsgList == nil then 
-		libunity.SetActive(Ref.SubMsg.spNil, true)
-		return 
-	end
-	libunity.SetActive(Ref.SubMsg.spNil, #MsgList == 0)
-		
-	local LowerList = DY_DATA.LowerList
-	print("LowerList :"..JSON:encode(LowerList))
-	
-	Ref.SubMsg.GrpMsg:dup( #MsgList, function (i, Ent, isNew)
-		local Msg = MsgList[i]
-		
-		UIMGR.get_photo(Ent.SubContext.spIcon, Msg.icon)
-		libunity.SetActive(Ent.SubContext.spTip, Msg.state == 1)
 
-		if Msg.people == 0 then 
-			Ent.SubContext.lbTitle.text = "系统消息"
-		else
-			Ent.SubContext.lbTitle.text = LowerList[Msg.people] and LowerList[Msg.people].name or Msg.people
-		end
-		Ent.SubContext.lbText.text = Msg.context
-		Ent.SubContext.lbTime.text = Msg.time
-		Ent.SubContext.lbDay.text = Msg.day
-	end)
-end
 
 local function init_view()
 	Ref.SubMsg.GrpMsg.Ent.SubContext.btnContext.onAction = on_submsg_grpmsg_entmsg_subcontext_btncontext_click
@@ -116,7 +124,8 @@ end
 
 local function init_logic()
 	NW.subscribe("MESSAGE.SC.GETMESSAGELIST", on_ui_init)
-	NW.subscribe("MESSAGE.SC.GETLOWER", on_ui_init)
+	-- NW.subscribe("MESSAGE.SC.GETINFOR", on_people_back)
+	NW.subscribe("USER.SC.GETLOWER", on_ui_init)
 	if DY_DATA.LowerList == nil or next(DY_DATA.LowerList) == nil then
 		local nm = NW.msg("MESSAGE.CS.GETLOWER")
 		nm:writeU32(DY_DATA.User.id)

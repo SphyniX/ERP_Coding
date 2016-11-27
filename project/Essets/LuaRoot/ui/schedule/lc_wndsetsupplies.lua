@@ -14,6 +14,7 @@ local UI_DATA = MERequire "datamgr/uidata.lua"
 local DY_DATA = MERequire "datamgr/dydata.lua"
 local TEXT = _G.ENV.TEXT
 local NW = MERequire "network/networkmgr"
+local LOGIN = MERequire "libmgr/login.lua"
 local Ref
 
 local reason, reasonIndex, photoIndex
@@ -23,6 +24,7 @@ local MaterListForUpdate
 local Imagelist = {}
 local InfoList = {}
 local on_photo_init
+local NeedChange = true
 
 local function on_set_reason_callback(reason)
 	if reasonIndex == nil then return end
@@ -44,15 +46,15 @@ end
 local function on_set_photo_callback(Photolist)
 
 	local function on_http_photo_callback(Ret)
-	if photoIndex == nil then return end
-	Ref.SubMain.Grp:dup(#MaterList, function (i, Ent, isNew)
-		if i == photoIndex then 
-			Ent.lbPhoto.text = state
-		end
-	end)
+		if photoIndex == nil then return end
+		Ref.SubMain.Grp:dup(#MaterList, function (i, Ent, isNew)
+			if i == photoIndex then 
+				Ent.lbPhoto.text = Ret.photoid[1]
+			end
+		end)
 		-- body
 	end
-	LOGIN.try_uploadphoto(DY_DATA.User.id, v.typeId, nil, Photolist[1].image, on_http_photo_callback)
+	LOGIN.try_uploadphotoforreport(DY_DATA.User.id,Photolist[1].image, on_http_photo_callback)
 	-- on_photo_init()
 end
 
@@ -69,6 +71,7 @@ local function set_photo(index)
 end
 
 local function on_set_state_callback(state)
+	NeedChange = false
 	print("on_set_state_callback stateIndex is :" .. stateIndex)
 	if stateIndex == nil then return end
 	Ref.SubMain.Grp:dup(#MaterList, function (i, Ent, isNew)
@@ -76,6 +79,8 @@ local function on_set_state_callback(state)
 			Ent.lbState.text = state
 		end
 	end)
+	libunity.SetActive(Ref.SubState.root, false)
+	
 		-- local id = MaterList[reasonIndex].id
 		-- InfoList[id] = {state = state}
 	
@@ -85,6 +90,29 @@ end
 
 local function on_submain_grp_ent_btnstate_click(btn)
 	stateIndex = tonumber(btn.transform.parent.name:sub(4))
+	Ref.SubMain.Grp:dup(#MaterList, function (i, Ent, isNew)
+		if i == stateIndex then 
+			if Ent.lbState.text == "完好" then
+				Ref.SubState.tglGood.isOn = true
+				Ref.SubState.tglGood:SetInteractable(false)
+				Ref.SubState.tglBad.isOn = false
+				Ref.SubState.tglBad:SetInteractable(true)
+			end
+			if Ent.lbState.text == "需维修/补货" then
+				Ref.SubState.tglGood.isOn = false
+				Ref.SubState.tglGood:SetInteractable(true)
+				Ref.SubState.tglBad.isOn = true
+				Ref.SubState.tglBad:SetInteractable(false)
+			end
+			if Ent.lbState.text == "状态" then
+				Ref.SubState.tglGood.isOn = false
+				Ref.SubState.tglGood:SetInteractable(true)
+				Ref.SubState.tglBad.isOn = false
+				Ref.SubState.tglBad:SetInteractable(true)
+			end
+		end
+	end)
+	NeedChange = true
 	libunity.SetActive(Ref.SubState.root, true)
 end
 
@@ -106,13 +134,17 @@ local function on_subtop_btnback_click(btn)
 end
 
 local function on_substate_tglgood_change(tgl)
-	on_set_state_callback("完好")
-	libunity.SetActive(Ref.SubState.root, false)
+	if NeedChange then
+		on_set_state_callback("完好")
+	end
+	
 end
 
-local function on_substate_tglbad_change(tgl)
-	on_set_state_callback("损坏")
-	libunity.SetActive(Ref.SubState.root, false)	
+local function on_substate_tglbad_change(tg2)
+	if NeedChange then
+		on_set_state_callback("需维修/补货")
+	end
+
 end
 
 local function on_substate_btnback_click(btn)
@@ -132,8 +164,9 @@ local function on_btnsave_click(btn)
 		if state == "状态" then state = "" end
 		if photo == nil then photo = "" end
 		if discribe == nil then discribe = "" end
-		table.insert(MaterListForUpdate,{id = id,name = name , photo = photo , state = state , discribe = discribe})
-
+		if state ~= "" then
+			table.insert(MaterListForUpdate,{id = id,name = name , photo = photo , state = state , discribe = discribe})
+		end
 	end)
 	if DY_DATA.WNDSubmitSchedule.MaterList == nil then
 		DY_DATA.WNDSubmitSchedule.MaterList = {}
