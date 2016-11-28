@@ -246,46 +246,53 @@ NW.regist("USER.SC.GETINFOR", sc_user_getinfor)
 local function sc_user_get_user_infor(nm)
     local User = DY_DATA.User
     local ret = tonumber(nm:readString()) -- 1 成功
-
-    User.limit = tonumber(nm:readString())  -- 1 促销员， 2 督导， 3 区域负责人， 4 项目负责人
-    if User.limit == 1 then 
-        User.phone = nm:readString()
-        User.name = nm:readString()
-        User.sex = tonumber(nm:readString())
-        User.age = tonumber(nm:readString())
-        User.height = tonumber(nm:readString())
-        User.weight = tonumber(nm:readString())
-        User.qq = nm:readString()
-        User.wechat = nm:readString()
-        User.email = nm:readString()
-        User.bankcard = nm:readString()
-        User.IDcard = nm:readString()
-        User.workstate = tonumber(nm:readString()) -- 1 下班， 2， 上班中， 3 离岗
-        User.taskid = tonumber(nm:readString())
-        User.cityid = tonumber(nm:readString())
-        local icon = nm:readString()
-        local idcard_front = nm:readString()
-        local idcard_back = nm:readString()
-        local idcard_all = nm:readString()
-        local cardNo_front = nm:readString()
-        local cardNo_back = nm:readString()
-        User.icon = icon == "nil" and nil or icon..".png"
-        User.idcard_front = idcard_front == "nil" and nil or idcard_front..".png"
-        User.idcard_back = idcard_back == "nil" and nil or idcard_back..".png"
-        User.idcard_all = idcard_all == "nil" and nil or idcard_all..".png"
-        User.cardNo_front = cardNo_front == "nil" and nil or cardNo_front..".png"
-        User.cardNo_back = cardNo_back == "nil" and nil or cardNo_back..".png"
+    if ret == 1 then
+        User.limit = tonumber(nm:readString())  -- 1 促销员， 2 督导， 3 区域负责人， 4 项目负责人
+        if User.limit == 1 then 
+            User.phone = nm:readString()
+            User.name = nm:readString()
+            User.sex = tonumber(nm:readString())
+            User.age = tonumber(nm:readString())
+            User.height = tonumber(nm:readString())
+            User.weight = tonumber(nm:readString())
+            User.qq = nm:readString()
+            User.wechat = nm:readString()
+            User.email = nm:readString()
+            User.bankcard = nm:readString()
+            User.IDcard = nm:readString()
+            User.workstate = tonumber(nm:readString()) -- 1 下班， 2， 上班中， 3 离岗
+            User.taskid = tonumber(nm:readString())
+            User.cityid = tonumber(nm:readString())
+            User.projectName = nm:readString()
+            User.starttime = nm:readString()
+            User.endtime = nm:readString()
+            local icon = nm:readString()
+            local idcard_front = nm:readString()
+            local idcard_back = nm:readString()
+            local idcard_all = nm:readString()
+            local cardNo_front = nm:readString()
+            local cardNo_back = nm:readString()
+            User.icon = icon == "nil" and nil or icon..".png"
+            User.idcard_front = idcard_front == "nil" and nil or idcard_front..".png"
+            User.idcard_back = idcard_back == "nil" and nil or idcard_back..".png"
+            User.idcard_all = idcard_all == "nil" and nil or idcard_all..".png"
+            User.cardNo_front = cardNo_front == "nil" and nil or cardNo_front..".png"
+            User.cardNo_back = cardNo_back == "nil" and nil or cardNo_back..".png"
+        else
+            User.phone = nm:readString()
+            User.name = nm:readString()
+            User.qq = nm:readString()
+            User.wechat = nm:readString()
+            User.email = nm:readString()
+            local cityid = nm:readString()
+            -- User.cityid = tonumber(nm:readString())
+            User.cityid = tonumber(cityid)
+            local icon = nm:readString()
+            User.icon = icon == "nil" and icon == nil and "test.png" or icon..".png"
+        end
+        print("<color=#EEB422>UserInfo is : " .. JSON:encode(User) .. "</color>")
     else
-        User.phone = nm:readString()
-        User.name = nm:readString()
-        User.qq = nm:readString()
-        User.wechat = nm:readString()
-        User.email = nm:readString()
-        local cityid = nm:readString()
-        -- User.cityid = tonumber(nm:readString())
-        User.cityid = tonumber(cityid)
-        local icon = nm:readString()
-        User.icon = icon == "nil" and icon == nil and "test.png" or icon..".png"
+        _G.UI.Toast:make(nil,"获取用户信息失败，请注销后重新登陆！"):show()
     end
 end
 NW.regist("USER.SC.GETUSERINFOR", sc_user_get_user_infor)
@@ -510,8 +517,11 @@ local function sc_reported_getstore(nm)
         local name = nm:readString()
         local icon = nm:readString()
         icon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
+        print(icon)
         table.insert(StoreList,{id = id, projectId = projectId, name = name, icon = icon,})
+        print("<color=#EEB422>StoreList is : " .. JSON:encode(StoreList) .. "</color>")
     end
+
 end
 NW.regist("REPORTED.SC.GETSTORE", sc_reported_getstore)
 
@@ -903,14 +913,14 @@ local function  sc_project_getproinfor(nm)
     selling_point = nm:readString(),
     words = nm:readString(),
     sales_technique = nm:readString(),
-    rule_att = nm:readString(),
-    rule_face = nm:readString(),
-    rule_sch = nm:readString(),
-    rule_photo = nm:readString(),
-    rule_data = nm:readString(),
-    rule_leave = nm:readString(),
-    rule_sale = nm:readString(),
-    rule_plan = nm:readString(),
+    -- rule_att = nm:readString(),
+    -- rule_face = nm:readString(),
+    -- rule_sch = nm:readString(),
+    -- rule_photo = nm:readString(),
+    -- rule_data = nm:readString(),
+    -- rule_leave = nm:readString(),
+    -- rule_sale = nm:readString(),
+    -- rule_plan = nm:readString(),
     info_wages = nm:readString(),
     info_reward = nm:readString(),
     info_procontact = nm:readString(),
@@ -959,6 +969,49 @@ print(JSON:encode(WorkDays))
 end
 NW.regist("PROJECT.SC.GETSTOREINFOR", sc_project_getstoreinfor)
 
+local function  sc_project_getsalesworkflow(nm)
+    local id = tonumber(nm:readString())
+    local taskid = tonumber(nm:readString())
+    
+    local Project = DY_DATA.ProjectList[id]
+    if Project == nil then
+       return
+    end
+
+    Project.InfoFlow = {
+    -- type = type,
+    -- brand = brand,
+    -- ProductList = List,
+    -- act_form = nm:readString(),
+    -- act_calendar = nm:readString(),
+    -- act_goal = nm:readString(),
+    -- goal_sale = nm:readString(),
+    -- goal_exppeople = nm:readString(),
+    -- goal_expvolume = nm:readString(),
+    -- goal_people = nm:readString(),
+    -- product_info = nm:readString(),
+    -- selling_point = nm:readString(),
+    -- words = nm:readString(),
+    -- sales_technique = nm:readString(),
+    rule_att = nm:readString(),
+    rule_face = nm:readString(),
+    rule_suppiles = nm:readString(),
+    rule_sch = nm:readString(),
+    rule_photo = nm:readString(),
+    rule_data = nm:readString(),
+    rule_leave = nm:readString(),
+    rule_sale = nm:readString(),
+    rule_plan = nm:readString(),
+    -- info_wages = nm:readString(),
+    -- info_reward = nm:readString(),
+    -- info_procontact = nm:readString(),
+    -- icon = nm:readString(),
+    }   
+
+end
+
+NW.regist("PROJECT.SC.GETSAlESWORKFLOW", sc_project_getsalesworkflow)
+
 local function sc_work_getproject(nm)
 
 
@@ -975,7 +1028,9 @@ local function sc_work_getproject(nm)
             List[id].icon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
         end
         DY_DATA.ProjectList = List
+        DY_DATA.SchProjectList = List
         DY_DATA.get_project_list(true)
+        DY_DATA.get_schproject_list(true)
     else    
         local List = DY_DATA.ProjectList
         local n = tonumber(nm:readString())
@@ -1011,12 +1066,17 @@ local function sc_work_getstore(nm)
     for i=1,n do
         local projectId = tonumber(nm:readString())
         local Project = DY_DATA.ProjectList[projectId]
+        local SchProject = DY_DATA.SchProjectList[projectId]
         local StoreList = Project.StoreList
+        local SchStoreList = SchProject.StoreList
         if StoreList == nil then
             StoreList = {}
             Project.StoreList = StoreList
         end
-
+        if SchStoreList == nil then
+            SchStoreList = {}
+            SchProject.StoreList = SchStoreList
+        end
         local Info = {
         id = tonumber(nm:readString()),
         name = nm:readString(),
@@ -1026,6 +1086,7 @@ local function sc_work_getstore(nm)
     Info.icon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
     Info.state = tonumber(nm:readString())
     table.insert(StoreList, Info)
+    table.insert(SchStoreList,Info)
 end
 
 end

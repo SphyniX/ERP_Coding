@@ -168,6 +168,8 @@ do
         return {
             GETPROINFOR = ID_BASE + 1,
             GETSTOREINFOR = ID_BASE + 2,
+            GETSAlESWORKFLOW = ID_BASE + 3,
+            GETSUPWORKFLOW = ID_BASE + 4,
         }
     end
 
@@ -176,6 +178,8 @@ do
         return {
             GETPROINFOR = ID_BASE + 1,
             GETSTOREINFOR = ID_BASE + 2,
+            GETSAlESWORKFLOW = ID_BASE + 3,
+            GETSUPWORKFLOW = ID_BASE + 3,
         }
     end
 

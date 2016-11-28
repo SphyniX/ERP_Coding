@@ -78,10 +78,10 @@ local function init_view()
 end
 
 local function init_logic()
-	NW.subscribe("REPORTED.SC.GETPROJECT", on_ui_init)
+	NW.subscribe("WORK.SC.GETPROJECT", on_ui_init)
 	if DY_DATA.SchProjectList == nil or next(DY_DATA.SchProjectList) == nil then
 		if NW.connected() then
-			local nm = NW.msg("REPORTED.CS.GETPROJECT")
+			local nm = NW.msg("WORK.CS.GETPROJECT")
 			nm:writeU32(DY_DATA.User.id)
 			NW.send(nm)
 		end
@@ -103,7 +103,7 @@ local function update_view()
 end
 
 local function on_recycle()
-	NW.unsubscribe("REPORTED.SC.GETPROJECT", on_ui_init)
+	NW.unsubscribe("WORK.SC.GETPROJECT", on_ui_init)
 end
 
 local P = {

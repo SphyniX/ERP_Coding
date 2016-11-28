@@ -205,19 +205,24 @@ function P.update_photo(tex, name, callBack)
 end
 
 function P.get_photo(tex, name, callBack)
+	print("---------------------------Starting GetPhoto! ----------------------")
 	if name == nil or name == "" then 
+		print("---------------------------No Name! ----------------------")
 		if callBack then callBack(false, nil, nil) end 
 		return 
 	end
 	P.load_photo(tex, name, function ( succ, name, image)
 		if succ == true then
+			print("---------------------------Loading Succ! ----------------------")
 			if callBack then callBack(succ, name, image) end
 		else
+			print("---------------------------Loading false! ----------------------")
 			P.update_photo( tex, name, function ()
 				P.load_photo(tex, name, callBack)
 			end)
 		end
 	end)
+	print("---------------------------Ending GetPhoto! ----------------------")
 end
 
 -- 隐藏公共背景图

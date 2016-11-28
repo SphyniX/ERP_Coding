@@ -27,6 +27,12 @@ return {
 	{OP="Default",ID=1025,Info="不在打卡区域内",},
 	{OP="Default",ID=1026,Info="已审核",},
 	{OP="Default",ID=1027,Info="你已打卡",},
+	{OP="Default",ID=1028,Info="信息不正确",},
+	{OP="Default",ID=1029,Info="照片不对",},
+	{OP="Default",ID=1030,Info="无任务",},
+	{OP="Default",ID=1031,Info="未上报进度",},
+	{OP="Default",ID=1032,Info="离岗编号不对",},
+
 	
 	{OP="Default",ID=2001,Info="上传出错",},
 	{OP="Default",ID=2002,Info="没有上传照片",},

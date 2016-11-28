@@ -41,7 +41,7 @@ local function on_store_init()
 	if Store.Info == nil then return end
 
 	Ref_SubMain_SubContent.SubStore.lbAddress.text = Store.Info.address
-	Ref_SubMain_SubContent.SubSeven.lbText.text = string.format(TEXT.fmtContext1,Store.Info.supcontact,Store.Info.salecontact)
+	Ref_SubMain_SubContent.SubSeven.lbText.text = string.format(TEXT.fmtContext1,Store.Info.supcontact)
 	local WorkDays = Store.Info.WorkDays
 	if WorkDays == nil then return end
 	Ref_SubMain_SubContent.SubWorkDay.Grp:dup( #WorkDays, function (i, Ent, isNew)
@@ -70,12 +70,19 @@ local function on_project_init()
 	Ref_SubMain_SubContent.SubTwo.lbText.text = string.format(TEXT.fmtType, Info.act_form, Info.act_calendar, Info.act_goal, Info.goal_sale, Info.goal_expvolume, Info.goal_exppeople) -- 活动形式， 
 	Ref_SubMain_SubContent.SubThree.lbText.text = string.format(TEXT.fmtProduct, Info.product_info, Info.selling_point) 
 	Ref_SubMain_SubContent.SubFour.lbText.text = string.format(TEXT.fmtWord, Info.words, Info.sales_technique)
-	Ref_SubMain_SubContent.SubFive.lbText.text = string.format(TEXT.fmtWork, Info.rule_att, Info.rule_face, Info.rule_sch, Info.rule_photo, Info.rule_data, Info.rule_leave, Info.rule_sale, Info.rule_plan)
 	Ref_SubMain_SubContent.SubSix.lbText.text = string.format(TEXT.fmtRole, Info.info_wages, Info.info_reward)
 	Ref_SubMain_SubContent.SubSeven.lbText1.text = string.format(TEXT.fmtContext2, Info.info_procontact)
 
 end
 
+local function on_projectflow_init()
+	local Ref_SubMain_SubContent = Ref.SubMain.SubContent
+	local projectId = UI_DATA.WNDWorkProject.projectId
+	Project = DY_DATA.ProjectList[projectId]
+	if Project.InfoFlow == nil then return end
+	local InfoFlow = Project.InfoFlow
+	Ref_SubMain_SubContent.SubFive.lbText.text = string.format(TEXT.fmtWork, InfoFlow.rule_att, InfoFlow.rule_face, InfoFlow.rule_suppiles, InfoFlow.rule_sch, InfoFlow.rule_photo, InfoFlow.rule_data, InfoFlow.rule_leave, InfoFlow.rule_sale, InfoFlow.rule_plan)	
+end
 -- local function on_work_init()
 
 -- 	local Attendance = DY_DATA.AttendanceList[0]
@@ -97,6 +104,7 @@ end
 
 local function init_logic()
 	NW.subscribe("PROJECT.SC.GETPROINFOR", on_project_init)
+	NW.subscribe("PROJECT.SC.GETSAlESWORKFLOW", on_projectflow_init)
 	NW.subscribe("PROJECT.SC.GETSTOREINFOR",on_store_init)
 	-- NW.subscribe("ATTENCE.SC.GETWORK",on_work_init)
 	
@@ -112,8 +120,17 @@ local function init_logic()
 		local nm = NW.msg("PROJECT.CS.GETPROINFOR")
 		nm:writeU32(projectId)
 		NW.send(nm)
+		
 	else
 		on_project_init()
+	end
+	if Project.InfoFlow == nil then
+		local nm = NW.msg("PROJECT.CS.GETSAlESWORKFLOW")
+		nm:writeU32(projectId)
+		NW.send(nm)
+		
+	else
+		on_projectflow_init()
 	end
 
 	local storeId = UI_DATA.WNDWorkProject.storeId
@@ -165,6 +182,7 @@ end
 
 local function on_recycle()
 	NW.unsubscribe("PROJECT.SC.GETPROINFOR", on_project_init)
+	NW.unsubscribe("PROJECT.SC.GETSAlESWORKFLOW", on_projectflow_init)
 	NW.unsubscribe("PROJECT.SC.GETSTOREINFOR",on_store_init)
 end
 

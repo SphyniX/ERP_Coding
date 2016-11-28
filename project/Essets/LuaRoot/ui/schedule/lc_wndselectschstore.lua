@@ -26,6 +26,7 @@ local function on_substore_grpstore_entstore_btnbutton_click(btn)
 	
 	UI_DATA.WNDSubmitSchedule.projectId = Store.projectId
 	UI_DATA.WNDSubmitSchedule.storeId = Store.id
+	UI_DATA.WNDSubmitSchedule.state = Store.state
 	UIMGR.create_window("UI/WNDSubmitSchedule")
 end
 
@@ -48,10 +49,10 @@ local function on_ui_init()
 		local Store = StoreList[i]
 		Ent.lbName.text = Store.name
 		UIMGR.get_photo(Ent.spIcon, Store.icon)
-		local clr = i % 3
-		libunity.SetActive(Ent.spRed, clr == 1)
-		libunity.SetActive(Ent.spBlue, clr == 2)
-		libunity.SetActive(Ent.spYellow, clr == 0)
+		-- local clr = i % 3
+		-- libunity.SetActive(Ent.spRed, clr == 1)
+		-- libunity.SetActive(Ent.spBlue, clr == 2)
+		-- libunity.SetActive(Ent.spYellow, clr == 0)
 	end)
 end
 
@@ -65,12 +66,12 @@ local function init_view()
 end
 
 local function init_logic()
-	NW.subscribe("REPORTED.SC.GETSTORE", on_ui_init)
+	NW.subscribe("WORK.SC.GETSTORE", on_ui_init)
 	local projectId = UI_DATA.WNDSelectStore.projectId
 	local Project = DY_DATA.SchProjectList[projectId]
 	print(JSON:encode(Project))
 	if Project.StoreList == nil or #Project.StoreList == 0 then
-		local nm = NW.msg("REPORTED.CS.GETSTORE")
+		local nm = NW.msg("WORK.CS.GETSTORE")
 		nm:writeU32(projectId)
 		nm:writeU32(DY_DATA.User.id)
 		NW.send(nm)
@@ -92,7 +93,7 @@ local function update_view()
 end
 
 local function on_recycle()
-	NW.unsubscribe("REPORTED.SC.GETSTORE", on_ui_init)
+	NW.unsubscribe("WORK.SC.GETSTORE", on_ui_init)
 end
 
 local P = {

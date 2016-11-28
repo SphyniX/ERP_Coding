@@ -14,7 +14,7 @@ local UI_DATA = MERequire "datamgr/uidata.lua"
 local Ref
 
 local callback, PhotoList
-local input,inputvalue
+local input,inputvalue,characterLimit
 
 --!*以下：自动生成的回调函数*--
 
@@ -79,6 +79,11 @@ local function init_logic()
 	UI_DATA.WNDShowPhoto.inputvalue = nil
 	Ref.SubPhoto.GrpPhoto.lbInput.text = input or ""
 	Ref.SubPhoto.GrpPhoto.inpInput.text = inputvalue or ""
+
+	if UI_DATA.WNDShowPhoto.characterLimit ~= nil then
+		characterLimit = tonumber(UI_DATA.WNDShowPhoto.characterLimit)
+		Ref.SubPhoto.GrpPhoto.inpInput.characterLimit = characterLimit
+	end
 
 	UI_DATA.WNDShowPhoto = {}
 

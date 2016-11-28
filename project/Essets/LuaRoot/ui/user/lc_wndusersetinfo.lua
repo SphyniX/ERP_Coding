@@ -75,6 +75,7 @@ local function on_submain_subidcard_click(btn)
 	UI_DATA.WNDShowPhoto.tip = "身份证照片"
 	UI_DATA.WNDShowPhoto.input = "身份证号码"
 	UI_DATA.WNDShowPhoto.inputvalue = DY_DATA.User.IDcard
+	UI_DATA.WNDShowPhoto.characterLimit = 18
 	local User = DY_DATA.User
 	UI_DATA.WNDShowPhoto.photolist = {
 		[1] = { title = "正面", name = User.idcard_front, typeId = 2, dl = true},
@@ -90,6 +91,7 @@ local function on_submain_subbankcard_click(btn)
 	UI_DATA.WNDShowPhoto.tip = "银行卡照片"
 	UI_DATA.WNDShowPhoto.input = "银行卡号码"
 	UI_DATA.WNDShowPhoto.inputvalue = DY_DATA.User.bankcard
+	UI_DATA.WNDShowPhoto.characterLimit = 19
 	local User = DY_DATA.User
 	UI_DATA.WNDShowPhoto.photolist = {
 		[1] = { title = "正面", name = User.cardNo_front, typeId = 5, dl = true },
