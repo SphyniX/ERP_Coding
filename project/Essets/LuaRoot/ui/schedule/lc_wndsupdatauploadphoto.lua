@@ -13,7 +13,7 @@ local UIMGR = MERequire "ui/uimgr"
 local Ref
 --!*以下：自动生成的回调函数*--
 
-local function on_subtop_btnclean_click(btn)
+local function on_subphoto_grpphoto_entphoto_click(btn)
 	
 end
 
@@ -21,41 +21,25 @@ local function on_subtop_btnback_click(btn)
 	UIMGR.close_window(Ref.root)
 end
 
-local function on_subimgs_btnimg1_click(btn)
+local function on_subtop_btnsave_click(btn)
 	
 end
 
-local function on_subimgs_btnimg2_click(btn)
+local function on_subtop_btnclear_click(btn)
 	
 end
 
-local function on_subimgs_btnimg3_click(btn)
-	
-end
-
-local function on_subimgs_btnimg4_click(btn)
-	
-end
-
-local function on_subimgs_btnimg5_click(btn)
-	
-end
-
-local function on_save_click(btn)
-	
-end
 
 
 
 local function init_view()
-	Ref.SubTop.btnClean.onAction = on_subtop_btnclean_click
+	Ref.SubPhoto.GrpPhoto.Ent.btn.onAction = on_subphoto_grpphoto_entphoto_click
 	Ref.SubTop.btnBack.onAction = on_subtop_btnback_click
-	Ref.SubImgs.btnImg1.onAction = on_subimgs_btnimg1_click
-	Ref.SubImgs.btnImg2.onAction = on_subimgs_btnimg2_click
-	Ref.SubImgs.btnImg3.onAction = on_subimgs_btnimg3_click
-	Ref.SubImgs.btnImg4.onAction = on_subimgs_btnimg4_click
-	Ref.SubImgs.btnImg5.onAction = on_subimgs_btnimg5_click
-	Ref.Save.onAction = on_save_click
+	Ref.SubTop.btnSave.onAction = on_subtop_btnsave_click
+	Ref.SubTop.btnClear.onAction = on_subtop_btnclear_click
+	UIMGR.make_group(Ref.SubPhoto.GrpPhoto, function (New, Ent)
+		New.btn.onAction = Ent.btn.onAction
+	end)
 	--!*以上：自动注册的回调函数*--
 end
 

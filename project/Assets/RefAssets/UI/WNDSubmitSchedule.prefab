@@ -431,7 +431,7 @@ GameObject:
   - 114: {fileID: 11414292}
   - 114: {fileID: 11465174}
   m_Layer: 5
-  m_Name: lbTip
+  m_Name: lbTip_
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4715,12 +4715,14 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 22445982}
-  m_RootOrder: 9
+  m_Father: {fileID: 22446080}
+  m_RootOrder: 1
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 83.4}
+  m_AnchoredPosition: {x: 1.4, y: -57.7}
+  m_SizeDelta: {x: -41.5, y: 50}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!224 &22434452
 RectTransform:
@@ -4831,7 +4833,6 @@ RectTransform:
   - {fileID: 22420738}
   - {fileID: 22479332}
   - {fileID: 22446080}
-  - {fileID: 22431836}
   m_Father: {fileID: 22462744}
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
@@ -4850,6 +4851,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 22400876}
+  - {fileID: 22431836}
   m_Father: {fileID: 22445982}
   m_RootOrder: 8
   m_AnchorMin: {x: 0.5, y: 0}
