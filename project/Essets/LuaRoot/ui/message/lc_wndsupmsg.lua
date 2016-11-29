@@ -49,10 +49,16 @@ local function on_submsg_grp_ent_subcontext_btncontext_click(btn)
 	print("<color=#00ff00>on_submsg_grpmsg_entmsg_subcontext_btncontext_click 订阅回调"..tostring(btn.name).."</color>")
    -- WNDsupmsg
    local listdata={}
-   listdata.MsgIndex= tonumber(btn.name)
-   UI_DATA.WNDsupmsgData=listdata
+   local MsgList = DY_DATA.MsgList
+   listdata.MsgIndex = tonumber(btn.name)
+   Ref.SubMsg.Grp:dup( #MsgList, function (i, Ent, isNew)
+   		if i == listdata.MsgIndex then
+   			listdata.username = Ent.SubContext.lbTitle.text
+   		end
+   	end)
+   UI_DATA.WNDsupmsgData.listdata =listdata
    UIMGR.create_window("UI/WNDSupMsgcontent")
-end
+end 
 
 local function on_tgltoggle_change(tgl)
 	print("<color=#00ff00>on_submsg_grpmsg_entmsg_subcontext_btncontext_click 订阅回调</color>")
@@ -141,9 +147,18 @@ local function on_ui_init()
 		else
 			print("<color=#00ffff>按钮查找失败</color>")
 		end
-		Ent.SubContext.lbTitle.text = Msg.people--LowerList[Msg.people] and LowerList[Msg.people].name or Msg.people
+		if Msg.people == 0 then
+			Ent.SubContext.lbTitle.text = "系统消息"
+		else
+			for i=1,#LowerList do
+				if LowerList[i].id == Msg.people then
+					Ent.SubContext.lbTitle.text = LowerList[i].name
+				end
+			end
+		end
+			--LowerList[Msg.people] and LowerList[Msg.people].name or Msg.people
 		Ent.SubContext.lbText.text = Msg.context
-		Ent.SubContext.lbTime.text = Msg.time
+		Ent.SubContext.lbTime.text = Msg.time:sub(0,5)
 		--Ent.SubContext.lbDay.text = Msg.day
 		end)
 end

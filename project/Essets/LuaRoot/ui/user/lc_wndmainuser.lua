@@ -15,6 +15,25 @@ local UI_DATA = MERequire "datamgr/uidata.lua"
 local NW = MERequire "network/networkmgr"
 local LOGIN = MERequire "libmgr/login.lua"
 local Ref
+local function on_msg_init()
+	if DY_DATA.MsgList == nil then
+		local nm = NW.msg("MESSAGE.CS.GETMESSAGELIST")
+		nm:writeU32(DY_DATA.User.id)
+		NW.send(nm)
+		return
+	end
+	local MsgList = DY_DATA.MsgList
+	if MsgList ~= nil then 
+		if #MsgList ~= 0 then
+			libunity.SetActive(Ref.SubBtm.SetRed, true)
+		else
+			libunity.SetActive(Ref.SubBtm.SetRed, false)
+		end
+	
+	end
+
+	-- body
+end
 
 local function on_set_photo(Photolist)
 	-- local nPhoto = 0
@@ -123,6 +142,7 @@ local function on_subbtm_btnmsg_click(btn)
 end
 
 local function on_ui_init()
+	on_msg_init()
 	local Ref_SubMain = Ref.SubMain
 	local User = DY_DATA.User
 	Ref_SubMain.SubIcon.lbName.text = User.name
@@ -149,6 +169,7 @@ end
 local function init_logic()
 	on_ui_init()
 	NW.subscribe("USER.SC.GETUSERINFOR", on_ui_init)
+	NW.subscribe("MESSAGE.SC.GETMESSAGELIST",on_msg_init)
 end
 
 local function start(self)
@@ -166,6 +187,7 @@ end
 local function on_recycle()
 	
 	NW.unsubscribe("USER.SC.GETUSERINFOR", on_ui_init)
+	NW.unsubscribe("MESSAGE.SC.GETMESSAGELIST",on_msg_init)
 end
 
 local P = {

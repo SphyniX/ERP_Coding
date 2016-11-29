@@ -22,7 +22,14 @@ local function on_ui_init()
 		return 
 	end
 	libunity.SetActive(Ref.SubMsg.spNil, #MsgList == 0)
-		
+	if MsgList ~= nil then 
+		if #MsgList ~= 0 then
+			libunity.SetActive(Ref.SubBtm.SetRed, true)
+		else
+			libunity.SetActive(Ref.SubBtm.SetRed, false)
+		end
+	
+	end	
 	local LowerList = DY_DATA.LowerList
 	print("LowerList :"..JSON:encode(LowerList))
 	
@@ -56,6 +63,11 @@ local function on_read_msg(index)
 		UIMGR.create_window("UI/WNDMainWork")
 	elseif Msg.type == 2 then
 		UI_DATA.WNDMsgContext.Msg = Msg
+		Ref.SubMsg.GrpMsg:dup( #MsgList, function (i, Ent, isNew)
+				if i == index then
+					UI_DATA.WNDMsgContext.Username = Ent.SubContext.lbTitle.text
+				end
+			end)
 		UIMGR.create_window("UI/WNDMsgContext")
 	elseif Msg.type == 3 then
 
@@ -73,6 +85,7 @@ local function on_submsg_grpmsg_entmsg_subcontext_btncontext_click(btn)
 		nm:writeU32(Msg.id)
 		NW.send(nm)
 	end
+	on_read_msg(index)
 end
 
 local function on_submsg_grpmsg_entmsg_subcontext_btndel_click(btn)

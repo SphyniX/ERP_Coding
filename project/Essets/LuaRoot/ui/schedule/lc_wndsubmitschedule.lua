@@ -256,7 +256,9 @@ local function on_store_init()
 	local state = UI_DATA.WNDSubmitSchedule.state
 	--------- 提取已上报进度在这里 ---------
 	if state == 2 then
-		Ref.SubMain.SubContent.lbTip.text = "请确认信息无误后提交\n<color=red>已上报进度</color>"
+		Ref.SubMain.SubContent.lbTip.text = "<color=red>已上报进度</color>"
+	else
+		Ref.SubMain.SubContent.lbTip.text = "请确认无误后提交"
 	end
 	Ref.SubMain.SubContent.SubAddress.lbText.text = Store.Info.address
 	Ref.SubMain.SubContent.SubTime.lbStart.text = Store.Info.starttime

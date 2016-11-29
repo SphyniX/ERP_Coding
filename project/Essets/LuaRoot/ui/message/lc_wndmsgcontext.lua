@@ -32,9 +32,9 @@ local function init_logic()
 	if Msg.people == 0 then 
 		Ref.SubMain.lbName.text = "系统消息"
 	else
-		Ref.SubMain.lbName.text = LowerList[Msg.people] and LowerList[Msg.people].name or Msg.people
+		Ref.SubMain.lbName.text = UI_DATA.WNDMsgContext.Username
 	end
-	Ref.SubMain.lbTime.text = Msg.time
+	Ref.SubMain.lbTime.text = Msg.time:sub(0,8)
 	Ref.SubMain.lbText.text = Msg.context
 end
 

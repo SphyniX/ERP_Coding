@@ -49,6 +49,7 @@ local function on_set_photo_callback(Photolist)
 		if photoIndex == nil then return end
 		Ref.SubMain.Grp:dup(#MaterList, function (i, Ent, isNew)
 			if i == photoIndex then 
+				_G.UI.Toast:make(nil, "成功"):show()
 				Ent.lbPhoto.text = Ret.photoid[1]
 			end
 		end)

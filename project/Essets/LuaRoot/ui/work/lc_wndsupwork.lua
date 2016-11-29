@@ -14,10 +14,49 @@ local DY_DATA = MERequire "datamgr/dydata.lua"
 local UI_DATA = MERequire "datamgr/uidata.lua"
 local NW= MERequire "network/networkmgr"
 
-	-- body
-	local Ref
-	local ProjectList
+local Ref
+local ProjectList
 --!*以下：自动生成的回调函数*--
+local TempProjectList
+
+
+local function on_ui_init(brandid)
+	if brandid == nil then brandid = 0 end
+	ProjectList = DY_DATA.get_schproject_list()
+	if ProjectList == nil then 
+		print("ProjectList is nil")
+		libunity.SetActive(Ref.SubProject.spNil, true)
+		return 
+	end
+	TempProjectList = {}
+	if brandid == 0 then
+		TempProjectList = ProjectList
+	else
+		for i=1,#ProjectList do
+			if ProjectList[i].brandnum == brandid then
+				table.insert(TempProjectList,ProjectList[i])
+			end
+		end
+	end
+	libunity.SetActive(Ref.SubProject.spNil, #ProjectList == 0)
+	print("TempProjectList is "..#TempProjectList)
+	Ref.SubProject.GrpProject:dup(#TempProjectList, function (i, Ent, isNew)
+		local Project = TempProjectList[i]
+		Ent.lbText.text = Project.name
+		UIMGR.get_photo(Ent.spIcon, Project.icon)
+		-- local clr = i % 3
+		-- libunity.SetActive(Ent.spRed, clr == 1)
+		-- libunity.SetActive(Ent.spBlue, clr == 2)
+		-- libunity.SetActive(Ent.spYellow, clr == 0)
+	end)
+	-- body
+end 
+
+
+local function on_brand_select_callback(brand)
+	-- body
+	on_ui_init(brand.id)
+end
 
 local function on_subproject_grpproject_entproject_btnbutton_click(btn)
 	--WNDSupWork.btnName=btn.name
@@ -29,7 +68,8 @@ local function on_subproject_grpproject_entproject_btnbutton_click(btn)
 end
 
 local function on_subtop_btnbrand_click(btn)
-	
+	UI_DATA.WNDSelectBrand.callbackfunc = on_brand_select_callback
+	UIMGR.create("UI/WNDSelectBrand")
 end
 
 local function on_subbtm_btnatt_click(btn)
@@ -51,27 +91,7 @@ local function on_subbtm_btnuser_click(btn)
 UIMGR.create_window("UI/WNDSupUser")
 end
 
-local function on_ui_init()
-	ProjectList = DY_DATA.get_schproject_list()
-	if ProjectList == nil then 
-		print("ProjectList is nil")
-		libunity.SetActive(Ref.SubProject.spNil, true)
-		return 
-	end
 
-	libunity.SetActive(Ref.SubProject.spNil, #ProjectList == 0)
-	print("ProjectList is "..#ProjectList)
-	Ref.SubProject.GrpProject:dup(#ProjectList, function (i, Ent, isNew)
-		local Project = ProjectList[i]
-		Ent.lbText.text = Project.name
-		UIMGR.get_photo(Ent.spIcon, Project.icon)
-		-- local clr = i % 3
-		-- libunity.SetActive(Ent.spRed, clr == 1)
-		-- libunity.SetActive(Ent.spBlue, clr == 2)
-		-- libunity.SetActive(Ent.spYellow, clr == 0)
-	end)
-	-- body
-end 
 
 
 local function init_view()
