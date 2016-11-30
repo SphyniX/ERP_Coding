@@ -22,7 +22,7 @@ public class AssetsPackerWindow : EditorWindow {
 	{
 		AssetPacker.EncryptLua();
 		AssetPacker.PackAssets();
-		AssetPacker.GenFileList();
+		//AssetPacker.GenFileList();
 	}
 
 	public static void UpdateAssets()

@@ -48,6 +48,11 @@ end
 
 
 
+local function on_sublog_grplog_entlog_subaskoff_btnbutton_click(btn)
+	UIMGR.create_window("UI/WNDAskOffMag")
+	
+end
+
 local function on_ui_init( )
 	
 	local AttenceList = DY_DATA.Work.AttenceList
@@ -81,7 +86,10 @@ local function init_view()
 	Ref.SubTop.SubMouth.btnNew.onAction = on_subtop_submouth_btnnew_click
 	Ref.SubTop.SubMouth.btnLast.onAction = on_subtop_submouth_btnlast_click
 	Ref.SubTop.btnBack.onAction = on_subtop_btnback_click
-	UIMGR.make_group(Ref.SubLog.GrpLog)
+	Ref.SubLog.GrpLog.Ent.SubAskOff.btnButton.onAction = on_sublog_grplog_entlog_subaskoff_btnbutton_click
+	UIMGR.make_group(Ref.SubLog.GrpLog, function (New, Ent)
+		New.SubAskOff.btnButton.onAction = Ent.SubAskOff.btnButton.onAction
+	end)
 	--!*以上：自动注册的回调函数*--
 end
 
