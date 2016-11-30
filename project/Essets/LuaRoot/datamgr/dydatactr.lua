@@ -1012,6 +1012,45 @@ end
 
 NW.regist("PROJECT.SC.GETSAlESWORKFLOW", sc_project_getsalesworkflow)
 
+local function  sc_project_getsupworkflow(nm)
+    local id = tonumber(nm:readString())
+
+    
+    local Project = DY_DATA.ProjectList[id]
+    if Project == nil then
+       return
+    end
+
+    Project.InfoFlow = {
+
+    --String:招聘比例
+    rule_1 = nm:readString(),
+    --String:截止日期
+    rule_2 = nm:readString(),
+    --String:办证
+    rule_3 = nm:readString(),
+    --String:培训频率
+    rule_4 = nm:readString(),
+    --String:培训要求
+    rule_5 = nm:readString(),
+    --String:巡店频率
+    rule_6 = nm:readString(),
+    --String:巡店要求
+    rule_7 = nm:readString(),
+    --String:数据
+    rule_8 = nm:readString(),
+    --String:物料管理
+    rule_9 = nm:readString(),
+    --String:费用申请/核销
+    rule_10 = nm:readString(),
+
+
+    }   
+
+end
+
+NW.regist("PROJECT.SC.GETSUPWORKFLOW", sc_project_getsupworkflow)
+
 local function sc_work_getproject(nm)
 
 
@@ -1060,10 +1099,50 @@ local function sc_work_getproject(nm)
 end
 NW.regist("WORK.SC.GETPROJECT", sc_work_getproject)
 
+
+
+---新版本---
+-- local function sc_work_getstore(nm)
+--     local projectId = tonumber(nm:readString())
+--     local n = tonumber(nm:readString())
+--     local List = {}
+--     for i=1,n do 
+--         local Project = DY_DATA.ProjectList[projectId]
+--         local SchProject = DY_DATA.SchProjectList[projectId]
+--         local StoreList = Project.StoreList
+--         local SchStoreList = SchProject.StoreList
+--         if StoreList == nil then
+--             StoreList = {}
+--             Project.StoreList = StoreList
+--         end
+--         if SchStoreList == nil then
+--             SchStoreList = {}
+--             SchProject.StoreList = SchStoreList
+--         end
+--         local Info = {
+--         id = tonumber(nm:readString()),
+--         name = nm:readString(),
+--         projectId = projectId,
+--         cityid = nm:readString(),
+--     }
+--     local icon = nm:readString()
+--     Info.icon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
+--     Info.state = tonumber(nm:readString())
+--     Info.takeorupload = tonumber(nm:readString())
+--     table.insert(StoreList, Info)
+--     table.insert(SchStoreList,Info)
+-- end
+
+-- end
+-- NW.regist("WORK.SC.GETSTORE", sc_work_getstore)
+------------------------------
+
+-----老版本----
 local function sc_work_getstore(nm)
+    
     local n = tonumber(nm:readString())
     local List = {}
-    for i=1,n do
+    for i=1,n do 
         local projectId = tonumber(nm:readString())
         local Project = DY_DATA.ProjectList[projectId]
         local SchProject = DY_DATA.SchProjectList[projectId]
@@ -1081,16 +1160,20 @@ local function sc_work_getstore(nm)
         id = tonumber(nm:readString()),
         name = nm:readString(),
         projectId = projectId,
+      
     }
     local icon = nm:readString()
     Info.icon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
     Info.state = tonumber(nm:readString())
+
     table.insert(StoreList, Info)
     table.insert(SchStoreList,Info)
 end
 
 end
 NW.regist("WORK.SC.GETSTORE", sc_work_getstore)
+--------------------
+
 
 local function sc_work_getstartdate(nm)
     local WorkDay = {}
@@ -1385,14 +1468,14 @@ NW.regist("REPORTED.SC.GETSUPUPLOADCOMANALYSIS", sc_reported_getsupuploadcomanal
 -- end
 -- NW.regist("MESSAGE.SC.ISSUED", sc_message_Issued)
 
-local function sc_message_sendmessage(nm)
-print("发送信息 注册回调")
-if nm ~=nil then
-    DY_DATA.SENDMESSAGESTATE=tonumber(nm:readString())
-    print("<color=#EEB422>发送信息 注册回调值"..DY_DATA.SENDMESSAGESTATE .. "</color>")
-end
-end
-NW.regist("MESSAGE.SC.SENDMESSAGE", sc_message_sendmessage)
+-- local function sc_message_sendmessage(nm)
+-- print("发送信息 注册回调")
+-- if nm ~=nil then
+--     DY_DATA.SENDMESSAGESTATE=tonumber(nm:readString())
+--     print("<color=#EEB422>发送信息 注册回调值"..DY_DATA.SENDMESSAGESTATE .. "</color>")
+-- end
+-- end
+-- NW.regist("MESSAGE.SC.SENDMESSAGE", sc_message_sendmessage)
 ----------------------------zzg-end-------------------------------------------
 
 

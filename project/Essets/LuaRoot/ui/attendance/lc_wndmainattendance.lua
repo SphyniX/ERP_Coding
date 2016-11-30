@@ -31,6 +31,25 @@ local AttendanceList
 local on_project_init
 
 local punch_type -- 1 上班， 2 下班
+local function on_msg_init()
+	if DY_DATA.MsgList == nil then
+		local nm = NW.msg("MESSAGE.CS.GETMESSAGELIST")
+		nm:writeU32(DY_DATA.User.id)
+		NW.send(nm)
+		return
+	end
+	local MsgList = DY_DATA.MsgList
+	if MsgList ~= nil then 
+		if #MsgList ~= 0 then
+			libunity.SetActive(Ref.SubBtm.SetRed, true)
+		else
+			libunity.SetActive(Ref.SubBtm.SetRed, false)
+		end
+	
+	end
+
+	-- body
+end
 
 local function time_to_string(Time)
 	return string.format("%d-%d-%d %d:%d", Time.year, Time.month, Time.day, Time.hour, Time.minute)
@@ -221,11 +240,13 @@ local function refreshtime()
 end
 
 local function init_logic()
+	on_msg_init()
 	print("Test DY_DATA.ProjectList is :"  .. JSON:encode(DY_DATA.ProjectList))
 	DY_DATA.Work.NowTime = nil
 	NW.subscribe("ATTENCE.SC.VERIFYLATLNG", on_try_punch)
 	NW.subscribe("USER.SC.GETUSERINFOR", on_ui_init)
 	NW.subscribe("ATTENCE.SC.GETTIME",refreshtime)
+	NW.subscribe("MESSAGE.SC.GETMESSAGELIST",on_msg_init)
 
 	-- libsystem.StartGps()
 	on_ui_init()
@@ -278,6 +299,7 @@ end
 local function on_recycle()
 	NW.unsubscribe("ATTENCE.SC.VERIFYLATLNG", on_try_punch)
 	NW.unsubscribe("USER.SC.GETUSERINFOR", on_ui_init)
+	NW.unsubscribe("MESSAGE.SC.GETMESSAGELIST",on_msg_init)
 	libsystem.StopGps()
 end
 
