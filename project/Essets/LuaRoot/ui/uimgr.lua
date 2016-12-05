@@ -1,4 +1,4 @@
---
+ --
 -- @file    ui/uimgr.lua
 -- @authors xingweizhen
 -- @date    2015-04=08 19:19:23

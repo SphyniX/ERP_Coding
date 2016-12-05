@@ -38,7 +38,7 @@ end
 local function on_ui_init()
 	local projectId = UI_DATA.WNDSelectStore.projectId
 	local Project = DY_DATA.SchProjectList[projectId]
-	StoreList = Project.StoreList
+	StoreList = Project.SchStoreList
 	if StoreList == nil then
 		libunity.SetActive(Ref.SubStore.spNil, true)
 		return 
@@ -70,7 +70,7 @@ local function init_logic()
 	local projectId = UI_DATA.WNDSelectStore.projectId
 	local Project = DY_DATA.SchProjectList[projectId]
 	print(JSON:encode(Project))
-	if Project.StoreList == nil or #Project.StoreList == 0 then
+	if Project.SchStoreList == nil or #Project.SchStoreList == 0 then
 		local nm = NW.msg("WORK.CS.GETSTORE")
 		nm:writeU32(projectId)
 		nm:writeU32(DY_DATA.User.id)

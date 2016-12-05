@@ -14,7 +14,7 @@ local UI_DATA = MERequire "datamgr/uidata.lua"
 local Ref
 
 local function time_to_string(Time)
-	return string.format("%d-%d-%d %d:%d", Time.year, Time.month, Time.day, Time.hour, Time.minute)
+	return string.format("%s-%s-%s %s:%s", Time.year, Time.month, Time.day, Time.hour, Time.minute)
 end
 
 --!*以下：自动生成的回调函数*--

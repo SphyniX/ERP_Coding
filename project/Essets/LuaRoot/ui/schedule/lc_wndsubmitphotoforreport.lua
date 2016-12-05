@@ -25,9 +25,14 @@ local NowNumber
 --!*以下：自动生成的回调函数*--
 
 local function on_ui_init()
-
-	local projectId = UI_DATA.WNDSubmitSchedule.projectId
+	local projectId
+	if DY_DATA.User.limit == 1 then
+		projectId = UI_DATA.WNDSubmitSchedule.projectId
+	else
+		projectId = UI_DATA.WNDSupStoreData.projectId
+	end
 	PhotoList = DY_DATA.SchProjectList[projectId].SellPhoto
+	print("PhotoList in WNDSubmitPhotoForReport is " .. JSON:encode(PhotoList))
 	Ref.SubPhoto.GrpPhoto:dup(#PhotoList, function (i, Ent, isNew)
 		local Photo = PhotoList[i]
 		if Photo.state == 1 then 
@@ -113,7 +118,18 @@ local function on_subtop_btnsave_click(btn)
 		_G.UI.Toast:make(nil, "必打图片缺少，请检查！"):show()
 		return
 	else
-		UI_DATA.WNDSubmitSchedule.PhotoListForUpdate = PhotoListForUpdate
+		if DY_DATA.User.limit == 1 then
+			UI_DATA.WNDSubmitSchedule.PhotoListForUpdate = PhotoListForUpdate
+		else
+			local nm = NW.msg("REPORTED.CS.GETSUPGUPLOADPHOTO")
+			nm:writeU32(UI_DATA.WNDSupStoreData.storeId)
+			nm:writeU32(#PhotoListForUpdate)
+			for i=1,#PhotoListForUpdate do
+				nm:writeU32(PhotoListForUpdate[i].id)
+				nm:writeString(PhotoListForUpdate[i].photo)
+			end
+			NW.send(nm)
+		end
 		UIMGR.close_window(Ref.root)
 	end
 
@@ -131,14 +147,27 @@ end
 
 local function init_logic()
 	NW.subscribe("WORK.SC.GETSELLPHOTO",on_ui_init)
+	NW.subscribe("WORK.SC.GETSUPPHOTO",on_ui_init)
 	PhotoListForUpdate = {}
-	local projectId = UI_DATA.WNDSubmitSchedule.projectId
+	local projectId
+	if DY_DATA.User.limit == 1 then
+		projectId = UI_DATA.WNDSubmitSchedule.projectId
+	else
+		projectId = UI_DATA.WNDSupStoreData.projectId
+	end
 	PhotoList = DY_DATA.SchProjectList[projectId].SellPhoto
 	if PhotoList == nil or PhotoList == {} then
-		local nm = NW.msg("WORK.CS.GETSELLPHOTO")
-		nm:writeU32(projectId)
-		NW.send(nm)
-		return
+		if DY_DATA.User.limit == 1 then
+			local nm = NW.msg("WORK.CS.GETSELLPHOTO")
+			nm:writeU32(projectId)
+			NW.send(nm)
+			return
+		else
+			local nm = NW.msg("WORK.CS.GETSUPPHOTO")
+			nm:writeU32(projectId)
+			NW.send(nm)
+			return
+		end
 	end
 	on_ui_init()
 
@@ -159,6 +188,7 @@ end
 
 local function on_recycle()
 	NW.unsubscribe("WORK.SC.GETSELLPHOTO",on_ui_init)
+	NW.unsubscribe("WORK.SC.GETSUPPHOTO",on_ui_init)
 end
 
 local P = {

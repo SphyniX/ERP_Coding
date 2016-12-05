@@ -9,12 +9,14 @@ public class ZFrame_UGUI_UIInputWrap
 		{
 			new LuaMethod("new", _CreateZFrame_UGUI_UIInput),
 			new LuaMethod("GetType", GetClassType),
-		};
+            new LuaMethod("SetInteractable", SetInteractable),
+        };
 
 		LuaField[] fields = new LuaField[]
 		{
 			new LuaField("current", get_current, set_current),
 			new LuaField("onSubmit", get_onSubmit, set_onSubmit),
+
 		};
 
 		var type = typeof(ZFrame.UGUI.UIInput);
@@ -79,7 +81,17 @@ public class ZFrame_UGUI_UIInputWrap
 		return 0;
 	}
 
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+    [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+    static int SetInteractable(IntPtr L)
+    {
+        L.ChkArgsCount(2);
+        ZFrame.UGUI.UIInput obj = (ZFrame.UGUI.UIInput)L.ChkUnityObjectSelf(1, "ZFrame.UGUI.UIInput");
+        var arg0 = L.ChkBoolean(2);
+        obj.SetInteractable(arg0);
+        return 0;
+    }
+
+    [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int set_onSubmit(IntPtr L)
 	{
 		object o = L.ToUserData(1);

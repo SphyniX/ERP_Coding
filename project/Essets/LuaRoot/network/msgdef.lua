@@ -201,6 +201,7 @@ do
             DELETEASS = ID_BASE + 12,
             GETSELLPHOTO = ID_BASE + 13,
             GETBRAND = ID_BASE + 14,
+            GETSUPPHOTO = ID_BASE + 15,
         }
     end
     function Funcs.work_sc()
@@ -220,6 +221,7 @@ do
             DELETEASS = ID_BASE + 12,
             GETSELLPHOTO = ID_BASE + 13,
             GETBRAND = ID_BASE + 14,
+            GETSUPPHOTO = ID_BASE + 15,
         }
     end
 

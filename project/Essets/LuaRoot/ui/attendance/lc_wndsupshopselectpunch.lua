@@ -59,9 +59,9 @@ local function on_submain_btnimg_click(btn)
 
 		local typeid 
 		if DY_DATA.WNDsupShopSelectPunch.state==1 then
-			typeid=7
+			typeid=3
 		else
-			typeid=8
+			typeid=4
 		end
 		print("--------------------"..DY_DATA.WNDsupShopSelect.StoreId.."????"..typeid)
 		if succ then
@@ -76,9 +76,9 @@ local function on_submain_btnimg_click(btn)
 
 		local typeid 
 		if DY_DATA.WNDsupShopSelectPunch.state==1 then
-			typeid=7
+			typeid=3
 		else
-			typeid=8
+			typeid=4
 		end
 		print("--------------------"..DY_DATA.WNDsupShopSelect.StoreId.."????"..typeid)
 		if succ then

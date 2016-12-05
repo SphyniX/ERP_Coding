@@ -40,9 +40,9 @@ end
 
 local function on_store_init()
 	print("on_store_init")
-	local Project = DY_DATA.ProjectList[projectId]
+	local Project = DY_DATA.AttendanceList[projectId]
 	print(JSON:encode(Project))
-	local StoreList = Project.StoreList
+	local StoreList = Project.AttStoreList
 	if StoreList == nil then return end
 	print(JSON:encode(StoreList))
 
@@ -75,11 +75,11 @@ end
 local function init_logic()
 	projectId = DY_DATA.WNDsupShopSelect.projectId
 	DY_DATA.WNDsupShopSelect.ShopSelectBackCall = wndsupshopselect_backCall
-	local Project = DY_DATA.ProjectList[projectId]
-	Project.StoreList = nil
-    local StoreList = Project.StoreList
+	local Project = DY_DATA.AttendanceList[projectId]
+	Project.AttStoreList = nil
+    local StoreList = Project.AttStoreList
 	NW.subscribe("WORK.SC.GETSTORE", on_store_init)
-	local Project = DY_DATA.ProjectList[projectId]
+	local Project = DY_DATA.AttendanceList[projectId]
 	print(JSON:encode(Project))
 	StoreList = nil
 	if StoreList == nil or #StoreList== 0 then

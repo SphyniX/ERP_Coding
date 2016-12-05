@@ -30,5 +30,11 @@ namespace ZFrame.UGUI
             onEndEdit.AddListener(DoSumbit);
             onEndEdit.AddListener(DoChange);
         }
+
+        public void SetInteractable(bool interactable)
+        {
+            this.interactable = interactable;
+            UGUITools.SetGrayscale(gameObject, !interactable);
+        }
     }
 }
