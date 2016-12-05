@@ -2,11 +2,12 @@ using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
 using System.Collections;
-
+using UnityEngine.UI;
+using ZFrame.UGUI;
 public class UITool  {
     static  string titleName="UITool/";
 
-
+    static UIInput ui;
     //[ExecuteInEditMode]
     [MenuItem("UITool/EditorStart  %h")]
     static void EditorStart()
@@ -67,6 +68,34 @@ public class UITool  {
 
 
     }
+    [MenuItem("UITool/FindObjectsOfTypeAll")]
+    static void FindObjectsOfTypeAll()
+    {
+        GameObject[] gms = Resources.FindObjectsOfTypeAll(typeof(GameObject)) as GameObject[];//FindObjectsOfTypeAll<GameObject>();//FindSceneObjectsOfType(typeof(GameObject)) as GameObject[];
+        foreach (GameObject gm in gms)
+        {
+            //Debug.Log(gm.name);
+            //if (gm.name.Substring(0,6) == "UIROOT")
+            //{
+            //    //gm.SetActive(!gm.activeSelf);
+            //    Debug.Log("----------" + gm.name);
+
+            //}
+                if (gm.name.Length > 5)
+                if (gm.name.Substring(0, 6) == "UIROOT")
+                {
+                    //if(gm.hideFlags==HideFlags.HideInHierarchy)
+                    //gm.SetActive(!gm.activeSelf);
+                    if (!AssetDatabase.Contains(gm))
+                        Debug.Log("----------" + gm.hideFlags.ToString());
+                   
+
+                }
+        }
+
+    }
+
+
     #endregion
 
     [MenuItem("UITool/PrefabCheck")]
@@ -100,15 +129,61 @@ public class UITool  {
     [MenuItem("UITool/GameObjectHide %g")]
     static void GameObjectHide()
     {
-        Transform obj = Selection.activeTransform;
-        if (obj.name != null)
+        Transform[] trans = Selection.transforms;
+        if (trans != null)
         {
+            if (trans.Length == 0)
+            {
+                GameObject[] gms = Resources.FindObjectsOfTypeAll(typeof(GameObject)) as GameObject[];//FindSceneObjectsOfType(typeof(GameObject)) as GameObject[];
+                foreach (GameObject gm in gms)
+                {
+                    if(gm.name.Length>5)
+                        
+                    if (gm.name.Substring(0, 6) == "UIROOT")
+                        {
 
-            obj.gameObject.SetActive(!obj.gameObject.activeSelf);
 
+                            if (!AssetDatabase.Contains(gm))
+                            gm.SetActive(!gm.activeSelf);
+
+                        }
+                }
+            }
+            if (trans.Length == 1)
+            {
+                if (trans[0] != null)
+                {
+
+                    trans[0].gameObject.SetActive(!trans[0].gameObject.activeSelf);
+
+                }
+                else
+                {
+
+                }
+            }
+            if (trans.Length >1)
+            {
+                foreach (Transform tr in trans)
+                {
+                    if (tr != null)
+                    {
+
+                        tr.gameObject.SetActive(!tr.gameObject.activeSelf);
+
+                    }
+                    else
+                    {
+                    }
+
+
+                }
+            }
         }
         else
         {
+
+
         }
 
     }

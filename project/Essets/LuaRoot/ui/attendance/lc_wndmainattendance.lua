@@ -132,7 +132,8 @@ local function on_submain_subleave_btnbutton_click(btn)
 end
 
 local function on_submain_subunder_btnbutton_click(btn)
-	UIMGR.create("UI/WNDAttUnder")
+	--UIMGR.create("UI/WNDAttUnder")								---zzg
+	UIMGR.create_window("UI/WNDAskOffTabb")
 end
 
 local function on_subtop_btnlog_click(btn)

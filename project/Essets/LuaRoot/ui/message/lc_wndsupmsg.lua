@@ -20,7 +20,7 @@ local function on_subtop_btnwrite_click(btn)
 	UIMGR.create_window("UI/WNDSupEditorMsg")
 end
 
-local function on_subbtm_btnspatt_click(btn)
+local function on_subbtm_spatt_click(btn)
 	UIMGR.create_window("UI/WNDSupAttendance")
 end
 
@@ -165,7 +165,7 @@ end
 
 local function init_view()
 	Ref.SubTop.btnWrite.onAction = on_subtop_btnwrite_click
-	Ref.SubBtm.btnSpAtt.onAction = on_subbtm_btnspatt_click
+	Ref.SubBtm.spAtt.onAction = on_subbtm_spatt_click
 	Ref.SubBtm.btnWork.onAction = on_subbtm_btnwork_click
 	Ref.SubBtm.btnSch.onAction = on_subbtm_btnsch_click
 	Ref.SubBtm.btnMsg.onAction = on_subbtm_btnmsg_click

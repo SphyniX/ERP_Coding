@@ -69,7 +69,7 @@ local function on_submain_btnlogout_click(btn)
 	_G.PKG["libmgr/login"].do_logout()
 end
 
-local function on_subbtm_btnatt_click(btn)
+local function on_subbtm_spatt_click(btn)
 -- ##	UIMGR.WNDStack:pop()
 	UIMGR.create_window("UI/WNDSupAttendance")
 end
@@ -117,7 +117,7 @@ local function init_view()
 	Ref.SubMain.SubSuggest.btn.onAction = on_submain_subsuggest_click
 	Ref.SubMain.About.onAction = on_submain_about_click
 	Ref.SubMain.btnLogout.onAction = on_submain_btnlogout_click
-	Ref.SubBtm.btnAtt.onAction = on_subbtm_btnatt_click
+	Ref.SubBtm.spAtt.onAction = on_subbtm_spatt_click
 	Ref.SubBtm.btnWork.onAction = on_subbtm_btnwork_click
 	Ref.SubBtm.btnSch.onAction = on_subbtm_btnsch_click
 	Ref.SubBtm.btnMsg.onAction = on_subbtm_btnmsg_click

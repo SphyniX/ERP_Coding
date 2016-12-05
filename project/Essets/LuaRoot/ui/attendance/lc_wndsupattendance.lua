@@ -159,7 +159,7 @@ end
 --!*以下：自动生成的回调函数*--
 
 local function on_subtop_btnbutton_click(btn)
-	UIMGR.create_window("UI/WNDSupPunchTabb")
+	UIMGR.create_window("UI/WNDSupPunchTabb")                          
 end
 
 local function on_subbtm_btnwork_click(btn)
@@ -193,7 +193,8 @@ local function on_submain_subpunch_btnbutton_click(btn)
 end
 
 local function on_submain_subunder_btnbutton_click(btn)
-	UIMGR.create("UI/WNDAttUnder")
+	--UIMGR.create("UI/WNDAttUnder")						--zzg
+	UIMGR.create_window("UI/WNDSupAttUnder")
 end
 
 -- local function on_submain_subscroll_subcontent_subpunch_subinfo_subproject_click(btn)
