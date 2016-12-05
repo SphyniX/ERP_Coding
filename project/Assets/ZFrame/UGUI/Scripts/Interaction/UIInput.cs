@@ -16,11 +16,19 @@ namespace ZFrame.UGUI
             current = this;
             if (onSubmit != null) onSubmit.Invoke(this);
         }
+        public UnityAction<UIInput> onChange;
+
+        private void DoChange(string text)
+        {
+            current = this;
+            if (onChange != null) onChange.Invoke(this);
+        }
 
         protected override void Awake()
         {
             base.Awake();
             onEndEdit.AddListener(DoSumbit);
+            onEndEdit.AddListener(DoChange);
         }
     }
 }
