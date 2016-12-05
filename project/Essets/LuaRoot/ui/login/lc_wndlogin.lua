@@ -99,6 +99,7 @@ end
 
 local function init_logic()
 	-- 尝试删除apk文件
+
     local patchRoot = _G.ENV.app_persistentdata_path .. "/Updates/"
     libcsharpio.CreateDir(patchRoot)
     libcsharpio.DeleteFile(patchRoot.."Richer.apk")

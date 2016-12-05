@@ -14,15 +14,18 @@ local Ref
 --!*以下：自动生成的回调函数*--
 
 local function on_subtop_submouth_btnnew_click(btn)
-	
+	libunity.SetActive(Ref.SubTop.SubMouth.btnNew, false)
+	libunity.SetActive(Ref.SubTop.SubMouth.btnLast, true)
 end
 
 local function on_subtop_submouth_btnlast_click(btn)
+	libunity.SetActive(Ref.SubTop.SubMouth.btnNew, true)
+	libunity.SetActive(Ref.SubTop.SubMouth.btnLast, false)
 	
 end
 
 local function on_subtop_btnback_click(btn)
-	
+	UIMGR.close_window(Ref.root)
 end
 
 local function init_view()
