@@ -44,11 +44,12 @@ WNDSupWork={},
 WNDAttLeave = {},
 WNDSupDataProgerssComData = {},
 WNDSupDataGoodAnalysis = {},
-
+WNDSupSelectStore = {},
 WNDSelectBrand = {},
 WNDSupStoreData = {},
 WNDsupWorkSelectShop = {},
 WNDSupWorkSelectShopTask={},
+WNDSupWorkSelectShopTaskSet={},
 WNDSupWorkSelectShopTaskSetSelPeople = {},
 
 WNDsupShopSelect = {},

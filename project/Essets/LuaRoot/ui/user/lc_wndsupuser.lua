@@ -103,6 +103,7 @@ end
 
 local function on_ui_init()
 	local Ref_SubMain = Ref.SubMain
+	
 	local User = DY_DATA.User
 	--Ref_SubMain.SubAddress.lbText.text =_G.CFG.CityLib.get_city(User.cityid).name
 	--Ref_SubMain.SubPhone.lbText.text = User.phone

@@ -17,6 +17,8 @@ local NW = MERequire "network/networkmgr"
 local IfcanSave
 local PhotoName
 local Ref
+
+local ComListRe
 --!*以下：自动生成的回调函数*--
 
 local function on_subtop_back_click(btn)
@@ -62,43 +64,41 @@ local function on_submain_subbtnimg_click(btn)
 	end)
 
 	---test ----
-	UIMGR.load_photo(tex,"1.png" , function (succ, name, image)
-		if succ then
-			LOGIN.try_uploadphotoforreport(DY_DATA.User.id,image,on_upload_photo_callback)
-		else
-			-- PhotoList[i].image = nil
-		end
-	end)
+	-- UIMGR.load_photo(tex,"1.png" , function (succ, name, image)
+	-- 	if succ then
+	-- 		LOGIN.try_uploadphotoforreport(DY_DATA.User.id,image,on_upload_photo_callback)
+	-- 	else
+	-- 		-- PhotoList[i].image = nil
+	-- 	end
+	-- end)
 end
 
 local function on_save_click(btn)
 		--IfcanSave=true
 		--PhotoName="qw.png"
 		if PhotoName ~= nil then
-		print("督导考勤")
-		local nm = NW.msg("REPORTED.CS.GETSUPUPLOADCOMANALYSIS")
-		print("UI_DATA.WNDSupStoreData.storeId---"..UI_DATA.WNDSupStoreData.storeId)
-		nm:writeU32(tonumber(UI_DATA.WNDSupStoreData.storeId))
+			-- print("督导考勤")
+			local nm = NW.msg("REPORTED.CS.GETSUPUPLOADCOMANALYSIS")
+			-- print("UI_DATA.WNDSupStoreData.storeId---"..UI_DATA.WNDSupStoreData.storeId)
+			nm:writeU32(tonumber(UI_DATA.WNDSupStoreData.storeId))
 
-		nm:writeU32(1)
-		print("UI_DATA.WNDSelectStore.projectId---"..UI_DATA.WNDSelectStore.projectId)
-		local roject = DY_DATA.SchProjectList[UI_DATA.WNDSelectStore.projectId] -- DY_DATA.StoreData.ComListRe
-		print("-----------"..JSON:encode(roject))
-		local ComListRe = roject.ComList
-		print("-----------"..JSON:encode(ComListRe))
-		print("UI_DATA.WNDSupDataGoodAnalysis.index---"..UI_DATA.WNDSupDataGoodAnalysis.index)
-		print("roject.ComList[UI_DATA.WNDSupDataGoodAnalysis.index].id--"..ComListRe[UI_DATA.WNDSupDataGoodAnalysis.index].id)
-		nm:writeU32(tonumber(ComListRe[UI_DATA.WNDSupDataGoodAnalysis.index].id))
-		print(Ref.SubMain.SubPrice.inpInput.text)
-		nm:writeString(Ref.SubMain.SubPrice.inpInput.text)
-		print(Ref.SubMain.SubMechanism.inpInput.text)
-		nm:writeString(Ref.SubMain.SubMechanism.inpInput.text)
-		print("PhotoName------------------------"..PhotoName)
-		nm:writeString(PhotoName)
-		NW.send(nm)
-		Ref.SubMain.SubPrice.inpInput.text = ""
-		Ref.SubMain.SubMechanism.inpInput.text = ""
-		UIMGR.close_window(Ref.root)
+			nm:writeU32(1)
+			-- print("UI_DATA.WNDSelectStore.projectId---"..UI_DATA.WNDSelectStore.projectId)
+			local Project = DY_DATA.SchProjectList[UI_DATA.WNDSupStoreData.projectId] -- DY_DATA.StoreData.ComListRe
+			-- print("-----------"..JSON:encode(Project))
+			ComListRe = Project.ComList
+			-- print("-----------"..JSON:encode(ComListRe))
+			-- print("UI_DATA.WNDSupDataGoodAnalysis.index---"..UI_DATA.WNDSupDataGoodAnalysis.index)
+			-- print("Project.ComList[UI_DATA.WNDSupDataGoodAnalysis.index].id--"..ComListRe[UI_DATA.WNDSupDataGoodAnalysis.index].id)
+			nm:writeU32(tonumber(ComListRe[UI_DATA.WNDSupDataGoodAnalysis.index].id))
+			-- print(Ref.SubMain.SubPrice.inpInput.text)
+			nm:writeString(Ref.SubMain.SubPrice.inpInput.text)
+			-- print(Ref.SubMain.SubMechanism.inpInput.text)
+			nm:writeString(Ref.SubMain.SubMechanism.inpInput.text)
+			-- print("PhotoName------------------------"..PhotoName)
+			nm:writeString(PhotoName)
+			NW.send(nm)
+			UIMGR.close_window(Ref.root)
 		else
 		 _G.UI.Toast:make(nil, "请拍摄图片"):show()
 		end
@@ -113,7 +113,12 @@ local function init_view()
 end
 
 local function init_logic()
-
+	local Project = DY_DATA.SchProjectList[UI_DATA.WNDSupStoreData.projectId] -- DY_DATA.StoreData.ComListRe
+			-- print("-----------"..JSON:encode(Project))
+	ComListRe = Project.ComList
+	Ref.SubTop.lbTitle.text = ComListRe[UI_DATA.WNDSupDataGoodAnalysis.index].name
+	Ref.SubMain.SubPrice.inpInput.text = ""
+	Ref.SubMain.SubMechanism.inpInput.text = ""
 	-- local roject =   DY_DATA.SchProjectList[UI_DATA.WNDSelectStore.projectId] -- DY_DATA.StoreData.ComListRe
 	-- local ComListRe = roject.ComList
 	-- print("UI_DATA.WNDSupDataGoodAnalysis.index"..UI_DATA.WNDSupDataGoodAnalysis.index)  --UI_DATA.WNDSupDataGoodAnalysis.index
@@ -123,6 +128,7 @@ local function init_logic()
 	-- 	Ref.SubMain.SubPrice.inpInput.text = Com.price
 	-- 	Ref.SubMain.SubMechanism.inpInput.text = Com.value
 	-- end
+
 end
 
 local function start(self)

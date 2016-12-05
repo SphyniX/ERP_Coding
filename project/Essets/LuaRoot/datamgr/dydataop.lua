@@ -112,6 +112,8 @@ NW.regist("MESSAGE.SC.UPSTATU", common_op_ret_suc)
 
 NW.regist("REPORTED.SC.GETSUPUPLOADFEEDBACK", common_op_ret_suc)
 
+NW.regist("REPORTED.SC.GETSUPGUPLOADPHOTO", common_op_ret_suc)
+
 NW.regist("MESSAGE.SC.DELETE", function (nm)
 	local Ret = common_op_ret(nm)
 	if Ret.ret == 1 then

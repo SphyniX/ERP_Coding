@@ -32,6 +32,7 @@ namespace ZFrame.UGUI
         
         public void SetInteractable(bool interactable)
         {
+            print(1);
             this.interactable = interactable;
 			UGUITools.SetGrayscale(gameObject, !interactable);
         }

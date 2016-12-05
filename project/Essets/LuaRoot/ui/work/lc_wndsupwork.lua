@@ -22,7 +22,7 @@ local TempProjectList
 
 local function on_ui_init(brandid)
 	if brandid == nil then brandid = 0 end
-	ProjectList = DY_DATA.get_schproject_list()
+	ProjectList = DY_DATA.get_project_list()
 	if ProjectList == nil then 
 		print("ProjectList is nil")
 		libunity.SetActive(Ref.SubProject.spNil, true)
@@ -62,8 +62,8 @@ local function on_subproject_grpproject_entproject_btnbutton_click(btn)
 	--WNDSupWork.btnName=btn.name
 	local index = tonumber(btn.transform.parent.name:sub(11))
 	print("lc_wndsupwork.lua--------"..btn.transform.name..tostring(btn.name:sub(11)))
-	UI_DATA.WNDWorkProject.projectId=ProjectList[index].id
-	UI_DATA.WNDSelectStore.projectId = ProjectList[index].id
+	UI_DATA.WNDWorkProject.projectId = TempProjectList[index].id
+	UI_DATA.WNDSelectStore.projectId = TempProjectList[index].id
 	UIMGR.create( "UI/WNDSupWorkSelect")
 end
 

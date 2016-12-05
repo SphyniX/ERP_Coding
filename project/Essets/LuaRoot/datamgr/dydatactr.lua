@@ -1043,6 +1043,10 @@ local function  sc_project_getsupworkflow(nm)
     rule_9 = nm:readString(),
     --String:费用申请/核销
     rule_10 = nm:readString(),
+     --String:人员要求
+    rule_11 = nm:readString(),
+     --String:工作时间
+    rule_12 = nm:readString(),
 
 
     }   
@@ -1053,7 +1057,7 @@ NW.regist("PROJECT.SC.GETSUPWORKFLOW", sc_project_getsupworkflow)
 
 local function sc_work_getproject(nm)
 
-
+    print("DY_DATA.User.Limit is " .. DY_DATA.User.limit )
     if DY_DATA.User.limit == 1 then
         local List = DY_DATA.ProjectList
         print("<color=#EEB422>Length of List is" .. #List .. "</color>")
@@ -1091,9 +1095,9 @@ local function sc_work_getproject(nm)
         DY_DATA.get_project_list(true)
         DY_DATA.get_attendance_list(true)
         DY_DATA.get_schproject_list(true)
-        -- print(JSON:encode(DY_DATA.get_project_list(false)))
-        -- print(JSON:encode(DY_DATA.get_attendance_list(false)))
-        -- print(JSON:encode(DY_DATA.get_schproject_list(false)))
+        print("AttendanceList is :" .. JSON:encode(DY_DATA.AttendanceList))
+        print(JSON:encode(DY_DATA.get_attendance_list(false)))
+        print(JSON:encode(DY_DATA.get_schproject_list(false)))
     end
 
 end
@@ -1101,12 +1105,95 @@ NW.regist("WORK.SC.GETPROJECT", sc_work_getproject)
 
 
 
----新版本---
+------新版本---
+local function sc_work_getstore(nm)
+    local projectId = tonumber(nm:readString())
+    local n = tonumber(nm:readString())
+    local List = {}
+    local InfoList = {}
+    for i=1,n do 
+
+      
+        
+        
+        local Info = {
+        id = tonumber(nm:readString()),
+        name = nm:readString(),
+        projectId = projectId,
+        cityid = nm:readString(),
+        icon = nm:readString(),
+        state = tonumber(nm:readString()),
+        takeorupload = tonumber(nm:readString()),
+        }
+        local icon = Info.icon
+        Info.icon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
+        
+        table.insert(InfoList,Info)
+       
+
+    end
+
+    print("LifoList is " .. JSON:encode(InfoList))
+
+    if DY_DATA.User.limit == 1 then
+        local Project = DY_DATA.ProjectList[projectId]
+        local SchProject = DY_DATA.SchProjectList[projectId]
+        local StoreList = Project.StoreList
+        local SchStoreList = SchProject.SchStoreList
+        if StoreList == nil then
+            StoreList = {}
+            Project.StoreList = StoreList
+        end
+        if SchStoreList == nil then
+            SchStoreList = {}
+            SchProject.SchStoreList = SchStoreList  
+        end
+        for i=1,#InfoList do
+            table.insert(StoreList,InfoList[i])
+            table.insert(SchStoreList,InfoList[i])
+        end
+    
+    else
+        local AttProject = DY_DATA.AttendanceList[projectId]
+        local Project = DY_DATA.ProjectList[projectId]
+        local SchProject = DY_DATA.SchProjectList[projectId]
+        local AttStoreList = AttProject.AttStoreList
+        local StoreList = Project.StoreList
+        local SchStoreList = SchProject.SchStoreList
+        if AttStoreList == nil then
+            AttStoreList = {}
+            AttProject.AttStoreList = AttStoreList
+        end
+        if StoreList == nil then
+            StoreList = {}
+            Project.StoreList = StoreList
+        end
+        if SchStoreList == nil then
+            SchStoreList = {}
+            SchProject.SchStoreList = SchStoreList
+        end
+        for i=1,#InfoList do
+            table.insert(StoreList,InfoList[i])
+            table.insert(SchStoreList,InfoList[i])
+            table.insert(AttStoreList,InfoList[i])
+        end
+    end
+        
+    print("N in Work.SC.GETSTORE is " .. n)
+    print("<color=#EEB422>DY_DATA.AttendanceList" .. projectId ..  " is :" .. JSON:encode(DY_DATA.AttendanceList[projectId]) .. "</color>")
+    print("<color=#EEB422>DY_DATA.ProjectList" .. projectId ..  " is :" .. JSON:encode(DY_DATA.ProjectList[projectId]) .. "</color>")
+    print("<color=#EEB422>DY_DATA.SchProjectList" .. projectId ..  " is :" .. JSON:encode(DY_DATA.SchProjectList[projectId]) .. "</color>")
+end
+NW.regist("WORK.SC.GETSTORE", sc_work_getstore)
+----------------------------
+
+-- -----老版本----
 -- local function sc_work_getstore(nm)
---     local projectId = tonumber(nm:readString())
+    
 --     local n = tonumber(nm:readString())
 --     local List = {}
 --     for i=1,n do 
+--         local projectId = tonumber(nm:readString())
 --         local Project = DY_DATA.ProjectList[projectId]
 --         local SchProject = DY_DATA.SchProjectList[projectId]
 --         local StoreList = Project.StoreList
@@ -1123,56 +1210,19 @@ NW.regist("WORK.SC.GETPROJECT", sc_work_getproject)
 --         id = tonumber(nm:readString()),
 --         name = nm:readString(),
 --         projectId = projectId,
---         cityid = nm:readString(),
+      
 --     }
 --     local icon = nm:readString()
 --     Info.icon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
 --     Info.state = tonumber(nm:readString())
---     Info.takeorupload = tonumber(nm:readString())
+
 --     table.insert(StoreList, Info)
 --     table.insert(SchStoreList,Info)
 -- end
 
 -- end
 -- NW.regist("WORK.SC.GETSTORE", sc_work_getstore)
-------------------------------
-
------老版本----
-local function sc_work_getstore(nm)
-    
-    local n = tonumber(nm:readString())
-    local List = {}
-    for i=1,n do 
-        local projectId = tonumber(nm:readString())
-        local Project = DY_DATA.ProjectList[projectId]
-        local SchProject = DY_DATA.SchProjectList[projectId]
-        local StoreList = Project.StoreList
-        local SchStoreList = SchProject.StoreList
-        if StoreList == nil then
-            StoreList = {}
-            Project.StoreList = StoreList
-        end
-        if SchStoreList == nil then
-            SchStoreList = {}
-            SchProject.StoreList = SchStoreList
-        end
-        local Info = {
-        id = tonumber(nm:readString()),
-        name = nm:readString(),
-        projectId = projectId,
-      
-    }
-    local icon = nm:readString()
-    Info.icon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
-    Info.state = tonumber(nm:readString())
-
-    table.insert(StoreList, Info)
-    table.insert(SchStoreList,Info)
-end
-
-end
-NW.regist("WORK.SC.GETSTORE", sc_work_getstore)
---------------------
+-- --------------------
 
 
 local function sc_work_getstartdate(nm)
@@ -1340,7 +1390,7 @@ local function sc_work_getassignment(nm)
 }
 table.insert(TaskList[starttime.."_"..endtime], Info)
 end
-print("<color=#0f0>WORK.SC.GETASSIGNMENT</color>",projectId, storeId, n, JSON:encode(TaskList))
+-- print("<color=#0f0>WORK.SC.GETASSIGNMENT</color>",projectId, storeId, n, JSON:encode(TaskList))
 local ProjectList = DY_DATA.ProjectList
 if ProjectList[projectId] == nil or ProjectList[projectId].StoreList == nil then return end
 local StoreList = ProjectList[projectId].StoreList
@@ -1391,6 +1441,28 @@ local function sc_work_getbrand(nm)
     DY_DATA.BrandList = BrandList
 end
 NW.regist("WORK.SC.GETBRAND", sc_work_getbrand)
+
+local function sc_work_getsupphoto(nm)
+
+    local projectId = tonumber(nm:readString())
+    local Project = DY_DATA.SchProjectList[projectId]
+    if Project == nil then return end
+
+    if Project.SellPhoto == nil then Project.SellPhoto = {} end
+    local SellPhoto = Project.SellPhoto
+
+    local n = tonumber(nm:readString())
+    for i=1,n do
+
+        local id = tonumber(nm:readString())
+        local name = nm:readString()
+        local state = nm:readString()
+        
+        table.insert(SellPhoto, {id = id, projectId = projectId, name = name, state = state})
+    end
+    print("<color=#EEB422>WORK.SC.GETSUPPHOTO-- SellPhoto is : " .. JSON:encode(SellPhoto) .. "</color>")
+end
+NW.regist("WORK.SC.GETSUPPHOTO", sc_work_getsupphoto)
 
 local function sc_message_getlower(nm)
     local n = tonumber(nm:readString())

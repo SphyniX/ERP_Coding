@@ -22,5 +22,11 @@ namespace ZFrame.UGUI
             base.Awake();
             onEndEdit.AddListener(DoSumbit);
         }
+
+        public void SetInteractable(bool interactable)
+        {
+            this.interactable = interactable;
+            UGUITools.SetGrayscale(gameObject, !interactable);
+        }
     }
 }

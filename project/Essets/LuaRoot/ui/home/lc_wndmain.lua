@@ -65,6 +65,7 @@ local function on_get_data(Ret)
 	-- local nm = NW.msg("WORK.CS.GETPROJECT")
 	-- nm:writeU32(DY_DATA.User.id)
 	-- NW.send(nm)
+	print("------------Requiring Base Data !-------------")
 	local nm = NW.msg("ATTENCE.CS.GETTIME")
 	NW.send(nm)
 	
@@ -72,7 +73,7 @@ local function on_get_data(Ret)
     local id = UI_DATA.WNDLogin.id
     nm:writeU32(id)
     NW.send(nm)
-
+    print("------------Requiring End!-------------")
 end
 --!*以下：自动生成的回调函数*--
 

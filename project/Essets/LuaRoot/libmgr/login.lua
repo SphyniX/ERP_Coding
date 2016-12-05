@@ -510,7 +510,7 @@ function P.enter_server(ip, port)
         local UIMGR = MERequire "ui/uimgr.lua"
         UIMGR.create_window("UI/WNDMain")
     else
-        print("connect")
+        -- print("connect")
         NW.connect(ip, port, on_enter_login)
         _G.UI.Waiting.show(TEXT.tipConnecting)
     end

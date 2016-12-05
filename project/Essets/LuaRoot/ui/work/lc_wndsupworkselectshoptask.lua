@@ -17,7 +17,7 @@ local ProjectList
 local PeopleList
 local Ref
 local NewTaskList
-local WeekList
+local WeekList,NextWeekList,ThisWeek
 local TaskList
 --!*以下：自动生成的回调函数*--
 
@@ -25,17 +25,17 @@ local TaskList
 
 
 local function on_subtop_btnback_click(btn)
-
+	UI_DATA.WNDSupWorkSelectShopTask.ThisWeek = nil
 	-- UIMGR.create_window("UI/WNDSupWorkSelectShopTaskSetSelPeople")
 	UIMGR.close_window(Ref.root)
 end
 
 
-local function on_subtop_nextweek_click(btn)
-	
-end
+
 
 local function on_subtasklist_grp_ent_btnbutton_click(btn)
+	local index = tonumber(btn.transform.parent.name:sub(4))
+
 	Ref.SubTaskList.Grp:dup(#NewTaskList,function (i,Ent,IsNew)
 		Ent.TaskConcent.text = "无任务"
 	end)
@@ -45,20 +45,33 @@ local function on_subtasklist_grp_ent_btnbutton_click(btn)
 	--UI_DATA.WNDSupWorkSelectShopTaskSetSelPeople.PersonListForUpdate=TaskListUI_DATA.WNDSupWorkSelectShopTask.index
 	-- print("UI_DATA.WNDSupWorkSelectShopTask.index"..tostring(UI_DATA.WNDSupWorkSelectShopTask.index))
 	-- print("name"..UI_DATA.WNDSupWorkSelectShopTask.PersonList[1].name)
+	if ThisWeek then
+		UI_DATA.WNDSupWorkSelectShopTaskSet.data = WeekList[index].data
+	else
+		UI_DATA.WNDSupWorkSelectShopTaskSet.data = NextWeekList[index].data
+	end
+	UI_DATA.WNDSupWorkSelectShopTask.ThisWeek = ThisWeek
 	UIMGR.create_window("UI/WNDSupWorkSelectShopTaskSet")
 end
 
 
 
 local function on_ui_init()
-	local projectId= UI_DATA.WNDSelectStore.projectId
-	local storeId = UI_DATA.WNDSubmitSchedule.storeId
+	if ThisWeek then
+		Ref.SubTop.lbWeek.text = "下周"
+	else
+		Ref.SubTop.lbWeek.text = "上周"
+	end
+	local projectId= UI_DATA.WNDSupWorkSelectShopTask.projectId
+	local storeId = UI_DATA.WNDSupWorkSelectShopTask.storeIdtrue
+	print("storeId is " .. storeId)
 	ProjectList = DY_DATA.ProjectList
 	local StoreList = ProjectList[projectId].StoreList
-	local Store =DY_DATA.get_store(StoreList, storeId) -- DY_DATA.get_store(StoreList, storeId)
+	print("StoreList is " .. JSON:encode(StoreList))
+	local Store = DY_DATA.get_store(StoreList, storeId)
 
 
-	TaskList=Store.TaskList
+	TaskList = Store.TaskList
 
 	print("TaskList is :" .. JSON:encode(TaskList))
 	-- if TaskList == nil or next(TaskList) == nil then
@@ -72,7 +85,7 @@ local function on_ui_init()
 	-- 	return
 	-- end
 
-print("<color=#0f0>on_ui_init---WORK.SC.GETASSIGNMENT--start</color>",projectId, storeId, JSON:encode(TaskList))
+	print("<color=#0f0>on_ui_init---WORK.SC.GETASSIGNMENT--start</color>",projectId, storeId, JSON:encode(TaskList))
 
 	for i=1,#TaskList do
 		local day = tonumber(TaskList[i].starttime:sub(9,10))
@@ -94,12 +107,22 @@ print("<color=#0f0>on_ui_init---WORK.SC.GETASSIGNMENT--start</color>",projectId,
 
 	for i=1,#TaskList do
 		for j=1,7 do
-			if TaskList[i].day == WeekList[j].day then 
-				NewTaskList[j] = TaskList[i]
-				print("<color=#0f0>on_ui_init---WORK.SC.GETASSIGNMENT---TaskList[i].PersonList--</color>",projectId, storeId, JSON:encode(TaskList[i].PersonList))
-				NewTaskList[j].PersonList = TaskList[i].PersonList
-				-- print("______________________________" .. JSON:encode(TaskList[i].PersonList))
-				-- print(JSON:encode(NewTaskList[j].PersonList))
+			if ThisWeek then
+				if TaskList[i].day == WeekList[j].day then 
+					NewTaskList[j] = TaskList[i]
+					print("<color=#0f0>on_ui_init---WORK.SC.GETASSIGNMENT---TaskList[i].PersonList--</color>",projectId, storeId, JSON:encode(TaskList[i].PersonList))
+					NewTaskList[j].PersonList = TaskList[i].PersonList
+					-- print("______________________________" .. JSON:encode(TaskList[i].PersonList))
+					-- print(JSON:encode(NewTaskList[j].PersonList))
+				end
+			else
+				if TaskList[i].day == NextWeekList[j].day then 
+					NewTaskList[j] = TaskList[i]
+					print("<color=#0f0>on_ui_init---WORK.SC.GETASSIGNMENT---TaskList[i].PersonList--</color>",projectId, storeId, JSON:encode(TaskList[i].PersonList))
+					NewTaskList[j].PersonList = TaskList[i].PersonList
+					-- print("______________________________" .. JSON:encode(TaskList[i].PersonList))
+					-- print(JSON:encode(NewTaskList[j].PersonList))
+				end
 			end
 		end
 	end
@@ -121,20 +144,74 @@ print("<color=#0f0>on_ui_init---WORK.SC.GETASSIGNMENT--start</color>",projectId,
 		if task.PersonList ~= nil then 
 			 if task.PersonList ~= {} then 
 				for i=1,#task.PersonList do
-					namelist=namelist..task.PersonList[i].name..";"
+					if i == 1 then
+						namelist=namelist..task.PersonList[i].name
+					else
+						namelist=namelist.. "  、 " ..task.PersonList[i].name
+					end
 				end
 			end
 		end
 		print("Name in " .. i .. "  Ent is :" .. namelist)
-		if starttime == "" then 
+		if starttime == "" then
+			Ent.TaskConcent.text = "无任务"
 		else
-			Ent.TaskConcent.text = starttime.."-"..endtime.."\n"..namelist
+			Ent.TaskConcent.text = starttime:sub(12).."  -  "..endtime:sub(12).."\n"..namelist
 		end
-	
+		if ThisWeek then
+			Ent.Time.text = WeekList[i].data
+		else
+			Ent.Time.text = NextWeekList[i].data
+		end
 	end)
 
 end
 
+local function tomorrow(today,bool)
+
+	if bool then
+		local day = today:sub(7,8)
+		local month = today:sub(5,6)
+		local year = today:sub(1,4)
+
+		day = day + 1
+		if day > tonumber(os.date("%d",os.time({year=tonumber(year),month=tonumber(month)+1,day=0}))) then 
+			day = 1
+			month = month + 1
+		end
+
+		if month == 13 then
+			month = 1
+			year = year + 1
+		end
+		if day < 10 then
+			return year..month.."0"..day
+		else
+			return year..month..day
+		end
+	else
+		local day = today:sub(7,8)
+		local month = today:sub(5,6)
+		local year = today:sub(1,4)
+
+		day = day + 7
+		if day > tonumber(os.date("%d",os.time({year=tonumber(year),month=tonumber(month)+1,day=0}))) then 
+			day = day - tonumber(os.date("%d",os.time({year=tonumber(year),month=tonumber(month)+1,day=0})))
+			month = month + 1
+		end
+
+		if month == 13 then
+			month = 1
+			year = year + 1
+		end
+		if day < 10 then
+			return year..month.."0"..day
+		else
+			return year..month..day
+		end
+	end
+	-- body
+end
 
 
 local function on_date_init()
@@ -144,6 +221,20 @@ local function on_date_init()
 -- 	end)
 	-- body
 end
+
+local function on_subtop_nextweek_click(btn)
+	if ThisWeek then
+		-- Ref.SubTop.lbWeek.text = "上周"
+		ThisWeek = false
+		on_ui_init()
+	else
+		-- Ref.SubTop.lbWeek.text = "下周"
+		ThisWeek = true
+		on_ui_init()
+	end
+end
+
+
 local function init_view()
 	Ref.SubTop.btnBack.onAction = on_subtop_btnback_click
 	Ref.SubTop.NextWeek.onAction = on_subtop_nextweek_click
@@ -154,7 +245,15 @@ local function init_view()
 	--!*以上：自动注册的回调函数*--
 end
 
+
 local function init_logic()
+	if UI_DATA.WNDSupWorkSelectShopTask.ThisWeek ~= nil then
+		ThisWeek = UI_DATA.WNDSupWorkSelectShopTask.ThisWeek
+		UI_DATA.WNDSupWorkSelectShopTask.ThisWeek = nil
+	else
+		ThisWeek = true
+	end
+
 	UI_DATA.WNDSupWorkSelectShopTaskSetSelPeople.dateState=true
  --   	NW.subscribe("WORK.SC.GETSTARTDATE", on_ui_init)
  --   if DY_DATA.WorkDay == nil or next(DY_DATA.WorkDay) == nil then
@@ -168,28 +267,29 @@ local function init_logic()
 	--print("function init_logic---storeId-----------")
 	-- print("WeekDay is :" .. os.date("%w",os.time()))
 	WeekList = {}
-	local todayweek = tonumber(os.date("%w",os.time()))
-	if todayweek == 0 then todayweek =7 end
-	local startday = tonumber(os.date("%d",os.time())) - todayweek + 1
+	local startdata = DY_DATA.Work.NowTime.day:sub(1,4)..DY_DATA.Work.NowTime.day:sub(6,7)..DY_DATA.Work.NowTime.day:sub(9,10)
+	-- local startdata = "20161128"
 	for i=1,7 do
-		local day = startday
-		table.insert(WeekList,{day = day})
-		startday = startday + 1
-		if startday > tonumber(os.date("%d",os.time({year=os.date("%Y"),month=os.date("%m")+1,day=0}))) then 
-			startday = 1
-		end
+		table.insert(WeekList,{day = tonumber(startdata:sub(7,8)), data = startdata:sub(1,4).. "-" .. startdata:sub(5,6) .. "-" .. startdata:sub(7,8)})
+		startdata = tomorrow(startdata,true)
 	end
+	NextWeekList = {}
 
 	for i=1,7 do
-		print(WeekList[i].day)
+		table.insert(NextWeekList,{day = tonumber(startdata:sub(7,8)), data = startdata:sub(1,4).. "-" .. startdata:sub(5,6) .. "-" .. startdata:sub(7,8)})
+		startdata = tomorrow(startdata,true)
 	end
-	local projectId= UI_DATA.WNDSelectStore.projectId
-	local storeId = UI_DATA.WNDSubmitSchedule.storeId
+
+	print("WeekList is :" .. JSON:encode(WeekList))
+	print("NextWeekList is :" .. JSON:encode(NextWeekList))
+	local projectId= UI_DATA.WNDSupWorkSelectShopTask.projectId
+	local storeId = UI_DATA.WNDSupWorkSelectShopTask.storeIdtrue
+	-- local 
 	print("projectId-----storeId:"..projectId.."/"..storeId)
 	ProjectList = DY_DATA.ProjectList
 	local StoreList = ProjectList[projectId].StoreList
-	local Store =StoreList[storeId]   -- DY_DATA.get_store(StoreList, storeId)
-	local TaskList=Store.TaskList
+	local Store = DY_DATA.get_store(StoreList, storeId)
+	local TaskList = Store.TaskList
 	TaskList = nil
 	print("function init_logic---storeId-----------"..tostring(storeId))
 	NW.subscribe("WORK.SC.GETASSIGNMENT",on_ui_init)	
