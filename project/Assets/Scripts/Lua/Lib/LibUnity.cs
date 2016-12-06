@@ -231,11 +231,11 @@ public static class LibUnity
 
         if (obj != null)
         {
-            Debug.Log("<color=#0f0>GetGameObject--获取对象成功</color>");
+            //Debug.Log("<color=#0f0>GetGameObject--获取对象成功</color>");
             lua.PushLightUserData(obj);
         }
         else {
-            Debug.Log("<color=#0f0>GetGameObject--获取对象失败--查看你是否忘记添加或者删除“root”</color>");
+            //Debug.Log("<color=#0f0>GetGameObject--获取对象失败--查看你是否忘记添加或者删除“root”</color>");
             lua.PushNil();
         }
         return 1;
