@@ -205,7 +205,32 @@ local function sc_attence_getkao(nm)
 end
 NW.regist("ATTENCE.SC.GETKAO", sc_attence_getkao)
 
+local function sc_attence_getattsup(nm)
 
+    local n = nm:readString()
+    local TEXT = _G.ENV.TEXT
+    local SupAttenceList = {}
+    for i=1,n do
+        local Day = nm:readString()
+        local Week = tonumber(nm:readString())
+        local CityName = nm:readString()
+        local StoreName = nm:readString()
+        local Up = nm:readString()
+        local Down = nm:readString()
+
+        table.insert(SupAttenceList,{Day = Day, CityName = CityName , StoreName = StoreName , Week= TEXT.Week[Week], Up = Up, Down = Down})
+        -- else
+        --     table.insert(WorkAttenceList,{day = Day})
+        -- end
+    end
+
+
+
+    DY_DATA.Work.SupAttenceList = SupAttenceList
+    print(JSON:encode(DY_DATA.Work.SupAttenceList))
+
+end
+NW.regist("ATTENCE.SC.GETATTSUP", sc_attence_getattsup)
 
 local function sc_user_gettype(nm)
     local n = tonumber(nm:readString())
@@ -1111,78 +1136,84 @@ local function sc_work_getstore(nm)
     local n = tonumber(nm:readString())
     local List = {}
     local InfoList = {}
+    print("______________________________n is :" .. n)
     for i=1,n do 
+                
+            local Info = {
+                id = tonumber(nm:readString()),
+                name = nm:readString(),
+                projectId = projectId,
+                cityid = nm:readString(),
+                icon = nm:readString(),
+                state = tonumber(nm:readString()),
+                takeorupload = tonumber(nm:readString()),
+                }
+         local icon = Info.icon
+         Info.icon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
+                
+         table.insert(InfoList,Info)
+     end
+               
 
-      
-        
-        
-        local Info = {
-        id = tonumber(nm:readString()),
-        name = nm:readString(),
-        projectId = projectId,
-        cityid = nm:readString(),
-        icon = nm:readString(),
-        state = tonumber(nm:readString()),
-        takeorupload = tonumber(nm:readString()),
-        }
-        local icon = Info.icon
-        Info.icon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
-        
-        table.insert(InfoList,Info)
-       
+    if #InfoList > 0 then
 
+        print("LifoList is " .. JSON:encode(InfoList))
+
+        if DY_DATA.User.limit == 1 then
+            local Project = DY_DATA.ProjectList[projectId]
+            local SchProject = DY_DATA.SchProjectList[projectId]
+            local StoreList = Project.StoreList
+            local SchStoreList = SchProject.SchStoreList
+            if StoreList == nil then
+                StoreList = {}
+                Project.StoreList = StoreList
+            end
+            if SchStoreList == nil then
+                SchStoreList = {}
+                SchProject.SchStoreList = SchStoreList  
+            end
+            for i=1,#InfoList do
+                table.insert(StoreList,InfoList[i])
+                table.insert(SchStoreList,InfoList[i])
+            end
+        
+        else
+            local AttProject = DY_DATA.AttendanceList[projectId]
+            local Project = DY_DATA.ProjectList[projectId]
+            local SchProject = DY_DATA.SchProjectList[projectId]
+            local AttStoreList = AttProject.AttStoreList
+            local StoreList = Project.StoreList
+            local SchStoreList = SchProject.SchStoreList
+            if AttStoreList == nil then
+                AttStoreList = {}
+                AttProject.AttStoreList = AttStoreList
+            else
+                AttStoreList = {}
+            end
+            if StoreList == nil then
+                StoreList = {}
+                Project.StoreList = StoreList
+            else
+                StoreList = {}
+            end
+            if SchStoreList == nil then
+                SchStoreList = {}
+                SchProject.SchStoreList = SchStoreList
+            else
+                SchStoreList = {}
+            end
+            for i=1,#InfoList do
+                table.insert(StoreList,InfoList[i])
+                table.insert(SchStoreList,InfoList[i])
+                table.insert(AttStoreList,InfoList[i])
+            end
+        end
+            
+        print("N in Work.SC.GETSTORE is " .. n)
+        print("<color=#EEB422>DY_DATA.AttendanceList" .. projectId ..  " is :" .. JSON:encode(DY_DATA.AttendanceList[projectId]) .. "</color>")
+        print("<color=#EEB422>DY_DATA.ProjectList" .. projectId ..  " is :" .. JSON:encode(DY_DATA.ProjectList[projectId]) .. "</color>")
+        print("<color=#EEB422>DY_DATA.SchProjectList" .. projectId ..  " is :" .. JSON:encode(DY_DATA.SchProjectList[projectId]) .. "</color>")
     end
-
-    print("LifoList is " .. JSON:encode(InfoList))
-
-    if DY_DATA.User.limit == 1 then
-        local Project = DY_DATA.ProjectList[projectId]
-        local SchProject = DY_DATA.SchProjectList[projectId]
-        local StoreList = Project.StoreList
-        local SchStoreList = SchProject.SchStoreList
-        if StoreList == nil then
-            StoreList = {}
-            Project.StoreList = StoreList
-        end
-        if SchStoreList == nil then
-            SchStoreList = {}
-            SchProject.SchStoreList = SchStoreList  
-        end
-        for i=1,#InfoList do
-            table.insert(StoreList,InfoList[i])
-            table.insert(SchStoreList,InfoList[i])
-        end
-    
-    else
-        local AttProject = DY_DATA.AttendanceList[projectId]
-        local Project = DY_DATA.ProjectList[projectId]
-        local SchProject = DY_DATA.SchProjectList[projectId]
-        local AttStoreList = AttProject.AttStoreList
-        local StoreList = Project.StoreList
-        local SchStoreList = SchProject.SchStoreList
-        if AttStoreList == nil then
-            AttStoreList = {}
-            AttProject.AttStoreList = AttStoreList
-        end
-        if StoreList == nil then
-            StoreList = {}
-            Project.StoreList = StoreList
-        end
-        if SchStoreList == nil then
-            SchStoreList = {}
-            SchProject.SchStoreList = SchStoreList
-        end
-        for i=1,#InfoList do
-            table.insert(StoreList,InfoList[i])
-            table.insert(SchStoreList,InfoList[i])
-            table.insert(AttStoreList,InfoList[i])
-        end
-    end
-        
-    print("N in Work.SC.GETSTORE is " .. n)
-    print("<color=#EEB422>DY_DATA.AttendanceList" .. projectId ..  " is :" .. JSON:encode(DY_DATA.AttendanceList[projectId]) .. "</color>")
-    print("<color=#EEB422>DY_DATA.ProjectList" .. projectId ..  " is :" .. JSON:encode(DY_DATA.ProjectList[projectId]) .. "</color>")
-    print("<color=#EEB422>DY_DATA.SchProjectList" .. projectId ..  " is :" .. JSON:encode(DY_DATA.SchProjectList[projectId]) .. "</color>")
 end
 NW.regist("WORK.SC.GETSTORE", sc_work_getstore)
 ----------------------------

@@ -46,7 +46,7 @@ GameObject:
   - 222: {fileID: 22222484}
   - 114: {fileID: 11466210}
   m_Layer: 5
-  m_Name: lbLeaveTimes
+  m_Name: lbDown
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -309,7 +309,7 @@ GameObject:
   - 222: {fileID: 22213808}
   - 114: {fileID: 11427304}
   m_Layer: 5
-  m_Name: lbDown
+  m_Name: lbUp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -487,7 +487,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &167732
 GameObject:
   m_ObjectHideFlags: 1
@@ -586,8 +586,9 @@ GameObject:
   - 224: {fileID: 22495750}
   - 222: {fileID: 22276368}
   - 114: {fileID: 11461848}
+  - 114: {fileID: 11449512}
   m_Layer: 5
-  m_Name: lbUp
+  m_Name: lbStoreName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -622,7 +623,7 @@ GameObject:
   - 222: {fileID: 22256790}
   - 114: {fileID: 11475570}
   m_Layer: 5
-  m_Name: lbName
+  m_Name: lbCityName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -815,7 +816,7 @@ GameObject:
   - 114: {fileID: 11462792}
   - 114: {fileID: 11467002}
   m_Layer: 5
-  m_Name: sp= (1)
+  m_Name: sp=
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1495,7 +1496,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 09:00
+  m_Text: nil
   localize: 0
   textFormat: '{0}'
 --- !u!114 &11430110
@@ -1742,10 +1743,10 @@ MonoBehaviour:
   m_Padding:
     m_Left: 0
     m_Right: 0
-    m_Top: 0
+    m_Top: 40
     m_Bottom: 0
   m_ChildAlignment: 0
-  m_Spacing: 12.4
+  m_Spacing: 30.24
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 0
 --- !u!114 &11441624
@@ -1856,6 +1857,19 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &11449512
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 175942}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1741964061, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 0
+  m_VerticalFit: 2
 --- !u!114 &11454472
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2001,7 +2015,7 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 12800000, guid: 94601089a2091354f922ca4eabc02f00, type: 3}
-    m_FontSize: 28
+    m_FontSize: 22
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 2
@@ -2012,7 +2026,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 09:00
+  m_Text: nil
   localize: 0
   textFormat: '{0}'
 --- !u!114 &11461862
@@ -2074,7 +2088,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u4FC3\u9500\u5458\u8003\u52E4"
+  m_Text: "\u5DE1\u5E97\u8BB0\u5F55"
   localize: 0
   textFormat: '{0}'
 --- !u!114 &11462792
@@ -2136,7 +2150,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 09:00
+  m_Text: nil
   localize: 0
   textFormat: '{0}'
 --- !u!114 &11467002
@@ -2449,7 +2463,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u5F20\u4E09"
+  m_Text: nil
   localize: 0
   textFormat: '{0}'
 --- !u!114 &11475814
@@ -3378,8 +3392,8 @@ RectTransform:
   m_RootOrder: 2
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -51.25, y: -19}
+  m_AnchoredPosition: {x: -0.0000047683716, y: 0.000045776367}
+  m_SizeDelta: {x: -0, y: 0.0000076294}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &22437880
 RectTransform:
@@ -3448,8 +3462,8 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 31.03999, y: 35.9}
-  m_SizeDelta: {x: 2, y: -28.2}
+  m_AnchoredPosition: {x: 31.03999, y: 44.9}
+  m_SizeDelta: {x: 2, y: -10.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &22442968
 RectTransform:

@@ -58,12 +58,6 @@
     <Reference Include="UnityEngine.Networking">
       <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.Networking">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
     </Reference>
@@ -198,10 +192,11 @@
     <None Include="Assets\MathLibraryForUnity\Doc\VersionLog.txt" />
     <None Include="Assets\MathLibraryForUnity\Lib\DestMath.XML" />
     <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
+    <None Include="Assets\RefAssets\Resources\luacoding.txt" />
+    <None Include="Assets\RefAssets\Resources\version.txt" />
     <None Include="Assets\RefAssets\version.txt" />
-    <None Include="Assets\Resources\luacoding.txt" />
-    <None Include="Assets\Resources\version.txt" />
     <None Include="Assets\Scenes\Realtime Reflections\Shaders\PlanarReflection.shader" />
+    <None Include="Assets\Scenes\Realtime Reflections\Shaders\circle.shader" />
     <None Include="Assets\Shaders\FX-Lightmap.shader" />
     <None Include="Assets\Shaders\FX-Scene-Outline.shader" />
     <None Include="Assets\Shaders\MADF\MADFINGER-billboarded-blinking-god-rays.shader" />

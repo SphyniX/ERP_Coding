@@ -20,10 +20,9 @@ productIP = "api.richer.net.cn:8888",
     productDomain = "",
 }
 P.Channel = {
-    -- loginHost = P.IPSet.productIP,
-    loginHost = P.IPSet.productIP,
-
-    downloadHost = "139.196.109.3:8000",
+    loginHost = P.IPSet.test,
+    -- loginHost = P.IPSet.test,
+    downloadHost = "139.196.109.3:8888",
     pid = 1,
     minAccLen = 6,
     maxAccLen = 16,
@@ -55,7 +54,7 @@ P.HTTPSet = {
     -- 获取版本号
     getversionInterface = function () return "http://"..P.Channel.loginHost.."/api/user/getversion" end,
     -- 下载图片
-    downloadPhotoInterface = function () return "http://"..P.Channel.loginHost.."/Photo" end,
+    downloadPhotoInterface = function () return "http://"..P.Channel.downloadHost.."/Photo" end,
 
 }
 

@@ -31,6 +31,11 @@ do
             GETATTSTORE = ID_BASE + 13,
             GETCITY = ID_BASE + 14,
             GETKAO = ID_BASE + 15,
+            GETATTSUP = ID_BASE + 16,
+            GETLEAVELIST = ID_BASE + 17,
+            SALESLEAVE = ID_BASE + 18,
+            GETLEAVEINFOR = ID_BASE + 19,
+            GETLEAVELS = ID_BASE + 20,
         }
     end
     function  Funcs.attence_sc()
@@ -51,6 +56,11 @@ do
             GETATTSTORE = ID_BASE + 13,
             GETCITY = ID_BASE + 14,
             GETKAO = ID_BASE + 15,
+            GETATTSUP = ID_BASE + 16,
+            GETLEAVELIST = ID_BASE + 17,
+            SALESLEAVE = ID_BASE + 18,
+            GETLEAVEINFOR = ID_BASE + 19,
+            GETLEAVELS = ID_BASE + 20,
         }
     end
 

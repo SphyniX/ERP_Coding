@@ -42,10 +42,11 @@ local on_project_init
 --                 `-...-'  
 
 ---proj Select callback Func ----
-local function on_select_project(id)
-	print("Start Making Project :" .. id)
+local function on_select_project(id,AttenceList)
+	-- print("Start Making Project :" .. AttenceList.id)
+	print("AttenceList is :" .. JSON:encode(AttenceList))
 	projectId = id
-	
+	print("______________________________projectid is : " .. projectId)
 	on_project_init()
 end
 
@@ -64,7 +65,7 @@ local function refreshtime()
 	local TimeOfDay = DY_DATA.Work.NowTime
 	print("TimeOfDay is :" .. JSON:encode(TimeOfDay))
 	Ref.SubMain.SubTime.lbTime.text = TimeOfDay.time
-	Ref.SubMain.SubTime.lbDay.text = TimeOfDay.day .. " " .. TimeOfDay.week
+	Ref.SubMain.SubTime.lbDay.text = TimeOfDay.day:sub(1,4) .. "年" .. TimeOfDay.day:sub(6,7) .. "月" .. TimeOfDay.day:sub(9,10) .. "日 " .. TimeOfDay.week
 	TimeInfo.hour = DY_DATA.Work.NowTime.time:sub(1,2)
 	TimeInfo.min = DY_DATA.Work.NowTime.time:sub(4,5)
 	TimeInfo.sec = DY_DATA.Work.NowTime.time:sub(7,8)
@@ -342,8 +343,13 @@ on_project_init = function ()
 	end
 	AttendanceList = DY_DATA.get_attendance_list(false)
 	print("UI_DATA.AttendanceList is :" .. JSON:encode(AttendanceList))
-
-	local AttendanceProject = AttendanceList[projectId]
+	local AttendanceProject
+	for i=1,#AttendanceList do
+		if AttendanceList[i].id == projectId then
+			AttendanceProject = AttendanceList[i]
+		end
+	end
+	
 	print("AttendanceProject in MainAttance :" .. JSON:encode(AttendanceProject))
 	Ref.SubMain.SubProject.lbText.text = AttendanceProject.name
 end
