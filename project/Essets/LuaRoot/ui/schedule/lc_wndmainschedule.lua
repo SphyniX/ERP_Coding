@@ -40,6 +40,7 @@ local function on_subproject_grpproject_entproject_click(btn)
 	local index = tonumber(btn.name:sub(11))
 	
 	UI_DATA.WNDSelectStore.projectId = ProjectList[index].id
+	-- UI_DATA.WNDSubmitSchedule.type = ProjectList[index].type
 	UIMGR.create_window("UI/WNDSelectSchStore")
 end
 

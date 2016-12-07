@@ -24,7 +24,11 @@ local function on_subproject_grpproject_entproject_click(btn)
 	end
 	local projectId = AttendanceList[index].id
 	local on_call_back = UI_DATA.WNDSelectProject.on_call_back
-	if on_call_back ~= nil then on_call_back(projectId,DY_DATA.AttendanceList) end
+	if DY_DATA.User.limit == 1 then
+		if on_call_back ~= nil then on_call_back(index,DY_DATA.AttendanceList) end
+	else
+		if on_call_back ~= nil then on_call_back(projectId,DY_DATA.AttendanceList) end
+	end
 	UIMGR.close_window(Ref.root)
 end
 
@@ -35,7 +39,7 @@ end
 local function on_ui_init()
 	print("try init ui")
 	AttendanceList = DY_DATA.get_attendance_list(false)
-	if AttendanceList == nil then 
+	if AttendanceList == nil or AttendanceList == {} then 
 		libunity.SetActive(Ref.SubProject.spNil, true)
 		return 
 	end
@@ -70,7 +74,7 @@ local function init_logic()
 	if DY_DATA.User.limit == 1 then
 		print("______________________________Init Limit 1 ______________________________")
 		NW.subscribe("ATTENCE.SC.GETWORK",on_ui_init)
-		libunity.SetActive(Ref.SubLimit,true)
+		libunity.SetActive(Ref.SubLimit.root,true)
 		if DY_DATA.AttendanceList == nil or next(DY_DATA.AttendanceList) == nil then
 			print("AttendanceList is nil")
 			if NW.connected() then

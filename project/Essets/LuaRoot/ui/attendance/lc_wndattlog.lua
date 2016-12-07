@@ -49,6 +49,10 @@ end
 
 
 local function on_sublog_grplog_entlog_subaskoff_btnbutton_click(btn)
+	local index = tonumber(btn.transform.parent.parent.name:sub(7))
+	local AttenceList = DY_DATA.Work.AttenceList
+	local Attence = AttenceList[index]
+	UI_DATA.WNDAskOffMag.UnderId = Attence.UnderId
 	UIMGR.create_window("UI/WNDAskOffMag")
 	
 end
@@ -77,6 +81,17 @@ local function on_ui_init( )
 		Ent.lbLeaveTimes.text = Attence.LeaveTimes
 		Ent.lbDay.text = Attence.Day
 		Ent.lbWeek.text = Attence.Week
+		if Attence.UnderState == 1 then
+			Ent.SubAskOff.lbButton.text = "无"
+			Ent.SubAskOff.btnButton:SetInteractable(false)
+		else
+			Ent.SubAskOff.lbButton.text = "查看"
+			Ent.SubAskOff.btnButton:SetInteractable(true)
+		end
+
+		if i == 1 then
+			libunity.SetActive(Ent.spNil,false)
+		end
 		-- end
 	end)
 

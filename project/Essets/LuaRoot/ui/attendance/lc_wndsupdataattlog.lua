@@ -19,6 +19,16 @@ local SaleAttenceList
 
 --!*以下：自动生成的回调函数*--
 
+local function on_sublog_grplog_entlog_subask_btnaskoff_click(btn)
+	local index = tonumber(btn.transform.parent.parent.name:sub(7))
+	local SaleAttenceList = DY_DATA.StoreData.SaleAttenceList
+	-- print("SaleAttenceList is " .. JSON:encode(SaleAttenceList))
+	local Attence = SaleAttenceList[index]
+	-- print("Attence is " .. JSON:encode(Attence))
+	UI_DATA.WNDAskOffMag.UnderId = Attence.UnderId
+	UIMGR.create_window("UI/WNDAskOffMag")
+end
+
 local function on_subtop_submouth_btnnew_click(btn)
 	libunity.SetActive(Ref.SubTop.SubMouth.btnNew, false)
 	libunity.SetActive(Ref.SubTop.SubMouth.btnLast, true)
@@ -49,8 +59,6 @@ end
 
 
 
-
-
 local function on_ui_init( )
 	
 	local SaleAttenceList = DY_DATA.StoreData.SaleAttenceList
@@ -78,16 +86,26 @@ local function on_ui_init( )
 		Ent.lbLeaveTimes.text = Attence.LeaveTimes
 		Ent.lbDay.text = Attence.Day
 		Ent.lbWeek.text = Attence.Week
+		if Attence.UnderState == 1 then
+			Ent.SubAsk.lbAskOff.text = "无"
+			Ent.SubAsk.btnAskOff:SetInteractable(false)
+		else
+			Ent.SubAsk.lbAskOff.text = "查看"
+			Ent.SubAsk.btnAskOff:SetInteractable(true)
+		end
 		-- end
 	end)
 
 end
 
 local function init_view()
+	Ref.SubLog.GrpLog.Ent.SubAsk.btnAskOff.onAction = on_sublog_grplog_entlog_subask_btnaskoff_click
 	Ref.SubTop.SubMouth.btnNew.onAction = on_subtop_submouth_btnnew_click
 	Ref.SubTop.SubMouth.btnLast.onAction = on_subtop_submouth_btnlast_click
 	Ref.SubTop.btnBack.onAction = on_subtop_btnback_click
-	UIMGR.make_group(Ref.SubLog.GrpLog)
+	UIMGR.make_group(Ref.SubLog.GrpLog, function (New, Ent)
+		New.SubAsk.btnAskOff.onAction = Ent.SubAsk.btnAskOff.onAction
+	end)
 	--!*以上：自动注册的回调函数*--
 end
 
@@ -134,5 +152,4 @@ local P = {
 	on_recycle = on_recycle,
 }
 return P
-
 

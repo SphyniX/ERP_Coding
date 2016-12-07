@@ -23,6 +23,7 @@ local function on_submain_grp_ent_click(btn)
 end
 
 local function on_subtop_back_click(btn)
+	Ref.SubMain.Grp:dup(0)
 	UIMGR.close_window(Ref.root)
 end
 

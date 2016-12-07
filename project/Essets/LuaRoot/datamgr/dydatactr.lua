@@ -32,9 +32,10 @@ local function sc_attence_gettask(nm)
         supervisor = nm:readString(),
         starttime = nm:readString(),
         endtime = nm:readString(),
+        icon = nm:readString(),
+        canusephoto = nm:readString(),
     }
-    local icon = nm:readString()
-    Attendance.icon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
+    Attendance.icon = Attendance.icon ~= nil and  Attendance.icon ~= "nil" and  Attendance.icon..".png" or nil
         -- table.insert(AttendanceList, Attendance)
         table.insert(AttendanceList,Attendance)
     end
@@ -116,6 +117,25 @@ local function sc_attence_getattstore(nm)
 end
 NW.regist("ATTENCE.SC.GETATTSTORE", sc_attence_getattstore)
 
+local function sc_attence_getleaveinfor(nm)
+
+    local id = tonumber(nm:readString())
+    local Info = {
+    id = id,
+    storename = nm:readString(),
+    projectname = nm:readString(),
+    starttime = nm:readString(),
+    endtime = nm:readString(),
+    reasonstate = nm:readString(),
+    reason = nm:readString(),
+    submittime = nm:readString(),
+    }
+
+    
+    DY_DATA.LeaveDetails = Info
+end
+NW.regist("ATTENCE.SC.GETLEAVEINFOR", sc_attence_getleaveinfor)
+
 local function sc_attence_getleavelist(nm)
     local n = tonumber(nm:readString())
     local List = {}
@@ -123,10 +143,16 @@ local function sc_attence_getleavelist(nm)
         local id = tonumber(nm:readString())
         local Info = {
         id = id,
+        storename = nm:readString(),
+        projectname = nm:readString(),
         starttime = nm:readString(),
+        endtime = nm:readString(),
+        state = tonumber(nm:readString()), -- (1 审核中，2 审核成功，3 审核失败, 4 未请假)
+        reasonstate = nm:readString(),
         reason = nm:readString(),
-            state = tonumber(nm:readString()), -- (1 审核中，2 审核成功，3 审核失败)
-            time = nm:readString(),
+
+      
+      
         }
         table.insert(List, Info)
     end
@@ -164,8 +190,10 @@ local function sc_attence_getattence(nm)
         local Up = nm:readString()
         local Down = nm:readString()
         local LeaveTimes = nm:readString()
+        local UnderState = tonumber(nm:readString())
+        local UnderId = tonumber(nm:readString())
 
-        table.insert(WorkAttenceList,{Day = Day, Week= TEXT.Week[Week], Up = Up, Down = Down, LeaveTimes = LeaveTimes})
+        table.insert(WorkAttenceList,{Day = Day, Week= TEXT.Week[Week], Up = Up, Down = Down, LeaveTimes = LeaveTimes , UnderState = UnderState , UnderId = UnderId })
         -- else
         --     table.insert(WorkAttenceList,{day = Day})
         -- end
@@ -192,8 +220,10 @@ local function sc_attence_getkao(nm)
         local Up = nm:readString()
         local Down = nm:readString()
         local LeaveTimes = nm:readString()
+        local UnderState = tonumber(nm:readString())
+        local UnderId = tonumber(nm:readString())
 
-        table.insert(SaleAttenceList,{Day = Day, Name = Name, Week= TEXT.Week[Week], Up = Up, Down = Down, LeaveTimes = LeaveTimes})
+        table.insert(SaleAttenceList,{Day = Day, Name = Name, Week= TEXT.Week[Week], Up = Up, Down = Down, LeaveTimes = LeaveTimes , UnderState = UnderState , UnderId = UnderId })
         -- else
         --     table.insert(WorkAttenceList,{day = Day})
         -- end
@@ -231,6 +261,33 @@ local function sc_attence_getattsup(nm)
 
 end
 NW.regist("ATTENCE.SC.GETATTSUP", sc_attence_getattsup)
+
+local function sc_attence_getleaves(nm)
+
+    local n = tonumber(nm:readString())
+    local List = {}
+    for i=1,n do
+        local id = tonumber(nm:readString())
+        local Info = {
+        id = id,
+        starttime = nm:readString(),
+        endtime = nm:readString(),
+        
+        reasonstate = nm:readString(),
+        reason = nm:readString(),
+        submittime = nm:readString(),
+        state = tonumber(nm:readString()), -- (1 审核中，2 审核成功，3 审核失败)
+      
+      
+        }
+        table.insert(List, Info)
+    end
+    DY_DATA.LeaveList = List
+
+end
+NW.regist("ATTENCE.SC.GETLEAVELS", sc_attence_getleaves)
+
+
 
 local function sc_user_gettype(nm)
     local n = tonumber(nm:readString())
@@ -741,8 +798,8 @@ NW.regist("REPORTED.SC.GETSUPSAMPLERE",sc_reported_getsamplere)
 local function sc_reported_getggiftre ( nm )
 
     local storeId = tonumber(nm:readString())
-    if DY_DATA.StoreData.GiftReList == nil then DY_DATA.StoreData.GiftReList = {} end
-
+    -- if DY_DATA.StoreData.GiftReList == nil then DY_DATA.StoreData.GiftReList = {} end
+    DY_DATA.StoreData.GiftReList = {}
     local n = tonumber(nm:readString())
     local GiftReList = {}
     for i=1,n do
@@ -765,7 +822,7 @@ local function sc_reported_getcomlistre ( nm )
 
     local storeId = tonumber(nm:readString())
     if DY_DATA.StoreData.ComListRe == nil then DY_DATA.StoreData.ComListRe = {} end
-
+    DY_DATA.StoreData.ComListRe = {} 
     local n = tonumber(nm:readString())
     print("<color=#EEB422>REPORTED.SC.GETSUPGETCOMPETING---------"..n .. "</color>")
     local ComListRe = {}
@@ -1092,8 +1149,10 @@ local function sc_work_getproject(nm)
             if List[id] == nil then List[id] = {} end
             List[id].id = id
             List[id].name = nm:readString()
+            List[id].brandnum = tonumber(nm:readString())
             local icon = nm:readString()
             List[id].icon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
+            List[id].type = nm:readString()
         end
         DY_DATA.ProjectList = List
         DY_DATA.SchProjectList = List
@@ -1113,6 +1172,7 @@ local function sc_work_getproject(nm)
             List[id].brandnum = tonumber(nm:readString())
             local icon = nm:readString()
             List[id].icon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
+            List[id].type = nm:readString()
         end
         DY_DATA.AttendanceList = List
         DY_DATA.ProjectList = List
@@ -1345,8 +1405,8 @@ local function sc_work_getcomlist(nm)
     if Project == nil then return end
 
     if Project.ComList == nil then Project.ComList = {} end
+    Project.ComList = {}
     local ComList = Project.ComList
-
     local n = tonumber(nm:readString())
     for i=1,n do
 
@@ -1406,10 +1466,11 @@ local function sc_work_getassignment(nm)
         local name = nm:readString()
         local starttime = nm:readString()
         local endtime = nm:readString()
+        local state = nm:readString()
         if TaskList[starttime.."_"..endtime] == nil then 
         TaskList[starttime.."_"..endtime] = {} 
     end
-
+    local TEXT = _G.ENV.TEXT
     local Info = { 
     taskId = id, 
     id = personId,
@@ -1418,6 +1479,7 @@ local function sc_work_getassignment(nm)
     storeId = storeId,
     starttime = starttime,
     endtime = endtime,
+    state =  TEXT.TaskState[tonumber(state)],
 }
 table.insert(TaskList[starttime.."_"..endtime], Info)
 end

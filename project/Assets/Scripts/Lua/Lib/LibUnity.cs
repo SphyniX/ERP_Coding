@@ -393,7 +393,7 @@ public static class LibUnity
     {
         GameObject go = lua.ToGameObject(1);
         bool active = lua.ToBoolean(2);
-        Debug.Log(go.name);
+        //Debug.Log(go.name);
         float delay = (float)lua.OptNumber(3, 0f);
         if (go != null) {
             if (delay > 0) {

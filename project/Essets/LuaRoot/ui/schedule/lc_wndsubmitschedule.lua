@@ -243,6 +243,7 @@ end
 local function on_store_init()
 	local storeId = UI_DATA.WNDSubmitSchedule.storeId
 	local projectId = UI_DATA.WNDSubmitSchedule.projectId
+	-- local type = UI_DATA.WNDSubmitSchedule.type
 	Project = DY_DATA.SchProjectList[projectId]
 	if Project.StoreList == nil then print("StoreList 为空"..projectId) return end
 	local StoreList = Project.StoreList
@@ -260,6 +261,7 @@ local function on_store_init()
 	else
 		Ref.SubMain.SubContent.lbTip.text = "请确认无误后提交"
 	end
+	-- Ref.SubMain.SubContent.lbClass.text = type
 	Ref.SubMain.SubContent.SubAddress.lbText.text = Store.Info.address
 	Ref.SubMain.SubContent.SubTime.lbStart.text = Store.Info.starttime
 	Ref.SubMain.SubContent.SubTime.lbEnd.text = Store.Info.endtime
@@ -294,7 +296,7 @@ local function init_logic()
 	if Project == nil then print("StoreList 为空"..projectId) return end
 	UIMGR.get_photo(Ref.SubMain.SubContent.spIcon, Project.icon)
 	Ref.SubMain.SubContent.lbName.text = Project.name
-	Ref.SubMain.SubContent.lbTip.text = Project.type
+	Ref.SubMain.SubContent.lbClass.text = Project.type
 
 	local storeId = UI_DATA.WNDSubmitSchedule.storeId
 	if Project.StoreList == nil then print("StoreList 为空"..projectId) return end

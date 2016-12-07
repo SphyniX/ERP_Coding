@@ -49,9 +49,9 @@ end
 local function on_subset_btnsubmit_click(btn)
 	Ref.SubMain.Grp:dup(#ProductList, function (i, Ent, isNew)
 		if i == NowEnt then 
-			Ent.lbVolume.text = Ref.SubSet.inpVolume.text .. ProductList[i].per
-			Ent.lbPrice.text = Ref.SubSet.inpPrice.text .. "元"
-			Ent.lbSale.text = Ref.SubSet.lbSale.text .. "元"
+			Ent.lbVolume.text = "<size=36>" .. Ref.SubSet.inpVolume.text .. "</size>" .. ProductList[i].per
+			Ent.lbPrice.text = "<size=36>" .. Ref.SubSet.inpPrice.text .. "</size>" .. "元"
+			Ent.lbSale.text = "<size=36>" .. Ref.SubSet.lbSale.text .. "</size>" .. "元"
 			Ref.SubSet.inpVolume.text = nil
 			Ref.SubSet.inpPrice.text = nil
 			Ref.SubSet.lbSale.text = nil
@@ -118,9 +118,9 @@ local function on_ui_init()
 			if Product.sale == ""then 
 				Product.sale = "   "
 			end
-			Ent.lbVolume.text = Product.volume .. ProductList[i].per
-			Ent.lbPrice.text = Product.price .. "元"
-			Ent.lbSale.text = Product.sale .. "元"
+			Ent.lbVolume.text = "<size=36>" .. Product.volume .. "</size>" .. ProductList[i].per
+			Ent.lbPrice.text = "<size=36>" .. Product.price .. "</size>" .. "元"
+			Ent.lbSale.text = "<size=36>" .. Product.sale .. "</size>" .. "元"
 		end)
 	end
 end

@@ -19,41 +19,56 @@ local Ref
 local NewTaskList
 local WeekList,NextWeekList,ThisWeek
 local TaskList
---!*以下：自动生成的回调函数*--
 
 
 
 
-local function on_subtop_btnback_click(btn)
-	UI_DATA.WNDSupWorkSelectShopTask.ThisWeek = nil
-	-- UIMGR.create_window("UI/WNDSupWorkSelectShopTaskSetSelPeople")
-	UIMGR.close_window(Ref.root)
-end
+--------日期计算器------
+local function tomorrow(today,bool)
 
+	if bool then
+		local day = today:sub(7,8)
+		local month = today:sub(5,6)
+		local year = today:sub(1,4)
 
+		day = day + 1
+		if day > tonumber(os.date("%d",os.time({year=tonumber(year),month=tonumber(month)+1,day=0}))) then 
+			day = 1
+			month = month + 1
+		end
 
-
-local function on_subtasklist_grp_ent_btnbutton_click(btn)
-	local index = tonumber(btn.transform.parent.name:sub(4))
-
-	Ref.SubTaskList.Grp:dup(#NewTaskList,function (i,Ent,IsNew)
-		Ent.TaskConcent.text = "无任务"
-	end)
-	UI_DATA.WNDSupWorkSelectShopTask.TaskList=NewTaskList
-	print("点击按钮"..btn.transform.parent.name)
-	UI_DATA.WNDSupWorkSelectShopTask.index=tonumber(btn.transform.parent.name:sub(4))
-	--UI_DATA.WNDSupWorkSelectShopTaskSetSelPeople.PersonListForUpdate=TaskListUI_DATA.WNDSupWorkSelectShopTask.index
-	-- print("UI_DATA.WNDSupWorkSelectShopTask.index"..tostring(UI_DATA.WNDSupWorkSelectShopTask.index))
-	-- print("name"..UI_DATA.WNDSupWorkSelectShopTask.PersonList[1].name)
-	if ThisWeek then
-		UI_DATA.WNDSupWorkSelectShopTaskSet.data = WeekList[index].data
+		if month == 13 then
+			month = 1
+			year = year + 1
+		end
+		if day < 10 then
+			return year..month.."0"..day
+		else
+			return year..month..day
+		end
 	else
-		UI_DATA.WNDSupWorkSelectShopTaskSet.data = NextWeekList[index].data
-	end
-	UI_DATA.WNDSupWorkSelectShopTask.ThisWeek = ThisWeek
-	UIMGR.create_window("UI/WNDSupWorkSelectShopTaskSet")
-end
+		local day = today:sub(7,8)
+		local month = today:sub(5,6)
+		local year = today:sub(1,4)
 
+		day = day + 7
+		if day > tonumber(os.date("%d",os.time({year=tonumber(year),month=tonumber(month)+1,day=0}))) then 
+			day = day - tonumber(os.date("%d",os.time({year=tonumber(year),month=tonumber(month)+1,day=0})))
+			month = month + 1
+		end
+
+		if month == 13 then
+			month = 1
+			year = year + 1
+		end
+		if day < 10 then
+			return year..month.."0"..day
+		else
+			return year..month..day
+		end
+	end
+	-- body
+end
 
 
 local function on_ui_init()
@@ -131,13 +146,13 @@ local function on_ui_init()
 
 	Ref.SubTaskList.Grp:dup(#NewTaskList,function (i,Ent,IsNew)
 		
-		local task=NewTaskList[i]
+		local task = NewTaskList[i]
 		
-		local  starttime,endtime=task.starttime,task.endtime
+		local  starttime , endtime = task.starttime , task.endtime
 		-- print("Time Test : .." .. os.date("%w", string2time(starttime)))
 		local namelist =""
 
-		print("<color=#0f0>on_ui_init---WORK.SC.GETASSIGNMENT</color>",projectId, storeId, JSON:encode(TaskList))
+		print("<color=#0f0>on_ui_init---WORK.SC.GETASSIGNMENT</color>",projectId, storeId, JSON:encode(NewTaskList))
 
 		
 		print("_______________________________" .. JSON:encode(task))
@@ -153,74 +168,58 @@ local function on_ui_init()
 			end
 		end
 		print("Name in " .. i .. "  Ent is :" .. namelist)
+		-- if starttime == "" then
+
+		-- 	Ent.TaskConcent.text = "无任务"
+		-- else
+		-- 	Ent.TaskConcent.text = starttime:sub(12).."  -  "..endtime:sub(12).."\n"..namelist
+		-- end
+		-- if ThisWeek then
+		-- 	Ent.Time.text = WeekList[i].data
+		-- else
+		-- 	Ent.Time.text = NextWeekList[i].data
+		-- end
+
 		if starttime == "" then
-			Ent.TaskConcent.text = "无任务"
+			libunity.SetActive(Ent.SubNone.root,true)
+			libunity.SetActive(Ent.SubTask.root,false)
+			---------处理无任务-----------
+			Ent.SubNone.TaskConcent.text = "无任务"
+			if ThisWeek then
+				Ent.SubNone.Time.text = WeekList[i].data
+			else
+				Ent.SubNone.Time.text = NextWeekList[i].data
+			end
 		else
-			Ent.TaskConcent.text = starttime:sub(12).."  -  "..endtime:sub(12).."\n"..namelist
+			libunity.SetActive(Ent.SubNone.root,false)
+			libunity.SetActive(Ent.SubTask.root,true)
+			Ent.SubTask.lbStartTime.text = starttime
+			Ent.SubTask.lbEndTime.text = endtime
+			Ent.SubTask.lbName.text = namelist
+			Ent.SubTask.lbState.text = task.PersonList[1].state
+			local TEXT = _G.ENV.TEXT
+			if task.PersonList[1].state == TEXT.TaskState[1] then
+				Ent.SubTask.btnButton:SetInteractable(true)
+			else
+				Ent.SubTask.btnButton:SetInteractable(false)
+			end
 		end
-		if ThisWeek then
-			Ent.Time.text = WeekList[i].data
-		else
-			Ent.Time.text = NextWeekList[i].data
-		end
+
 	end)
 
+	libunity.SetParent(Ref.SubTaskList.lbText.transform, Ref.SubTaskList.Grp.root, false)
 end
 
-local function tomorrow(today,bool)
+--!*以下：自动生成的回调函数*--
 
-	if bool then
-		local day = today:sub(7,8)
-		local month = today:sub(5,6)
-		local year = today:sub(1,4)
-
-		day = day + 1
-		if day > tonumber(os.date("%d",os.time({year=tonumber(year),month=tonumber(month)+1,day=0}))) then 
-			day = 1
-			month = month + 1
-		end
-
-		if month == 13 then
-			month = 1
-			year = year + 1
-		end
-		if day < 10 then
-			return year..month.."0"..day
-		else
-			return year..month..day
-		end
-	else
-		local day = today:sub(7,8)
-		local month = today:sub(5,6)
-		local year = today:sub(1,4)
-
-		day = day + 7
-		if day > tonumber(os.date("%d",os.time({year=tonumber(year),month=tonumber(month)+1,day=0}))) then 
-			day = day - tonumber(os.date("%d",os.time({year=tonumber(year),month=tonumber(month)+1,day=0})))
-			month = month + 1
-		end
-
-		if month == 13 then
-			month = 1
-			year = year + 1
-		end
-		if day < 10 then
-			return year..month.."0"..day
-		else
-			return year..month..day
-		end
-	end
-	-- body
+local function on_subtop_btnback_click(btn)
+	UI_DATA.WNDSupWorkSelectShopTask.ThisWeek = nil
+	-- UIMGR.create_window("UI/WNDSupWorkSelectShopTaskSetSelPeople")
+	UIMGR.close_window(Ref.root)
 end
 
 
-local function on_date_init()
-	--local WorkDay = DY_DATA.WorkDay
--- Ref.SubTaskList.Grp:dup(#WorkDay,function (i,Ent,IsNew)
 
--- 	end)
-	-- body
-end
 
 local function on_subtop_nextweek_click(btn)
 	if ThisWeek then
@@ -235,16 +234,92 @@ local function on_subtop_nextweek_click(btn)
 end
 
 
+local function on_subtasklist_grp_ent_subnone_btnbutton_click(btn)
+	local index = tonumber(btn.transform.parent.transform.parent.name:sub(4))
+
+	-- Ref.SubTaskList.Grp:dup(#NewTaskList,function (i,Ent,IsNew)
+	-- 	Ent.TaskConcent.text = "无任务"
+	-- end)
+	UI_DATA.WNDSupWorkSelectShopTask.TaskList = NewTaskList
+	print("点击按钮"..btn.transform.parent.name)
+	UI_DATA.WNDSupWorkSelectShopTask.index = tonumber(btn.transform.parent.transform.parent.name:sub(4))
+	--UI_DATA.WNDSupWorkSelectShopTaskSetSelPeople.PersonListForUpdate=TaskListUI_DATA.WNDSupWorkSelectShopTask.index
+	-- print("UI_DATA.WNDSupWorkSelectShopTask.index"..tostring(UI_DATA.WNDSupWorkSelectShopTask.index))
+	-- print("name"..UI_DATA.WNDSupWorkSelectShopTask.PersonList[1].name)
+	if ThisWeek then
+		UI_DATA.WNDSupWorkSelectShopTaskSet.data = WeekList[index].data
+	else
+		UI_DATA.WNDSupWorkSelectShopTaskSet.data = NextWeekList[index].data
+	end
+	UI_DATA.WNDSupWorkSelectShopTask.ThisWeek = ThisWeek
+	UIMGR.create_window("UI/WNDSupWorkSelectShopTaskSet")
+end
+
+local function on_subtasklist_grp_ent_subtask_btnbutton_click(btn)
+	local index = tonumber(btn.transform.parent.transform.parent.name:sub(4))
+
+	-- Ref.SubTaskList.Grp:dup(#NewTaskList,function (i,Ent,IsNew)
+	-- 	Ent.TaskConcent.text = "无任务"
+	-- end)
+	UI_DATA.WNDSupWorkSelectShopTask.TaskList = NewTaskList
+	print("点击按钮"..btn.transform.parent.name)
+	UI_DATA.WNDSupWorkSelectShopTask.index = tonumber(btn.transform.parent.transform.parent.name:sub(4))
+	--UI_DATA.WNDSupWorkSelectShopTaskSetSelPeople.PersonListForUpdate=TaskListUI_DATA.WNDSupWorkSelectShopTask.index
+	-- print("UI_DATA.WNDSupWorkSelectShopTask.index"..tostring(UI_DATA.WNDSupWorkSelectShopTask.index))
+	-- print("name"..UI_DATA.WNDSupWorkSelectShopTask.PersonList[1].name)
+	if ThisWeek then
+		UI_DATA.WNDSupWorkSelectShopTaskSet.data = WeekList[index].data
+	else
+		UI_DATA.WNDSupWorkSelectShopTaskSet.data = NextWeekList[index].data
+	end
+	UI_DATA.WNDSupWorkSelectShopTask.ThisWeek = ThisWeek
+	UIMGR.create_window("UI/WNDSupWorkSelectShopTaskSet")
+end
+
+-- local function on_subtasklist_grp_ent_btnbutton_click(btn)
+-- 	local index = tonumber(btn.transform.parent.name:sub(4))
+
+-- 	Ref.SubTaskList.Grp:dup(#NewTaskList,function (i,Ent,IsNew)
+-- 		Ent.TaskConcent.text = "无任务"
+-- 	end)
+-- 	UI_DATA.WNDSupWorkSelectShopTask.TaskList=NewTaskList
+-- 	print("点击按钮"..btn.transform.parent.name)
+-- 	UI_DATA.WNDSupWorkSelectShopTask.index=tonumber(btn.transform.parent.name:sub(4))
+-- 	--UI_DATA.WNDSupWorkSelectShopTaskSetSelPeople.PersonListForUpdate=TaskListUI_DATA.WNDSupWorkSelectShopTask.index
+-- 	-- print("UI_DATA.WNDSupWorkSelectShopTask.index"..tostring(UI_DATA.WNDSupWorkSelectShopTask.index))
+-- 	-- print("name"..UI_DATA.WNDSupWorkSelectShopTask.PersonList[1].name)
+-- 	if ThisWeek then
+-- 		UI_DATA.WNDSupWorkSelectShopTaskSet.data = WeekList[index].data
+-- 	else
+-- 		UI_DATA.WNDSupWorkSelectShopTaskSet.data = NextWeekList[index].data
+-- 	end
+-- 	UI_DATA.WNDSupWorkSelectShopTask.ThisWeek = ThisWeek
+-- 	UIMGR.create_window("UI/WNDSupWorkSelectShopTaskSet")
+-- end
+
+
+
+
+
+local function on_date_init()
+	--local WorkDay = DY_DATA.WorkDay
+-- Ref.SubTaskList.Grp:dup(#WorkDay,function (i,Ent,IsNew)
+
+-- 	end)
+	-- body
+end
+
 local function init_view()
 	Ref.SubTop.btnBack.onAction = on_subtop_btnback_click
 	Ref.SubTop.NextWeek.onAction = on_subtop_nextweek_click
-	Ref.SubTaskList.Grp.Ent.btnButton.onAction = on_subtasklist_grp_ent_btnbutton_click
+	Ref.SubTaskList.Grp.Ent.SubNone.btnButton.onAction = on_subtasklist_grp_ent_subnone_btnbutton_click
+	Ref.SubTaskList.Grp.Ent.SubTask.btnButton.onAction = on_subtasklist_grp_ent_subtask_btnbutton_click
 	UIMGR.make_group(Ref.SubTaskList.Grp, function (New, Ent)
-		New.btnButton.onAction = Ent.btnButton.onAction
-		end)
+		New.SubNone.btnButton.onAction = Ent.SubNone.btnButton.onAction
+		New.SubTask.btnButton.onAction = Ent.SubTask.btnButton.onAction
+	end)
 	--!*以上：自动注册的回调函数*--
 end
-
 
 local function init_logic()
 	if UI_DATA.WNDSupWorkSelectShopTask.ThisWeek ~= nil then
@@ -309,6 +384,8 @@ local function init_logic()
 	--end)
 end
 
+
+
 local function start(self)
 	if Ref == nil or Ref.root ~= self then
 		Ref = libugui.GenLuaTable(self, "root")
@@ -326,9 +403,9 @@ local function on_recycle()
 end
 
 local P = {
-start = start,
-update_view = update_view,
-on_recycle = on_recycle,
+	start = start,
+	update_view = update_view,
+	on_recycle = on_recycle,
 }
 return P
 

@@ -43,8 +43,10 @@ local function on_ui_init(cityid)
 		end
 	end
 	Ref.SubStore.GrpStore:dup(#TempStoreList, function ( i, Ent, isNew)
+		local TEXT = _G.ENV.TEXT
 		local Store = TempStoreList[i]
 		Ent.lbName.text = Store.name
+		Ent.StoreState.text = TEXT.StoreState[tonumber(Store.takeorupload)]
 		UIMGR.get_photo(Ent.spIcon, Store.icon)
 
 	end)

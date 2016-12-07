@@ -54,6 +54,8 @@ NW.regist("ATTENCE.SC.BEDEMOBILIZED", common_op_ret_userinfo)
 
 NW.regist("ATTENCE.SC.FUGANG", common_op_ret_userinfo)
 
+NW.regist("ATTENCE.SC.SALESLEAVE", common_op_ret_suc)
+
 NW.regist("ATTENCE.SC.LEAVE", common_op_ret_userinfo)
 
 NW.regist("ATTENCE.SC.VERIFYLATLNG", function (nm)
@@ -109,6 +111,8 @@ NW.regist("WORK.SC.DELETEASS", common_op_ret_suc)
 NW.regist("MESSAGE.SC.SENDMESSAGE", common_op_ret_suc)
 
 NW.regist("MESSAGE.SC.UPSTATU", common_op_ret_suc)
+
+NW.regist("MESSAGE.SC.LEAVEAUDIT", common_op_ret_suc)
 
 NW.regist("REPORTED.SC.GETSUPUPLOADFEEDBACK", common_op_ret_suc)
 

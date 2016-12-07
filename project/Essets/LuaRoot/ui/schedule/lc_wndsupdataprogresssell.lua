@@ -89,8 +89,8 @@ local function on_proaggregate_init()
 		-- value -- 
 		Ref.SubSale.SubMask.GrpList:dup(#ProAggregateList, function ( i, Ent, isNew)
 			Ent.lbName.text = ProAggregateList[i].name
-			Ent.lbValue.text = "总销量： " ..  ProAggregateList[i].value .. " 元"
-			Ent.lbPrice.text = "销售价： " ..  ProAggregateList[i].price .. " 元"
+			Ent.lbValue.text = "总销量： <size=30>" ..  ProAggregateList[i].value .. "</size> 元"
+			Ent.lbPrice.text = "销售价： <size=30> "..  ProAggregateList[i].price .. "</size> 元"
 			Ent.lbNumber.text = ""
 			Ent.lbPer.text = ""
 		end)

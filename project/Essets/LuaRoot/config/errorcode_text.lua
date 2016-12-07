@@ -32,6 +32,9 @@ return {
 	{OP="Default",ID=1030,Info="无任务",},
 	{OP="Default",ID=1031,Info="未上报进度",},
 	{OP="Default",ID=1032,Info="离岗编号不对",},
+	{OP="Default",ID=1033,Info="无进度数据",},
+	{OP="Default",ID=1034,Info="任务号不存在",},
+	{OP="Default",ID=1035,Info="任务已请假成功",},
 
 	
 	{OP="Default",ID=2001,Info="上传出错",},

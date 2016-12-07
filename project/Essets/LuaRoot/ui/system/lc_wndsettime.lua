@@ -142,9 +142,11 @@ local function on_subbtm_btnconfirm_click(btn)
 		return
 	end
 	if Task ~= nil then
-		if tonumber(Time.minute) <= tonumber(TaskData.minute) then
-			_G.UI.Toast:make(nil, "下发任务结束时间不得早于开始时间"):show()
-			return
+		if tonumber(Time.hour) == tonumber(TaskData.hour) then
+			if tonumber(Time.minute) <= tonumber(TaskData.minute) then
+				_G.UI.Toast:make(nil, "下发任务结束时间不得早于开始时间"):show()
+				return
+			end
 		end
 	end
 	if tonumber(Time.minute) < 0 or tonumber(Time.minute) > 60 then

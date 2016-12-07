@@ -52,6 +52,19 @@ return {
 
 
     },
+    TaskState = {
+
+        [1] = "未开始",
+        [2] = "进行中",
+        [3] = "已结束",
+    },
+
+    StoreState = {
+        [1] = "未开店",
+        [2] = "开店中",
+        [3] = "已结束",
+
+    },
     fmtDownloadException = "下载异常： %s",
     tipNotImplemented = "~功能未实现~",
     tipExepction = "异常",

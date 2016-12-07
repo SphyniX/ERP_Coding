@@ -76,14 +76,25 @@ local function on_subphoto_grpphoto_entphoto_click(btn)
 	NowNumber = tonumber(btn.name:sub(9))
 	NowBtn = Ref.SubPhoto.GrpPhoto.Ents[tonumber(btn.name:sub(9))]
 	local tex = NowBtn.spPhoto
+	if DY_DATA.User.Limit == 1 then
+		
+		UIMGR.on_sdk_take_photo(name, tex, function (succ, name, image)
+			if succ then
+				on_take_photo_call_back(image)
+			else
+		
+			end
+		end)
+	else
+		UIMGR.on_sdk_take_photo_selecttype(name, tex, "nottakephoto" , function (succ, name, image)
+			if succ then
+				on_take_photo_call_back(image)
+			else
+		
+			end
+		end)
+	end
 
-	UIMGR.on_sdk_take_photo(name, tex, function (succ, name, image)
-		if succ then
-			on_take_photo_call_back(image)
-		else
-	
-		end
-	end)
 	-- test ---
 	UIMGR.load_photo(tex, name, function (succ, name, image)
 		if succ then

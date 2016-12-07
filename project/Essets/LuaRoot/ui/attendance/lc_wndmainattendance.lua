@@ -31,6 +31,50 @@ local AttendanceList
 local on_project_init
 
 local punch_type -- 1 上班， 2 下班
+
+on_project_init = function ()
+	if projectId == nil then
+		Ref.SubMain.SubProject.lbText.text = "请选择项目"
+		Ref.SubMain.SubAttOn.lbText.text = ""
+		Ref.SubMain.SubAttOff.lbText.text = ""
+		return
+	end
+	
+	local AttendanceProject = AttendanceList[projectId]
+	print("AttendanceProject in MainAttance :" .. JSON:encode(AttendanceProject))
+	Assignmentid = AttendanceProject.Assignmentid
+	Ref.SubMain.SubProject.lbText.text = AttendanceProject.name
+	Ref.SubMain.SubAttOn.lbText.text = AttendanceProject.starttime
+	Ref.SubMain.SubAttOff.lbText.text = AttendanceProject.endtime
+end
+
+local function on_ui_init()
+	-- Ref.SubMain.SubTime.lbTime.text = libsystem.DateTime()
+	-- Ref.SubMain.SubTime.lbDay.text = ""
+	-- projectId = nil
+	local User = DY_DATA.User
+	if User.workstate == 1 then
+		Ref.SubMain.SubLeave.btnButton:SetInteractable(false)
+		Ref.SubMain.SubLeave.lbText.text = "离岗"
+	elseif User.workstate == 2 then
+		Ref.SubMain.SubLeave.btnButton:SetInteractable(true)
+		Assignmentid = User.taskid
+		Ref.SubMain.SubLeave.lbText.text = "离岗"
+	elseif User.workstate == 3 then
+		Ref.SubMain.SubLeave.btnButton:SetInteractable(true)
+		Assignmentid = User.taskid
+		Ref.SubMain.SubLeave.lbText.text = "复岗"
+	end
+
+	if User.workstate ~= 1 then
+		Ref.SubMain.SubProject.lbText.text = User.projectName
+		Ref.SubMain.SubAttOn.lbText.text = User.starttime
+		Ref.SubMain.SubAttOff.lbText.text = User.endtime
+	else
+		on_project_init()
+	end
+end
+
 local function on_msg_init()
 	if DY_DATA.MsgList == nil then
 		local nm = NW.msg("MESSAGE.CS.GETMESSAGELIST")
@@ -74,8 +118,12 @@ end
 
 local function on_submain_subproject_click(btn)
 	-- 选择项目
-	UI_DATA.WNDSelectProject.on_call_back = on_select_project
-	UIMGR.create_window("UI/WNDSelectProject")
+	if DY_DATA.User.workstate ~= 1 then
+		_G.UI.Toast:make(nil, "当前有任务进行中！"):show()
+	else
+		UI_DATA.WNDSelectProject.on_call_back = on_select_project
+		UIMGR.create_window("UI/WNDSelectProject")
+	end
 end
 
 local function on_submain_subatton_btnbutton_click(btn)
@@ -156,47 +204,9 @@ local function on_subbtm_btnuser_click(btn)
 	UIMGR.create_window("UI/WNDMainUser")
 end
 
-on_project_init = function ()
-	if projectId == nil then
-		Ref.SubMain.SubProject.lbText.text = "请选择项目"
-		Ref.SubMain.SubAttOn.lbText.text = ""
-		Ref.SubMain.SubAttOff.lbText.text = ""
-		return
-	end
-	local AttendanceProject = AttendanceList[projectId]
-	print("AttendanceProject in MainAttance :" .. JSON:encode(AttendanceProject))
-	Assignmentid = AttendanceProject.Assignmentid
-	Ref.SubMain.SubProject.lbText.text = AttendanceProject.name
-	Ref.SubMain.SubAttOn.lbText.text = AttendanceProject.starttime
-	Ref.SubMain.SubAttOff.lbText.text = AttendanceProject.endtime
-end
 
-local function on_ui_init()
-	-- Ref.SubMain.SubTime.lbTime.text = libsystem.DateTime()
-	-- Ref.SubMain.SubTime.lbDay.text = ""
 
-	local User = DY_DATA.User
-	if User.workstate == 1 then
-		Ref.SubMain.SubLeave.btnButton:SetInteractable(false)
-		Ref.SubMain.SubLeave.lbText.text = "离岗"
-	elseif User.workstate == 2 then
-		Ref.SubMain.SubLeave.btnButton:SetInteractable(true)
-		Assignmentid = User.taskid
-		Ref.SubMain.SubLeave.lbText.text = "离岗"
-	elseif User.workstate == 3 then
-		Ref.SubMain.SubLeave.btnButton:SetInteractable(true)
-		Assignmentid = User.taskid
-		Ref.SubMain.SubLeave.lbText.text = "复岗"
-	end
 
-	if User.workstate ~= 1 then
-		Ref.SubMain.SubProject.lbText.text = User.projectName
-		Ref.SubMain.SubAttOn.lbText.text = User.starttime
-		Ref.SubMain.SubAttOff.lbText.text = User.endtime
-	else
-		on_project_init()
-	end
-end
 
 local function init_view()
 	Ref.SubMain.SubProject.btn.onAction = on_submain_subproject_click

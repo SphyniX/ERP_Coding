@@ -34,7 +34,7 @@ local function on_subtop_btnclear_click(btn)
 	Ref.SubMain.Grp:dup(#SampleList, function (i, Ent, isNew)
 	
 		Ent.lbVolume.text = "   " .. SampleList[i].per
-		Ent.lbNumber.text = "   " .. "次"
+		Ent.lbNumber.text = "   " .. "次" 
 
 	end)
 end
@@ -47,8 +47,8 @@ local function on_subset_btnsubmit_click(btn)
 
 	Ref.SubMain.Grp:dup(#SampleList, function (i, Ent, isNew)
 		if i == NowEnt then 
-			Ent.lbVolume.text = Ref.SubSet.inpVolume.text .. SampleList[i].per
-			Ent.lbNumber.text = Ref.SubSet.inpNumber.text .. "次"
+			Ent.lbVolume.text =  "<size=36>" .. Ref.SubSet.inpVolume.text.. "</size>" .. SampleList[i].per 
+			Ent.lbNumber.text =  "<size=36>" .. Ref.SubSet.inpNumber.text.. "</size>" .."次" 
 			Ref.SubSet.inpVolume.text = nil
 			Ref.SubSet.inpNumber.text = nil
 		end
@@ -68,9 +68,10 @@ local function on_btnsave_click(btn)
 		local id = SampleList[i].id
 		local value = Ent.lbVolume.text:sub(1,string.len(Ent.lbVolume.text)-3)
 		local number = Ent.lbNumber.text:sub(1,string.len(Ent.lbNumber.text)-3)
-		table.insert(ProductListForUpdate,{id = id ,value =value,number = number})
-
-		end)
+		if value ~= "   " then
+			table.insert(ProductListForUpdate,{id = id ,value =value,number = number})
+		end
+	end)
 	UI_DATA.WNDSubmitSchedule.ProductListForetaste = ProductListForUpdate
 
 	UIMGR.close_window(Ref.root)
@@ -98,8 +99,8 @@ local function on_ui_init()
 	Ref.SubMain.Grp:dup(#SampleList, function (i, Ent, isNew)
 		local Sample = SampleList[i]
 		Ent.lbName.text = Sample.name
-		Ent.lbVolume.text = "   " .. Sample.per
-		Ent.lbNumber.text = "   " .. "次"
+		Ent.lbVolume.text = "   " .. Sample.per 
+		Ent.lbNumber.text = "   ".. "次"
 	end)
 	ProductListForUpdate = UI_DATA.WNDSubmitSchedule.ProductListForetaste
 
@@ -108,8 +109,8 @@ local function on_ui_init()
 		Ref.SubMain.Grp:dup(#SampleList, function (i, Ent, isNew)
 			local Sample = SampleList[i]
 			-- Ent.lbName.text = Sample.name
-			Ent.lbVolume.text = ProductListForUpdate[i].value .. Sample.per
-			Ent.lbNumber.text = ProductListForUpdate[i].number .. "次"
+			Ent.lbVolume.text = "<size=36>" .. ProductListForUpdate[i].value .. "</size>" .. Sample.per
+			Ent.lbNumber.text = "<size=36>" .. ProductListForUpdate[i].number .. "</size>" .. "次"
 		end)
 	end
 end

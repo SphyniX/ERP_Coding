@@ -42,6 +42,7 @@ WNDSUPSENDEESELECT={},
 WNDsupmsgData={},
 WNDSupWork={},
 WNDAttLeave = {},
+WNDAttUnder = {},
 WNDSupDataProgerssComData = {},
 WNDSupDataGoodAnalysis = {},
 WNDSupSelectStore = {},
@@ -51,9 +52,10 @@ WNDsupWorkSelectShop = {},
 WNDSupWorkSelectShopTask={},
 WNDSupWorkSelectShopTaskSet={},
 WNDSupWorkSelectShopTaskSetSelPeople = {},
-
+WNDSupAskOffMag = {},
 WNDsupShopSelect = {},
 WNDsupShopSelectPunch = {},
+WNDAskOffMag = {},
 
 }
 

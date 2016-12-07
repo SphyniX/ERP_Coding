@@ -41,7 +41,7 @@ local function on_ui_init(brandid)
 	Ref.SubProject.GrpProject:dup(#TempSchProjectList, function (i, Ent, isNew)
 		local Project = TempSchProjectList[i]
 		Ent.SubWorkProject.lbText.text = Project.name
-		UIMGR.get_photo(Ent.spIcon, Project.icon)
+		UIMGR.get_photo(Ent.SubWorkProject.spIcon, Project.icon)
 	end)
 end
 
