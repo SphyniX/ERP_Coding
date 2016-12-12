@@ -34,6 +34,17 @@ local function on_subtop_btnback_click(btn)
 	UIMGR.close_window(Ref.root)
 end
 
+local function on_upload_photo_callback(Ret)
+
+	if Ret.ret == 1 then
+		_G.UI.Toast:make(nil, "成功"):show()
+	end
+end
+
+local function on_take_photo_call_back(image)
+
+	LOGIN.try_uploadphotoforreport(DY_DATA.User.id,image,on_upload_photo_callback)
+end 
 
 local function on_ui_init()
 	local projectId = UI_DATA.WNDSelectStore.projectId
@@ -66,6 +77,19 @@ local function init_view()
 end
 
 local function init_logic()
+	print("初始化店铺")
+	UI_DATA.WNDSubmitSchedule.WNDSubmitPhotoForReportNWStata = false
+	UI_DATA.WNDSubmitSchedule.WNDSetPromoteInfoNWStata = false
+	UI_DATA.WNDSubmitSchedule.ProductListForetasteNWStata = false
+	UI_DATA.WNDSubmitSchedule.ProductListGiftNWStata = false
+	UI_DATA.WNDSubmitSchedule.WNDSetComProductNWStata = false
+	UI_DATA.WNDSubmitSchedule.WNDSetSuppliesNWStata = false
+	UI_DATA.WNDSubmitSchedule.WNDSetInforNWStata = false
+	UI_DATA.WNDSubmitSchedule.DataInitStata = false   -------控制进度界面初始化第一次
+
+--
+
+
 	NW.subscribe("WORK.SC.GETSTORE", on_ui_init)
 	local projectId = UI_DATA.WNDSelectStore.projectId
 	local Project = DY_DATA.SchProjectList[projectId]

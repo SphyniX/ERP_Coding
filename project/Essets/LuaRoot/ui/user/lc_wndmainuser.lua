@@ -119,6 +119,8 @@ end
 
 local function on_submain_btnlogout_click(btn)
 	_G.PKG["libmgr/login"].do_logout()
+	UIMGR.close("UI/WNDMsgHint") 
+	
 end
 
 local function on_subbtm_btnatt_click(btn)
@@ -167,6 +169,7 @@ local function init_view()
 end
 
 local function init_logic()
+	UI_DATA.WNDMsgHint.state = true
 	on_ui_init()
 	NW.subscribe("USER.SC.GETUSERINFOR", on_ui_init)
 	NW.subscribe("MESSAGE.SC.GETMESSAGELIST",on_msg_init)
@@ -185,7 +188,7 @@ local function update_view()
 end
 
 local function on_recycle()
-	
+	UI_DATA.WNDMsgHint.state = false
 	NW.unsubscribe("USER.SC.GETUSERINFOR", on_ui_init)
 	NW.unsubscribe("MESSAGE.SC.GETMESSAGELIST",on_msg_init)
 end

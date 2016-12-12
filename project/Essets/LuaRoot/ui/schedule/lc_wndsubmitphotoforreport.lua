@@ -24,13 +24,31 @@ local NowBtn
 local NowNumber
 --!*以下：自动生成的回调函数*--
 
-local function on_ui_init()
+local function on_ui_init(NWStata)
+	UI_DATA.WNDSubmitSchedule.WNDSubmitPhotoForReportNWStata=NWStata
 	local projectId
 	if DY_DATA.User.limit == 1 then
 		projectId = UI_DATA.WNDSubmitSchedule.projectId
 	else
 		projectId = UI_DATA.WNDSupStoreData.projectId
 	end
+
+	-- PhotoListInit = DY_DATA.WNDSubmitScheduleData.SchedulePhoto
+	-- print("PhotoList in WNDSubmitPhotoForReport is " .. JSON:encode(PhotoList))
+	-- Ref.SubPhoto.GrpPhoto:dup(#PhotoList, function (i, Ent, isNew)
+	-- 	local Photo = PhotoList[i]
+
+	-- 	if Photo.state == 1 then 
+	-- 		Ent.lbTitle.text = Photo.name
+	-- 		print("Photo.icon----------"..tostring(Photo.icon))
+	-- 		UIMGR.get_photo(Ent.spIcon, Photo.icon)
+	-- 	else
+	-- 		libunity.SetActive(Ent.spState,false)
+	-- 	end
+	-- 	libunity.SetActive(Ent.spIfsucc,false)
+	-- end)
+
+
 	PhotoList = DY_DATA.SchProjectList[projectId].SellPhoto
 	print("PhotoList in WNDSubmitPhotoForReport is " .. JSON:encode(PhotoList))
 	Ref.SubPhoto.GrpPhoto:dup(#PhotoList, function (i, Ent, isNew)
@@ -48,7 +66,7 @@ local function on_ui_init()
 end
 
 local function on_upload_photo_callback(Ret)
-
+		print("on_upload_photo_callbackPhotoForUpdate------------")
 	
 	if Ret.ret == 1 then
 		libunity.SetActive(NowBtn.spIfsucc,true)
@@ -57,6 +75,7 @@ local function on_upload_photo_callback(Ret)
 			photo = Ret.photoid[1],
 			state = PhotoList[NowNumber].state,
 		}
+		print("PhotoForUpdate------------"..PhotoForUpdate.state)
 		table.insert(PhotoListForUpdate,PhotoForUpdate)
 		_G.UI.Toast:make(nil, "成功"):show()
 	end
@@ -124,7 +143,7 @@ local function on_subtop_btnsave_click(btn)
 			nowtrue = nowtrue + 1
 		end
 	end
-
+	print("need/nowtrue"..tostring(need).."/"..tostring(nowtrue))
 	if need ~= nowtrue then 
 		_G.UI.Toast:make(nil, "必打图片缺少，请检查！"):show()
 		return
@@ -155,9 +174,11 @@ local function init_view()
 	end)
 	--!*以上：自动注册的回调函数*--
 end
-
+local function on_ui_initBack()
+		on_ui_init(true)
+end
 local function init_logic()
-	NW.subscribe("WORK.SC.GETSELLPHOTO",on_ui_init)
+	NW.subscribe("WORK.SC.GETSELLPHOTO",on_ui_initBack)
 	NW.subscribe("WORK.SC.GETSUPPHOTO",on_ui_init)
 	PhotoListForUpdate = {}
 	local projectId
@@ -180,7 +201,7 @@ local function init_logic()
 			return
 		end
 	end
-	on_ui_init()
+	on_ui_init(false)
 
 
 end

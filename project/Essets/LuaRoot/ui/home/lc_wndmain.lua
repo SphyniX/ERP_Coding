@@ -23,6 +23,7 @@ MERequire "datamgr/dydataop"
 
 local function on_sc_entergame(Ret)
 	_G.UI.Waiting.hide()
+
 	local limit = DY_DATA.User.limit
 
 	if limit == 1 then
@@ -89,12 +90,16 @@ local function on_btnregisted_click(btn)
 end
 --判断用户类型
 local function on_ui_init()
+	UIMGR.create("UI/WNDMsgHint")     -----加载红点界面
+	UI_DATA.WNDMsgHint.state = false   ----初始化消息红点是否显示
+
 	if _G.Debug then
 		local id = DY_DATA.User.id
 		MERequire "datamgr/localdata.lua"
 		DY_DATA.User.id = id
 		if id == 1 then
 			UIMGR.create_window("UI/WNDMainAttendance")
+
 		elseif id == 2 then
 			UIMGR.create_window("UI/WNDSupAttendance")
 		elseif id == 3 then

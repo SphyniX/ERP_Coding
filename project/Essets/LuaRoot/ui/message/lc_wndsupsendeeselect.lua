@@ -131,7 +131,7 @@ local function on_editor_click(btn)
 	
 end
 local function on_ui_init()
-		local LowerList = DY_DATA.LowerList
+	local LowerList = UI_DATA.WNDSUPSENDEESELECT.LowerList
 	print("JSON"..JSON:encode(LowerList))
 	print("size"..tostring(#LowerList))
 
@@ -184,20 +184,25 @@ end
 
 local function init_logic()
 	---UI_DATA.WNDSUPSENDEESELECT={}
-	NW.subscribe("MESSAGE.SC.GETLOWER", on_ui_init)
-	if DY_DATA.LowerList == nil or next(DY_DATA.LowerList) == nil then
-		local nm = NW.msg("MESSAGE.CS.GETLOWER")
-		print("<color=#00ff00>on_ui_init 订阅回调消息</color>")
-		nm:writeU32(DY_DATA.User.id)
-		NW.send(nm)
-	end
+	--MESSAGE.SC.GETLOWER
+
+	on_ui_init()
+	-- NW.subscribe("MESSAGE.SC.GETLOWER", on_ui_init)
+
+	-- if DY_DATA.LowerList == nil or next(DY_DATA.LowerList) == nil then
+	-- 	local nm = NW.msg("MESSAGE.CS.GETLOWER")
+	-- 	nm:writeU32(DY_DATA.User.id)
+	-- 	NW.send(nm)
+	-- 	return
+	-- end
+
 	
-   cityPanel= libunity.FindGameObject(nil,"/UIROOT/UICanvas/WNDSupSendeeSelect/SubCity")
-   if cityPanel then
-    libunity.SetActive(cityPanel, false)
-    else
-    print("未找到城市界面")
-    end
+   -- cityPanel= libunity.FindGameObject(nil,"/UIROOT/UICanvas/WNDSupSendeeSelect/SubCity")
+   -- if cityPanel then
+   --  libunity.SetActive(cityPanel, false)
+   --  else
+   --  print("未找到城市界面")
+   --  end
 end
 
 local function start(self)

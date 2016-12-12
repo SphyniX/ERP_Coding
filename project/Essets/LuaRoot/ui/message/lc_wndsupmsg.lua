@@ -191,20 +191,31 @@ local function on_ui_init()
 		libunity.SetActive(Ref.SubMsg.spNil, true)
 		return 
 	else
-		print("<color=#00ff00>获取信息数据成功</color>")
+		print("<color=#00ff00>获取信息数据成功---</color>")
 
 	end
 
 	print(#MsgList)
 	local LowerList = DY_DATA.LowerList
+	if LowerList ~=nil and next(LowerList) ~=nil then
+	UI_DATA.WNDSUPSENDEESELECT.LowerList=LowerList
+	else
+		UI_DATA.WNDSUPSENDEESELECT.LowerList={}
+	end
 	print(JSON:encode(LowerList))
-	print(#MsgList)
+	print("Length"..#MsgList)
+	print("<color=#00ff00>获取信息数据成功------------</color>"..tostring(#MsgList))
 	Ref.SubMsg.Grp:dup( #MsgList, function (i, Ent, isNew)
 		local Msg = MsgList[i]
 		print(JSON:encode(Msg))
 		print(" Msg people ")
 		print(Msg.people)
 		print(JSON:encode(LowerList[Msg.people]))
+		if tonumber(Msg.state) == 1 then
+			libunity.SetActive(Ref.SubContext.spTip, true)
+		else
+			libunity.SetActive(Ref.SubContext.spTip, false)
+		end
 		local obj = libunity.FindGameObject(Ent.SubContext,"btnContext")
 		if obj then
 			obj.name=tostring(i);
@@ -259,6 +270,7 @@ local function init_view()
 end
 
 local function init_logic()
+		UI_DATA.WNDMsgHint.state = true
 	NW.subscribe("MESSAGE.SC.GETMESSAGELIST", on_ui_init)
 	NW.subscribe("MESSAGE.SC.GETLOWER", on_ui_init)
 
@@ -270,6 +282,13 @@ local function init_logic()
 		NW.send(nm)
 		return
 	end
+
+	-- if DY_DATA.LowerList == nil or next(DY_DATA.LowerList) == nil then
+	-- 	local nm = NW.msg("MESSAGE.CS.GETMESSAGELIST")
+	-- 	nm:writeU32(DY_DATA.User.id)
+	-- 	NW.send(nm)
+	-- 	return
+	-- end
 	on_ui_init()
 end
 
@@ -286,6 +305,7 @@ local function update_view()
 end
 
 local function on_recycle()
+		UI_DATA.WNDMsgHint.state = false
 	NW.unsubscribe("MESSAGE.SC.GETMESSAGELIST", on_ui_init)
 	NW.unsubscribe("MESSAGE.SC.GETLOWER", on_ui_init)
 end

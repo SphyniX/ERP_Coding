@@ -153,6 +153,9 @@ local function on_substate_btnback_click(btn)
 end
 
 local function on_btnsave_click(btn)
+	if not UI_DATA.WNDSubmitSchedule.WNDSetSuppliesNWStata then
+		_G.UI.Toast:make(nil, "网络请求失败，请重新登陆"):show()
+	end
 	MaterListForUpdate = {}
 
 	Ref.SubMain.Grp:dup(#MaterList, function (i, Ent, isNew)
@@ -185,7 +188,9 @@ local function on_submain_grp_btnsave_click(btn)
 	UIMGR.close_window(Ref.root)
 end
 
-local function on_ui_init()
+local function on_ui_init(NWStata)
+	print("on_ui_init--"..tostring(NWStata))
+	UI_DATA.WNDSubmitSchedule.WNDSetSuppliesNWStata=NWStata
 	local projectId = UI_DATA.WNDSubmitSchedule.projectId
 	local storeId = UI_DATA.WNDSubmitSchedule.storeId
 
@@ -215,27 +220,30 @@ local function init_view()
 	Ref.SubState.btnBack.onAction = on_substate_btnback_click
 	Ref.btnSave.onAction = on_btnsave_click
 	UIMGR.make_group(Ref.SubMain.Grp, function (New, Ent)
+		UI_DATA.WNDSubmitSchedule.WNDSetSuppliesNWStata=NWStata
 		New.btnState.onAction = Ent.btnState.onAction
 		New.btnPhoto.onAction = Ent.btnPhoto.onAction
 	end)
 	--!*以上：自动注册的回调函数*--
 end
-
+local function on_ui_initBack()
+		on_ui_init(true)
+end
 local function init_logic()
-	NW.subscribe("WORK.SC.GETMATER", on_ui_init)
+	NW.subscribe("WORK.SC.GETMATER", on_ui_initBack)
 	libunity.SetActive(Ref.SubState.root, false)
 
 	local projectId = UI_DATA.WNDSubmitSchedule.projectId
 	local storeId = UI_DATA.WNDSubmitSchedule.storeId
 
 	local Project = DY_DATA.SchProjectList[projectId]
-	if Project.MaterList == nil then
+	if Project.MaterList == nil or next(Project.MaterList) == nil then
 		local nm = NW.msg("WORK.CS.GETMATER")
 		nm:writeU32(projectId)
 		NW.send(nm)
 		return
 	end
-	on_ui_init()
+	on_ui_init(false)
 end
 
 local function start(self)

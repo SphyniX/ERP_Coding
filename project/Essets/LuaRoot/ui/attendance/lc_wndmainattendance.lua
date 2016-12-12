@@ -83,14 +83,14 @@ local function on_msg_init()
 		return
 	end
 	local MsgList = DY_DATA.MsgList
-	if MsgList ~= nil then 
-		if #MsgList ~= 0 then
-			libunity.SetActive(Ref.SubBtm.SetRed, true)
-		else
-			libunity.SetActive(Ref.SubBtm.SetRed, false)
-		end
+	-- if MsgList ~= nil then 
+	-- 	if #MsgList ~= 0 and next(MsgList) ~=nil then
+	-- 		libunity.SetActive(Ref.SubBtm.SetRed, true)
+	-- 	else
+	-- 		libunity.SetActive(Ref.SubBtm.SetRed, false)
+	-- 	end
 	
-	end
+	-- end
 
 	-- body
 end
@@ -250,6 +250,7 @@ local function refreshtime()
 end
 
 local function init_logic()
+	UI_DATA.WNDMsgHint.state = true
 	on_msg_init()
 	print("Test DY_DATA.ProjectList is :"  .. JSON:encode(DY_DATA.ProjectList))
 	DY_DATA.Work.NowTime = nil
@@ -307,6 +308,7 @@ local function update_view()
 end
 
 local function on_recycle()
+	UI_DATA.WNDMsgHint.state = false
 	NW.unsubscribe("ATTENCE.SC.VERIFYLATLNG", on_try_punch)
 	NW.unsubscribe("USER.SC.GETUSERINFOR", on_ui_init)
 	NW.unsubscribe("MESSAGE.SC.GETMESSAGELIST",on_msg_init)

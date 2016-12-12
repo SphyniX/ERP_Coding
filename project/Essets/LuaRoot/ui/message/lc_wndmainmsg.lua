@@ -22,14 +22,7 @@ local function on_ui_init()
 		return 
 	end
 	libunity.SetActive(Ref.SubMsg.spNil, #MsgList == 0)
-	if MsgList ~= nil then 
-		if #MsgList ~= 0 then
-			libunity.SetActive(Ref.SubBtm.SetRed, true)
-		else
-			libunity.SetActive(Ref.SubBtm.SetRed, false)
-		end
 	
-	end	
 	local LowerList = DY_DATA.LowerList
 	print("LowerList :"..JSON:encode(LowerList))
 	
@@ -48,6 +41,13 @@ local function on_ui_init()
 				end
 			end
 		end
+
+		if tonumber(Msg.state) == 1 then
+			libunity.SetActive(Ent.SubContext.spTip, true)
+		else
+			libunity.SetActive(Ent.SubContext.spTip, false)
+		end
+
 		Ent.SubContext.lbText.text = Msg.context
 		Ent.SubContext.lbTime.text = Msg.time:sub(0,8)
 		Ent.SubContext.lbDay.text = Msg.day
@@ -80,7 +80,7 @@ local function on_submsg_grpmsg_entmsg_subcontext_btncontext_click(btn)
 	local index = tonumber(btn.transform.parent.parent.name:sub(7))
 	local MsgList = DY_DATA.MsgList
 	local Msg = MsgList[index]
-	if Msg.state == 1 then
+	if tonumber(Msg.state) == 1 then
 		local nm = NW.msg("MESSAGE.CS.UPSTATU")
 		nm:writeU32(Msg.id)
 		NW.send(nm)
@@ -136,9 +136,10 @@ local function init_view()
 end
 
 local function init_logic()
+	UI_DATA.WNDMsgHint.state = true
 	NW.subscribe("MESSAGE.SC.GETMESSAGELIST", on_ui_init)
 	-- NW.subscribe("MESSAGE.SC.GETINFOR", on_people_back)
-	NW.subscribe("USER.SC.GETLOWER", on_ui_init)
+	NW.subscribe("MESSAGE.CS.GETLOWER", on_ui_init)
 	if DY_DATA.LowerList == nil or next(DY_DATA.LowerList) == nil then
 		local nm = NW.msg("MESSAGE.CS.GETLOWER")
 		nm:writeU32(DY_DATA.User.id)
@@ -167,6 +168,7 @@ local function update_view()
 end
 
 local function on_recycle()
+	UI_DATA.WNDMsgHint.state = false
 	NW.unsubscribe("MESSAGE.SC.GETMESSAGELIST", on_ui_init)
 	NW.unsubscribe("MESSAGE.SC.GETLOWER", on_ui_init)
 end

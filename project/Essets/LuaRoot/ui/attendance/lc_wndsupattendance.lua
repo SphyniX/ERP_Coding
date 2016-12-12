@@ -394,6 +394,7 @@ local function init_view()
 end
 
 local function init_logic()
+	UI_DATA.WNDMsgHint.state = true
 	NW.subscribe("ATTENCE.SC.VERIFY", on_try_punch)
 	NW.subscribe("USER.SC.GETUSERINFOR", on_ui_init)
 	NW.subscribe("WORK.SC.GETSTORE", on_store_init)
@@ -417,6 +418,7 @@ local function update_view()
 end
 
 local function on_recycle()
+	UI_DATA.WNDMsgHint.state = false
 	NW.unsubscribe("ATTENCE.SC.VERIFY", on_try_punch)
 	NW.unsubscribe("USER.SC.GETUSERINFOR", on_ui_init)
 	NW.unsubscribe("WORK.SC.GETSTORE", on_store_init)

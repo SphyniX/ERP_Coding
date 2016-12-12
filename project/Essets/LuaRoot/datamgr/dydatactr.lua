@@ -934,6 +934,82 @@ local function sc_reported_getproaggregate ( nm )
     DY_DATA.StoreData.ProAggregateList = ProAggregateList
 end
 NW.regist("REPORTED.SC.GETSUPGETPROAGGREGATE",sc_reported_getproaggregate)
+
+
+local function sc_reported_getpersonalrep ( nm )
+    print("请求回调------------------sc_reported_getpersonalrep")
+    local storeState = tonumber(nm:readString())
+    local storeId =  tonumber(nm:readString())
+    if DY_DATA.WNDSubmitScheduleData == nil then DY_DATA.WNDSubmitScheduleData = {} end
+
+    local n = tonumber(nm:readString()) or 0
+    local ProductList = {}
+    for i=1,n do
+        local ProductListUpdate = {
+            Productid = tonumber(nm:readString()),
+            price = tonumber(nm:readString()),
+            volume=tonumber(nm:readString()),
+            value = nm:readString(),
+            
+        }
+        table.insert(ProductList, ProductListUpdate) 
+    end
+ print("请求回调-ProductList-----------------sc_reported_getpersonalrep"..JSON:encode(ProductList))
+    local n = tonumber(nm:readString())  or 0   
+    local ComList = {}
+    for i=1,n do
+        local ComListUpdate = {
+            id = tonumber(nm:readString()),
+            Price = tonumber(nm:readString()),
+            name=nm:readString(),        
+        }
+        local icon = nm:readString()
+        ComListUpdate.icon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
+
+        table.insert(ComList, ComListUpdate) 
+    end
+
+    local n = tonumber(nm:readString()) or 0
+    local MaterList = {}
+    for i=1,n do
+        local MaterListUpdate = {
+            id = tonumber(nm:readString()),
+            state = nm:readString(),
+            discribe=nm:readString(),
+            
+        }
+        local icon = nm:readString()
+        MaterListUpdate.photo = icon ~= nil and icon ~= "nil" and icon..".png" or nil
+
+        table.insert(MaterList, MaterListUpdate) 
+    end
+
+    local n = tonumber(nm:readString()) or 0
+    local SchedulePhoto = {}
+    for i=1,n do
+        local SchedulePhotoUpdate = {
+            productPhotoid = tonumber(nm:readString()),
+            PhotoId = tonumber(nm:readString()),
+        }
+        local icon = nm:readString()
+        SchedulePhotoUpdate.productIcon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
+
+        icon = nm:readString()
+        SchedulePhotoUpdate.PhotoIcon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
+
+        table.insert(SchedulePhoto, SchedulePhotoUpdate) 
+    end
+    local Infor = nm:readString()
+
+    DY_DATA.WNDSubmitScheduleData.ProductList = ProductList
+    DY_DATA.WNDSubmitScheduleData.ComList = ComList
+    DY_DATA.WNDSubmitScheduleData.MaterList = MaterList
+    DY_DATA.WNDSubmitScheduleData.SchedulePhoto = SchedulePhoto
+    DY_DATA.WNDSubmitScheduleData.Infor = Infor
+    print("<color=#EEB422>REPORTED.SC.GETPERSONALREP------ is :" .. JSON:encode(DY_DATA.WNDSubmitScheduleData) .. "</color>")
+end
+NW.regist("REPORTED.SC.GETPERSONALREP",sc_reported_getpersonalrep)
+
 --     local act_form = nm:readString()
 --     local act_calendar = nm:readString()
 --     local act_goal = nm:readString()
@@ -1514,6 +1590,7 @@ local function sc_work_getsellphoto(nm)
         local state = tonumber(nm:readString())
         table.insert(SellPhoto, {id = id, name = name,state = state})
     end
+
     Project.SellPhoto = SellPhoto
     print("<color=#EEB422>SellPhoto is :" .. JSON:encode(SellPhoto) .. "</color>")
     print("<color=#EEB422>SellPhoto is :" .. JSON:encode(Project.SellPhoto) .. "</color>")
@@ -1577,7 +1654,7 @@ local function sc_message_getlower(nm)
         People.icon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
 
 
-        print("<color=#EEB422>People is :" .. JSON:encode(People) .. "</color>")
+        print("<color=#EEB422>People is------------ :" .. JSON:encode(People) .. "</color>")
         table.insert(List,People)
     end
 DY_DATA.LowerList = List
@@ -1608,6 +1685,7 @@ for i=1,n do
    end
    DY_DATA.MsgList = List
 end
+print("<color=#00ff00>回调数据MESSAGE.SC.GETMESSAGELIST-yes-</color>"..JSON:encode(DY_DATA.MsgList))
 NW.regist("MESSAGE.SC.GETMESSAGELIST", sc_message_getmessagelist)
 --------------------zzg-add----------------------------------
 local function sc_reported_getsupuploadcomanalysis(nm)

@@ -190,7 +190,7 @@ local function init_view()
 end
 local function init_logic()
 		data = UI_DATA.WNDSupWorkSelectShopTaskSet.data
-		UI_DATA.WNDSupWorkSelectShopTaskSet.data = nil
+		--UI_DATA.WNDSupWorkSelectShopTaskSet.data = nil
 		storeId = UI_DATA.WNDSupWorkSelectShopTask.storeIdtrue
 	    local TaskList = UI_DATA.WNDSupWorkSelectShopTask.TaskList
 	    local Tempn = UI_DATA.WNDSupWorkSelectShopTask.index

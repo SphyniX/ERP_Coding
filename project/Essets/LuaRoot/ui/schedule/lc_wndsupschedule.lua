@@ -111,7 +111,7 @@ local function init_view()
 end
 
 local function init_logic()
-
+	UI_DATA.WNDMsgHint.state = true
 	NW.subscribe("WORK.SC.GETPROJECT", on_ui_init)
 	
 	if DY_DATA.SchProjectLis == nil or next(DY_DATA.SchProjectLis) == nil then
@@ -141,6 +141,7 @@ local function update_view()
 end
 
 local function on_recycle()
+		UI_DATA.WNDMsgHint.state = false
 	NW.unsubscribe("WORK.SC.GETPROJECT",on_ui_init)
 end
 

@@ -56,6 +56,7 @@ WNDSupAskOffMag = {},
 WNDsupShopSelect = {},
 WNDsupShopSelectPunch = {},
 WNDAskOffMag = {},
+WNDMsgHint = {},
 
 }
 

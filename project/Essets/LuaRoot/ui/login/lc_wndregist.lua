@@ -78,7 +78,12 @@ local function on_submain_btnenter_click(btn)
 	UserInfo.name = inpName
 	UserInfo.city = CityChoose
 	UserInfo.supname = inpCode
-	LOGIN.try_bind_supervisor(inpSupname, inpName, inpCode, on_bind_supervisored)
+	if CityChoose ~= nil then
+		LOGIN.try_bind_supervisor(inpSupname, inpName, inpCode, on_bind_supervisored)
+	else
+		_G.UI.Toast:make(nil,"请选择城市"):show()
+		return
+	end
 end
 
 local function on_submain_subselect_btnsave_click(btn)

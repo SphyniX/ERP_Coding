@@ -30,7 +30,7 @@ local function on_msg_init()
 		else
 			libunity.SetActive(Ref.SubBtm.SetRed, false)
 		end
-	
+
 	end
 
 	-- body
@@ -98,6 +98,7 @@ local function init_view()
 end
 
 local function init_logic()
+	UI_DATA.WNDMsgHint.state = true
 	on_msg_init()
 	NW.subscribe("WORK.SC.GETPROJECT", on_ui_init)
 	NW.subscribe("MESSAGE.SC.GETMESSAGELIST",on_msg_init)
@@ -125,6 +126,7 @@ local function update_view()
 end
 
 local function on_recycle()
+	UI_DATA.WNDMsgHint.state = false
 	NW.unsubscribe("WORK.SC.GETPROJECT", on_ui_init)
 	NW.unsubscribe("MESSAGE.SC.GETMESSAGELIST",on_msg_init)
 end

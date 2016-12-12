@@ -36,6 +36,7 @@ do
             SALESLEAVE = ID_BASE + 18,
             GETLEAVEINFOR = ID_BASE + 19,
             GETLEAVELS = ID_BASE + 20,
+            CARDVERIFICATION = ID_BASE + 21,
         }
     end
     function  Funcs.attence_sc()
@@ -136,6 +137,7 @@ do
             GETSUPGUPLOADPHOTO = ID_BASE + 25,
             GETSUPUPLOADFEEDBACK = ID_BASE + 26,
             GETSUPUPLOADCOMANALYSIS = ID_BASE + 27,
+            GETPERSONALREP = ID_BASE + 28,
         }
     end
 
@@ -169,6 +171,7 @@ do
             GETSUPGUPLOADPHOTO = ID_BASE + 25,
             GETSUPUPLOADFEEDBACK = ID_BASE + 26,
             GETSUPUPLOADCOMANALYSIS = ID_BASE + 27,
+            GETPERSONALREP = ID_BASE + 28,
         }
     end
 

@@ -110,7 +110,18 @@ NW.regist("WORK.SC.DELETEASS", common_op_ret_suc)
 
 NW.regist("MESSAGE.SC.SENDMESSAGE", common_op_ret_suc)
 
-NW.regist("MESSAGE.SC.UPSTATU", common_op_ret_suc)
+NW.regist("MESSAGE.SC.UPSTATU", function (nm)
+	local Ret = common_op_ret(nm)
+	if Ret.ret == 1 then
+		-- _G.UI.Toast:make(nil, NW.get_error(Ret.ret)):show()
+		local DY_DATA = MERequire "datamgr/dydata.lua"
+		local NW = MERequire "network/networkmgr"
+		local nm = NW.msg("MESSAGE.CS.GETMESSAGELIST")
+		nm:writeU32(DY_DATA.User.id)
+		NW.send(nm)
+	end
+	return Ret
+end)
 
 NW.regist("MESSAGE.SC.LEAVEAUDIT", common_op_ret_suc)
 

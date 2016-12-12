@@ -63,7 +63,11 @@ local function on_subset_btnback_click(btn)
 end
 
 local function on_btnsave_click(btn)
+	if not UI_DATA.WNDSubmitSchedule.ProductListForetasteNWStata then
+		_G.UI.Toast:make(nil, "网络请求失败，请重新登陆"):show()
+	end
 	ProductListForUpdate = {}
+	print("#SampleList".. tostring(#SampleList) .. JSON:encode(SampleList))
 	Ref.SubMain.Grp:dup(#SampleList, function (i, Ent, isNew)
 		local id = SampleList[i].id
 		local value = Ent.lbVolume.text:sub(1,string.len(Ent.lbVolume.text)-3)
@@ -81,7 +85,10 @@ local function on_submain_grp_btnsave_click(btn)
 	UIMGR.close_window(Ref.root)
 end
 
-local function on_ui_init()
+local function on_ui_init(NWStata)
+	print("回调--------------体验品")
+	UI_DATA.WNDSubmitSchedule.ProductListForetasteNWStata = NWStata
+
 	libunity.SetActive(Ref.SubSet.root,false)
 	local projectId = UI_DATA.WNDSubmitSchedule.projectId
 	local Project = DY_DATA.SchProjectList[projectId]
@@ -127,22 +134,25 @@ local function init_view()
 	end)
 	--!*以上：自动注册的回调函数*--
 end
-
+local function on_ui_initBack()
+		on_ui_init(true)
+end
 local function init_logic()
 
-	NW.subscribe("REPORTED.SC.GETSAMPLE", on_ui_init)
+	
+	NW.subscribe("REPORTED.SC.GETSAMPLE", on_ui_initBack)
 	libunity.SetActive(Ref.SubSet.root, false)
 
 	local projectId = UI_DATA.WNDSubmitSchedule.projectId
 	local Project = DY_DATA.SchProjectList[projectId]
-	if Project == nil then print("Project 为空"..projectId) return end
-	if Project.SampleList == nil then
+	--if Project == nil then print("Project 为空"..projectId) return end
+	if Project.SampleList == nil or next(Project.SampleList) == nil then
 		local nm = NW.msg("REPORTED.CS.GETSAMPLE")
 		nm:writeU32(projectId)
 		NW.send(nm)
 		return
 	end
-	on_ui_init()
+	on_ui_init(false)
 end
 
 local function start(self)

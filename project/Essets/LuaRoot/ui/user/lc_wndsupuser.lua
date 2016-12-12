@@ -105,6 +105,12 @@ local function on_ui_init()
 	local Ref_SubMain = Ref.SubMain
 	
 	local User = DY_DATA.User
+	if User ~= nil and next(User) ~= nil then
+		Ref.SubMain.SubIcon.lbName.text=User.name
+	end
+
+
+
 	--Ref_SubMain.SubAddress.lbText.text =_G.CFG.CityLib.get_city(User.cityid).name
 	--Ref_SubMain.SubPhone.lbText.text = User.phone
 	UIMGR.get_photo(Ref_SubMain.SubIcon.spIcon, User.icon)
@@ -125,6 +131,7 @@ local function init_view()
 end
 
 local function init_logic()
+	UI_DATA.WNDMsgHint.state = true
 	on_ui_init()
 	NW.subscribe("USER.SC.GETUSERINFOR", on_ui_init)
 end
@@ -142,6 +149,7 @@ local function update_view()
 end
 
 local function on_recycle()
+	UI_DATA.WNDMsgHint.state = false
 	NW.unsubscribe("USER.SC.GETUSERINFOR", on_ui_init)
 end
 

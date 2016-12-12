@@ -1,7 +1,7 @@
 //*************************************************************************
 //	创建日期:	2015-9-25
 //	文件名称:	UserAvatarController.mm
-//  创建作者:	Rect 	
+//  创建作者:	Rect
 //	版权所有:	Shadowkobg.com
 //	相关说明:	头像设置 拍照 - 打开相册
 //*************************************************************************
@@ -12,6 +12,10 @@
 #include "UnityAppController.h"
 #import "UserAvatarController.h"
 #import "NSObject+SDKMgr.h"
+#import<AVFoundation/AVCaptureDevice.h>
+#import <AVFoundation/AVMediaFormat.h>
+#import<AssetsLibrary/AssetsLibrary.h>
+#import<CoreLocation/CoreLocation.h>
 //-------------------------------------------------------------------------
 @implementation UserAvatarController
 @synthesize popoverViewController = _popoverViewController;
@@ -101,18 +105,30 @@
 {
     
     UserAvatarController * app = [[UserAvatarController alloc] init];
-	if( buttonIndex == 0 )
-	{
-	/**打开相机*/
-		[app showPicker:UIImagePickerControllerSourceTypeCamera];
-	}
-	else if( buttonIndex == 1 )
-	{
-	/**打开相册*/
-		[app showPicker:UIImagePickerControllerSourceTypePhotoLibrary];
-	}
-	else 
-	{
+    if( buttonIndex == 0 )
+    {
+        /**打开相机*/
+        [app showPicker:UIImagePickerControllerSourceTypeCamera];
+    }
+    else if( buttonIndex == 1 )
+    {
+        /**打开相册*/
+        
+        //        ALAuthorizationStatus status1 = [ALAssetsLibrary authorizationStatus];
+        //
+        //        if (status1 == kCLAuthorizationStatusDenied || kCLAuthorizationStatusRestricted) {
+        //
+        ////            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"" message:@"请在通用-隐私中允许访问相册" preferredStyle:UIAlertControllerStyleActionSheet];
+        //
+        //
+        //        } else {
+        
+        [app showPicker:UIImagePickerControllerSourceTypePhotoLibrary];
+        
+        //        }
+    }
+    else
+    {
         if (NULL == m_pstrObjectName || [m_pstrObjectName isEqualToString:@""])
         {
             NSLog(@"actionSheet m_pstrObjectName is null");
@@ -124,56 +140,56 @@
             NSLog(@"actionSheet m_pstrFuncName is null");
             return;
         }
-//		UnitySendMessage( [m_pstrObjectName UTF8String], [m_pstrFuncName UTF8String], RESULE_CANCEL );
-	}
+        //		UnitySendMessage( [m_pstrObjectName UTF8String], [m_pstrFuncName UTF8String], RESULE_CANCEL );
+    }
 }
 //-------------------------------------------------------------------------
 - (void)showPicker:(UIImagePickerControllerSourceType)type
 {
     
-	UIImagePickerController *picker = [[[UIImagePickerController alloc] init] autorelease];
-	picker.delegate = self;
-	picker.sourceType = type;
-	picker.allowsEditing = YES;
-	
-	if( UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad )
-	{
-		Class popoverClass = NSClassFromString( @"UIPopoverController" );
-		if( !popoverClass )
-			return;
+    UIImagePickerController *picker = [[[UIImagePickerController alloc] init] autorelease];
+    picker.delegate = self;
+    picker.sourceType = type;
+    picker.allowsEditing = NO;
+    
+    if( UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad )
+    {
+        Class popoverClass = NSClassFromString( @"UIPopoverController" );
+        if( !popoverClass )
+            return;
         
-		_popoverViewController = [[popoverClass alloc] initWithContentViewController:picker];
-		[_popoverViewController setDelegate:self];
-
-		[_popoverViewController presentPopoverFromRect:CGRectMake( 0, 0, 320 , 1100 )
-												inView:UnityGetGLViewController().view
-							  permittedArrowDirections:UIPopoverArrowDirectionAny
-											  animated:YES];
-	}
-	else
-	{
+        _popoverViewController = [[popoverClass alloc] initWithContentViewController:picker];
+        [_popoverViewController setDelegate:self];
+        
+        [_popoverViewController presentPopoverFromRect:CGRectMake( 0, 0, 320 , 320 )
+                                                inView:UnityGetGLViewController().view
+                              permittedArrowDirections:UIPopoverArrowDirectionAny
+                                              animated:YES];
+    }
+    else
+    {
         UIViewController *vc = UnityGetGLViewController();
-		[vc presentModalViewController:picker animated:YES];
-	}
+        [vc presentModalViewController:picker animated:YES];
+    }
 }
 //-------------------------------------------------------------------------
 - (void)popoverControllerDidDismissPopover:(UIPopoverController*)popoverController
 {
-	self.popoverViewController = nil;
-	
-//    UnitySendMessage( [m_pstrObjectName UTF8String], [m_pstrFuncName UTF8String], RESULE_FINISH );
+    self.popoverViewController = nil;
+    
+    //    UnitySendMessage( [m_pstrObjectName UTF8String], [m_pstrFuncName UTF8String], RESULE_FINISH );
     
 }
 //-------------------------------------------------------------------------
 - (void)imagePickerController:(UIImagePickerController*)picker didFinishPickingMediaWithInfo:(NSDictionary*)info
 {
-	UIImage *image;
-	UIImage *image2;
-    image = [info objectForKey:UIImagePickerControllerEditedImage];
+    UIImage *image;
+    UIImage *image2;
+    image = [info objectForKey:UIImagePickerControllerOriginalImage];
     
-    NSLog( @"picker got image with orientation: %i", image.imageOrientation );
-    UIGraphicsBeginImageContext(CGSizeMake(128,128));
-    [image drawInRect:CGRectMake(0, 0, 128, 128)];
+    NSLog( @"picker got image with orientation: %li", (long)image.imageOrientation );
+    UIGraphicsBeginImageContext(CGSizeMake(600,600));
+    [image drawInRect:CGRectMake(0, 0, 600, 600)];
     image2 = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     
@@ -184,56 +200,89 @@
     }
     else
     {
-         imgData = UIImagePNGRepresentation(image2);
+        imgData = UIImagePNGRepresentation(image2);
     }
     
-    NSString * DocumentsPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
-//    printf([DocumentsPath UTF8String]);
-//    printf([m_pstrFileName UTF8String]);
+    NSString * DocumentsPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/Image"];
+    //    printf([DocumentsPath UTF8String]);
+    //    printf([m_pstrFileName UTF8String]);
     printf([[DocumentsPath stringByAppendingString:m_pstrFileName] UTF8String]);
     NSFileManager *fileManager = [NSFileManager defaultManager];
     [fileManager createDirectoryAtPath:DocumentsPath withIntermediateDirectories:YES attributes:nil error:nil];
     [fileManager createFileAtPath:[DocumentsPath stringByAppendingString:m_pstrFileName] contents:imgData attributes:nil];
     
     NSLog(@"UnitySendMessage %s",RESULE_SUCCESS);
-//    UnitySendMessage( [m_pstrObjectName UTF8String], [m_pstrFuncName UTF8String], RESULE_SUCCESS);
+    //    UnitySendMessage( [m_pstrObjectName UTF8String], [m_pstrFuncName UTF8String], RESULE_SUCCESS);
     NSDictionary *dict = @{@"method":@"on_get_photo",
                            @"path":m_usepstrFileName,
                            };
     [SDKMgr SendSDKMessage:dict];
-	[self dismissWrappedController];
+    [self dismissWrappedController];
 }
+
+
 //-------------------------------------------------------------------------
 - (void)imagePickerControllerDidCancel:(UIImagePickerController*)picker
 {
-	[self dismissWrappedController];
-//    UnitySendMessage( [m_pstrObjectName UTF8String], [m_pstrFuncName UTF8String], RESULE_CANCEL);
+    [self dismissWrappedController];
+    //    UnitySendMessage( [m_pstrObjectName UTF8String], [m_pstrFuncName UTF8String], RESULE_CANCEL);
 }
 //-------------------------------------------------------------------------
 - (void)dismissWrappedController
 {
     
-	UIViewController *vc = UnityGetGLViewController();
-	
-	if( !vc )
-		return;
-	
-	[vc dismissModalViewControllerAnimated:YES];
-	[self performSelector:@selector(removeAndReleaseViewControllerWrapper) withObject:nil afterDelay:1.0];
-	
+    UIViewController *vc = UnityGetGLViewController();
+    
+    if( !vc )
+        return;
+    
+    [vc dismissModalViewControllerAnimated:YES];
+    [self performSelector:@selector(removeAndReleaseViewControllerWrapper) withObject:nil afterDelay:1.0];
+    
 }
 //-------------------------------------------------------------------------
 - (void)removeAndReleaseViewControllerWrapper
 {
-	if( UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad && _popoverViewController )
-	{
-		[_popoverViewController dismissPopoverAnimated:YES];
-		self.popoverViewController = nil;
-	}
+    if( UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad && _popoverViewController )
+    {
+        [_popoverViewController dismissPopoverAnimated:YES];
+        self.popoverViewController = nil;
+    }
 }
 + (void)SettingAvaterFormGameMessageRet:(const char*)pstrFileName AndWithType:(const bool*)GetOrTake{
-    
     UserAvatarController * app = [[UserAvatarController alloc] init];
+    //    AVAuthorizationStatus status = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo] ;
+    //
+    //    if (status == AVAuthorizationStatusDenied || status == AVAuthorizationStatusRestricted) {
+    //
+    ////          UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"" message:@"请在通用-隐私中允许访问相机" preferredStyle:UIAlertControllerStyleActionSheet];
+    //
+    //    } else {
+    
+    NSString *mediaType = AVMediaTypeVideo;
+    AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:mediaType];
+    if(authStatus == ALAuthorizationStatusRestricted || authStatus == ALAuthorizationStatusDenied){
+        //无权限
+        NSString *tips = [NSString stringWithFormat:@"请在iPhone的”设置-隐私-相机“选项中，允许%@访问你的手机相机",NSLocalizedString(@"Richer",@"Richer")];
+        UIViewController *vc = UnityGetGLViewController();
+        //         UIAlertView *alertController = [UIAlertView alertControllerWithTitle:@"" message:tips preferredStyle:UIAlertControllerStyleActionSheet];
+        //        alertController.popoverPresentationController.sourceView = vc.view;
+        //        alertController.popoverPresentationController.sourceRect = CGRectMake(0, vc.view.bounds.size.height, vc.view.bounds.size.width, 1.0);
+        //        UIAlertAction *cancleAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil];
+        //        [alertController addAction:cancleAction];
+        //        [vc presentViewController:alertController animated:YES completion:nil];
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:tips message:nil delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil];
+        [alertView show];
+        NSDictionary *dict = @{@"method":@"on_get_photo",
+                               @"path":@"nil",
+                               };
+        [SDKMgr SendSDKMessage:dict];
+        
+        return;
+    }
+    
+    
+    
     
     if( ![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera] )
     {
@@ -241,17 +290,22 @@
         return;
     }
     
-//    [app SetUnityObjectName:pstrObjectName];
-//    [app SetUnityFuncName:pstrFuncName];
+    //    [app SetUnityObjectName:pstrObjectName];
+    //    [app SetUnityFuncName:pstrFuncName];
     
     [app SetUnityFileName:pstrFileName];
-//    [self SetUnityFileName:pstrFileName];
+    //    [self SetUnityFileName:pstrFileName];
     if(GetOrTake){
         [app showActionSheet];
     }else{
         [app showPicker:UIImagePickerControllerSourceTypeCamera];
+        //        }
+        
     }
-
+    
+    
+    
+    
     
 }
 
@@ -261,7 +315,7 @@
 /**接收Unity设置的数据*/
 //extern "C" void SettingAvaterFormiOS(char* pstrObjectName,char* pstrFuncName,char*pstrFileName )
 //{
-//    
+//
 //    UserAvatarController * app = [[UserAvatarController alloc] init];
 //
 //	if( ![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera] )
