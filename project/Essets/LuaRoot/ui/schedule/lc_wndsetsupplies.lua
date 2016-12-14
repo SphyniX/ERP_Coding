@@ -190,6 +190,8 @@ end
 
 local function on_ui_init(NWStata)
 	print("on_ui_init--"..tostring(NWStata))
+
+	DY_DATA.WNDSubmitSchedule.MaterList = {}
 	UI_DATA.WNDSubmitSchedule.WNDSetSuppliesNWStata=NWStata
 	local projectId = UI_DATA.WNDSubmitSchedule.projectId
 	local storeId = UI_DATA.WNDSubmitSchedule.storeId

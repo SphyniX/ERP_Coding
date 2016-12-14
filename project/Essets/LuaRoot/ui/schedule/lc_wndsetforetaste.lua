@@ -66,6 +66,8 @@ local function on_btnsave_click(btn)
 	if not UI_DATA.WNDSubmitSchedule.ProductListForetasteNWStata then
 		_G.UI.Toast:make(nil, "网络请求失败，请重新登陆"):show()
 	end
+	UI_DATA.WNDSubmitSchedule.ProductListForetasteNWStata = true
+
 	ProductListForUpdate = {}
 	print("#SampleList".. tostring(#SampleList) .. JSON:encode(SampleList))
 	Ref.SubMain.Grp:dup(#SampleList, function (i, Ent, isNew)
@@ -89,6 +91,7 @@ local function on_ui_init(NWStata)
 	print("回调--------------体验品")
 	UI_DATA.WNDSubmitSchedule.ProductListForetasteNWStata = NWStata
 
+	UI_DATA.WNDSubmitSchedule.ProductListForetaste = {}
 	libunity.SetActive(Ref.SubSet.root,false)
 	local projectId = UI_DATA.WNDSubmitSchedule.projectId
 	local Project = DY_DATA.SchProjectList[projectId]

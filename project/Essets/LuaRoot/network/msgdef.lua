@@ -62,6 +62,7 @@ do
             SALESLEAVE = ID_BASE + 18,
             GETLEAVEINFOR = ID_BASE + 19,
             GETLEAVELS = ID_BASE + 20,
+            CARDVERIFICATION = ID_BASE + 21,
         }
     end
 

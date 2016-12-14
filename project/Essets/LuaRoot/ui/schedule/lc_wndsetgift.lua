@@ -36,6 +36,7 @@ end
 
 local function on_subtop_btnback_click(btn)
 	UIMGR.close_window(Ref.root)
+	UI_DATA.WNDSubmitSchedule.ProductListGiftNWStata = true
 end
 
 local function on_subset_btnsubmit_click(btn)
@@ -53,12 +54,15 @@ end
 local function on_subset_btnback_click(btn)
 	
 	libunity.SetActive(Ref.SubSet.root, false)
+	UI_DATA.WNDSubmitSchedule.ProductListGiftNWStata = true
 end
 
 local function on_btnsave_click(btn)
 	if not UI_DATA.WNDSubmitSchedule.ProductListGiftNWStata then
 		_G.UI.Toast:make(nil, "网络请求失败，请重新登陆"):show()
 	end
+	UI_DATA.WNDSubmitSchedule.ProductListGiftNWStata = true
+
 	ProductListForUpdate = {}
 	Ref.SubMain.Grp:dup(#GiftList, function (i, Ent, isNew)
 		local id = GiftList[i].id
@@ -73,13 +77,10 @@ local function on_btnsave_click(btn)
 	UIMGR.close_window(Ref.root)
 end
 
-local function on_submain_grp_btnsave_click(btn)
-	UIMGR.close_window(Ref.root)
-end
-
 local function on_ui_init(NWStata)
-	UI_DATA.WNDSubmitSchedule.ProductListGiftNWStata=NWStata
-
+	print("赠品回调"..tostring(NWStata))
+	UI_DATA.WNDSubmitSchedule.ProductListGiftNWStata = NWStata
+	UI_DATA.WNDSubmitSchedule.ProductListGift = {}
 	libunity.SetActive(Ref.SubSet.root,false)
 	local projectId = UI_DATA.WNDSubmitSchedule.projectId
 	local Project = DY_DATA.SchProjectList[projectId]

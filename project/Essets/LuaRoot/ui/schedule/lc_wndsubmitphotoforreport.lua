@@ -55,6 +55,7 @@ local function on_ui_init(NWStata)
 		local Photo = PhotoList[i]
 		if Photo.state == 1 then 
 			Ent.lbTitle.text = Photo.name
+			libunity.SetActive(Ent.spState,true)
 		else
 			Ent.lbTitle.text = Photo.name
 			libunity.SetActive(Ent.spState,false)
@@ -68,7 +69,7 @@ end
 local function on_upload_photo_callback(Ret)
 		print("on_upload_photo_callbackPhotoForUpdate------------")
 	
-	if Ret.ret == 1 then
+	if tonumber(Ret.ret) == 1 then
 		libunity.SetActive(NowBtn.spIfsucc,true)
 		local PhotoForUpdate = {
 			id = PhotoList[NowNumber].id,
@@ -76,8 +77,27 @@ local function on_upload_photo_callback(Ret)
 			state = PhotoList[NowNumber].state,
 		}
 		print("PhotoForUpdate------------"..PhotoForUpdate.state)
-		table.insert(PhotoListForUpdate,PhotoForUpdate)
-		_G.UI.Toast:make(nil, "成功"):show()
+		local blTemp = false
+		if PhotoListForUpdate ~= nil then
+			if next(PhotoListForUpdate) ~= nil then 
+				for i=1,#PhotoListForUpdate  do
+					if PhotoListForUpdate[i].id == PhotoList[NowNumber].id then
+						PhotoListForUpdate[i] = PhotoForUpdate
+						_G.UI.Toast:make(nil, "更新成功"):show()
+						blTemp = true
+					end
+				end
+				if not blTemp then
+					table.insert(PhotoListForUpdate,PhotoForUpdate)	
+					_G.UI.Toast:make(nil, "添加成功"):show()
+				end
+			else
+				table.insert(PhotoListForUpdate,PhotoForUpdate)	
+				_G.UI.Toast:make(nil, "添加成功"):show()
+			end
+		end
+	else
+		_G.UI.Toast:make(nil, "失败"):show()
 	end
 end
 
@@ -95,6 +115,15 @@ local function on_subphoto_grpphoto_entphoto_click(btn)
 	NowNumber = tonumber(btn.name:sub(9))
 	NowBtn = Ref.SubPhoto.GrpPhoto.Ents[tonumber(btn.name:sub(9))]
 	local tex = NowBtn.spPhoto
+	-- -- 				-- test ---
+	-- UIMGR.load_photo(tex, name, function (succ, name, image)
+	-- 	if succ then
+	-- 		on_take_photo_call_back(image)
+	-- 	else
+		
+	-- 	end
+	-- end)
+	---------------------------
 	if DY_DATA.User.Limit == 1 then
 		
 		UIMGR.on_sdk_take_photo(name, tex, function (succ, name, image)
@@ -115,13 +144,7 @@ local function on_subphoto_grpphoto_entphoto_click(btn)
 	end
 
 	-- test ---
-	UIMGR.load_photo(tex, name, function (succ, name, image)
-		if succ then
-			on_take_photo_call_back(image)
-		else
-		
-		end
-	end)
+
 end
 
 local function on_subtop_btnback_click(btn)

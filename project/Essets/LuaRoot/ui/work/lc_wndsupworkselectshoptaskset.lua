@@ -122,7 +122,7 @@ end
 
 local function on_substarttime_btnbutton_click(btn)
 	UI_DATA.WNDSetTime.on_call_back = function (Time)
-		Ref.SubStartTime.data.text = time_to_string(Time) .. ":00"
+	Ref.SubStartTime.data.text = time_to_string(Time) .. ":00"
 	end
 
 	local SourceTime = {
@@ -144,31 +144,35 @@ local function on_substarttime_btnbutton_click(btn)
 end
 
 local function on_subendtime_btnbutton_click(btn)
-	UI_DATA.WNDSetTime.on_call_back = function (Time)
+	if Ref.SubStartTime.data.text ~= "请输入时间" then
+		UI_DATA.WNDSetTime.on_call_back = function (Time)
 		Ref.SubEndTime.data.text = time_to_string(Time) .. ":00"
+		end
+
+			local SourceTime = {
+
+			year = data:sub(1,4),
+			month = data:sub(6,7),
+			day = data:sub(9,10),
+		}	
+
+		local SetInteractable = {
+
+			year = 1,
+			month = 1,
+		}
+		UI_DATA.WNDSetTime.SourceTime = SourceTime
+		UI_DATA.WNDSetTime.SetInteractable = SetInteractable
+		UI_DATA.WNDSetTime.Task = 1
+		UI_DATA.WNDSetTime.TaskData = {
+			hour = tonumber(Ref.SubStartTime.data.text:sub(12,13)),
+			minute = tonumber(Ref.SubStartTime.data.text:sub(15,16)),
+		}
+
+		UIMGR.create("UI/WNDSetTime")
+	else
+		_G.UI.Toast:make(nil,"请录入开始时间"):show()
 	end
-
-		local SourceTime = {
-
-		year = data:sub(1,4),
-		month = data:sub(6,7),
-		day = data:sub(9,10),
-	}	
-
-	local SetInteractable = {
-
-		year = 1,
-		month = 1,
-	}
-	UI_DATA.WNDSetTime.SourceTime = SourceTime
-	UI_DATA.WNDSetTime.SetInteractable = SetInteractable
-	UI_DATA.WNDSetTime.Task = 1
-	UI_DATA.WNDSetTime.TaskData = {
-		hour = tonumber(Ref.SubStartTime.data.text:sub(12,13)),
-		minute = tonumber(Ref.SubStartTime.data.text:sub(15,16)),
-	}
-
-	UIMGR.create("UI/WNDSetTime")
 end
 
 local function on_subselectpeople_btnbutton_click(btn)

@@ -379,7 +379,7 @@ local function on_store_init()
 			Store = v
 		end
 	end
-	if Store == nil then print("Store 为空"..storeId) return end
+	if Store == nil or next(Store) == nil then print("Store 为空"..storeId) return end
 	local state = UI_DATA.WNDSubmitSchedule.state
 	--------- 提取已上报进度在这里 ---------
 	if state == 2 then
@@ -389,10 +389,12 @@ local function on_store_init()
 		Ref.SubMain.SubContent.lbTip.text = "请确认无误后提交"
 	end
 	-- Ref.SubMain.SubContent.lbClass.text = type
-	Ref.SubMain.SubContent.SubAddress.lbText.text = Store.Info.address
-	Ref.SubMain.SubContent.SubTime.lbStart.text = Store.Info.starttime
-	Ref.SubMain.SubContent.SubTime.lbEnd.text = Store.Info.endtime
-	wndSubmitScheduleDataInit()
+	if Store.Info ~= nil then
+		Ref.SubMain.SubContent.SubAddress.lbText.text = Store.Info.address
+		Ref.SubMain.SubContent.SubTime.lbStart.text = Store.Info.starttime
+		Ref.SubMain.SubContent.SubTime.lbEnd.text = Store.Info.endtime
+		wndSubmitScheduleDataInit()
+	end
 end
 
 local function init_view()

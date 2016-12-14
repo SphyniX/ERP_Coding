@@ -287,6 +287,12 @@ local function sc_attence_getleaves(nm)
 end
 NW.regist("ATTENCE.SC.GETLEAVELS", sc_attence_getleaves)
 
+local function sc_attence_cardverification(nm)
+    if DY_DATA.AttenceCardverification == nil then DY_DATA.AttenceCardverification = {} end
+
+    DY_DATA.AttenceCardverification.state = tonumber(nm:readString())   --  1为可以打卡  
+end
+NW.regist("ATTENCE.SC.CARDVERIFICATION", sc_attence_cardverification)
 
 
 local function sc_user_gettype(nm)
