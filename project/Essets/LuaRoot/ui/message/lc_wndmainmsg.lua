@@ -57,8 +57,9 @@ end
 
 local function on_read_msg(index)
 	local MsgList = DY_DATA.MsgList
+	print("信息列表-----------------"..JSON:encode(MsgList))
 	local Msg = MsgList[index]
-	print(JSON:encode(Msg))
+	print("信息--------------"..JSON:encode(Msg))
 	if Msg.type == 1 then
 		UIMGR.create_window("UI/WNDMainWork")
 	elseif Msg.type == 2 then
