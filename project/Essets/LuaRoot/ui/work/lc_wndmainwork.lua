@@ -17,6 +17,25 @@ local Ref
 
 local ProjectList
 --!*以下：自动生成的回调函数*--
+local function on_msg_init()
+	if DY_DATA.MsgList == nil then
+		local nm = NW.msg("MESSAGE.CS.GETMESSAGELIST")
+		nm:writeU32(DY_DATA.User.id)
+		NW.send(nm)
+		return
+	end
+	local MsgList = DY_DATA.MsgList
+	if MsgList ~= nil then 
+		if #MsgList ~= 0 then
+			libunity.SetActive(Ref.SubBtm.SetRed, true)
+		else
+			libunity.SetActive(Ref.SubBtm.SetRed, false)
+		end
+	
+	end
+
+	-- body
+end
 
 local function on_subproject_grpproject_entproject_click(btn)
 	print("<color=#00ff00>DY_DATA.ProjectList2"..JSON:encode(DY_DATA.ProjectList).."</color>")
@@ -47,16 +66,6 @@ local function on_subbtm_btnuser_click(btn)
 -- ##	UIMGR.WNDStack:pop()
 	UIMGR.create_window("UI/WNDMainUser")
 end
-
-local function on_set_red()
-	if DY_DATA.SetRed then
-		libunity.SetActive(Ref.SubBtm.SetRed,true)
-	else
-		libunity.SetActive(Ref.SubBtm.SetRed,false)
-	end
-end
-
-
 
 local function on_ui_init()
 	print("on_ui_init")
@@ -93,17 +102,10 @@ local function init_view()
 end
 
 local function init_logic()
+	UI_DATA.WNDMsgHint.state = true
+	on_msg_init()
 	NW.subscribe("WORK.SC.GETPROJECT", on_ui_init)
-	NW.subscribe("MESSAGE.SC.GETMESSAGELIST", on_set_red)
-	if DY_DATA.MsgList == nil or next(DY_DATA.MsgList) == nil then
-		local nm = NW.msg("MESSAGE.CS.GETMESSAGELIST")
-		nm:writeU32(DY_DATA.User.id)
-		NW.send(nm)
-		return
-	else
-		on_set_red()
-	end
-
+	NW.subscribe("MESSAGE.SC.GETMESSAGELIST",on_msg_init)
 	print("<color=#00ff00>DY_DATA.ProjectList1"..JSON:encode(DY_DATA.ProjectList).."</color>")
 print("<color=#00ff00>DY_DATA.ProjectList1</color>")
 	if DY_DATA.ProjectList == nil or next(DY_DATA.ProjectList) == nil then
@@ -132,7 +134,9 @@ local function update_view()
 end
 
 local function on_recycle()	
+	UI_DATA.WNDMsgHint.state = false
 	NW.unsubscribe("WORK.SC.GETPROJECT", on_ui_init)
+	NW.unsubscribe("MESSAGE.SC.GETMESSAGELIST",on_msg_init)
 end
 
 local P = {

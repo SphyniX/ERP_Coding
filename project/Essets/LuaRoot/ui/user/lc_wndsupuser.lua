@@ -69,7 +69,7 @@ local function on_submain_btnlogout_click(btn)
 	_G.PKG["libmgr/login"].do_logout()
 end
 
-local function on_subbtm_btnatt_click(btn)
+local function on_subbtm_spatt_click(btn)
 -- ##	UIMGR.WNDStack:pop()
 	UIMGR.create_window("UI/WNDSupAttendance")
 end
@@ -103,7 +103,14 @@ end
 
 local function on_ui_init()
 	local Ref_SubMain = Ref.SubMain
+	
 	local User = DY_DATA.User
+	if User ~= nil and next(User) ~= nil then
+		Ref.SubMain.SubIcon.lbName.text=User.name
+	end
+
+
+
 	--Ref_SubMain.SubAddress.lbText.text =_G.CFG.CityLib.get_city(User.cityid).name
 	--Ref_SubMain.SubPhone.lbText.text = User.phone
 	UIMGR.get_photo(Ref_SubMain.SubIcon.spIcon, User.icon)
@@ -116,7 +123,7 @@ local function init_view()
 	Ref.SubMain.SubSuggest.btn.onAction = on_submain_subsuggest_click
 	Ref.SubMain.About.onAction = on_submain_about_click
 	Ref.SubMain.btnLogout.onAction = on_submain_btnlogout_click
-	Ref.SubBtm.btnAtt.onAction = on_subbtm_btnatt_click
+	Ref.SubBtm.spAtt.onAction = on_subbtm_spatt_click
 	Ref.SubBtm.btnWork.onAction = on_subbtm_btnwork_click
 	Ref.SubBtm.btnSch.onAction = on_subbtm_btnsch_click
 	Ref.SubBtm.btnMsg.onAction = on_subbtm_btnmsg_click
@@ -124,6 +131,7 @@ local function init_view()
 end
 
 local function init_logic()
+	UI_DATA.WNDMsgHint.state = true
 	on_ui_init()
 	NW.subscribe("USER.SC.GETUSERINFOR", on_ui_init)
 end
@@ -141,6 +149,7 @@ local function update_view()
 end
 
 local function on_recycle()
+	UI_DATA.WNDMsgHint.state = false
 	NW.unsubscribe("USER.SC.GETUSERINFOR", on_ui_init)
 end
 

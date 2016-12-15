@@ -54,6 +54,19 @@ return {
 
 
     },
+    TaskState = {
+
+        [1] = "未开始",
+        [2] = "进行中",
+        [3] = "已结束",
+    },
+
+    StoreState = {
+        [1] = "未开店",
+        [2] = "开店中",
+        [3] = "已结束",
+
+    },
     fmtDownloadException = "下载异常： %s",
     tipNotImplemented = "~功能未实现~",
     tipExepction = "异常",
@@ -164,6 +177,8 @@ return {
 
 <size=28>3、清点物料</size>
 
+%s
+
 上班
 活动准备，清点物料，统一摆放规定位置
 
@@ -223,8 +238,7 @@ return {
 <size=28>1、活动联系人</size>
 
 督导联系方式 : %s
-
-长促联系方式 : %s]],
+]],
 
  fmtContext2 = [[
 

@@ -25,12 +25,20 @@ local function on_submain_grp_ent_click(btn)
 end
 
 local function on_subtop_btnback_click(btn)
+	if not UI_DATA.WNDSubmitSchedule.WNDSetComProductNWStata then
+		_G.UI.Toast:make(nil, "网络请求失败，请重新登陆"):show()
+	end
+
 	UIMGR.close_window(Ref.root)
 end
 
 
-local function on_ui_init(  )
-	
+local function on_ui_init(NWStata)
+	print("竞品分析回调" .. tostring(NWStata))
+	UI_DATA.WNDSubmitSchedule.WNDSetComProductNWStata=NWStata
+	if UI_DATA.WNDSubmitSchedule.ComList == nil then
+    	UI_DATA.WNDSubmitSchedule.ComList = {}
+   	end
 	local projectId = UI_DATA.WNDSubmitSchedule.projectId
  	local Project = DY_DATA.SchProjectList[projectId]
 
@@ -43,7 +51,16 @@ local function on_ui_init(  )
 	Ref.SubMain.Grp:dup(#ComList, function (i, Ent, isNew)
 		local Com = ComList[i]
 		Ent.lbName.text = Com.name
+		UIMGR.get_photo(Ent.spIcon, Com.icon)
 	end)
+	local ComListUpdate = UI_DATA.WNDSubmitSchedule.ComList
+	if ComListUpdate ~= nil then
+		Ref.SubMain.Grp:dup(#ComListUpdate, function (i, Ent, isNew)
+			local Com = ComListUpdate[i]
+			Ent.lbName.text = Com.name
+			UIMGR.get_photo(Ent.spIcon, Com.icon)
+		end)
+	end
 
 
 end
@@ -59,22 +76,25 @@ local function init_view()
 end
 
 
+local function on_ui_initBack()
 
+		on_ui_init(true)
+end
 
 local function init_logic()
-	NW.subscribe("WORK.SC.GETCOMLIST",on_ui_init)
+	NW.subscribe("WORK.SC.GETCOMLIST",on_ui_initBack)
 
 	local projectId = UI_DATA.WNDSubmitSchedule.projectId
 	local Project = DY_DATA.SchProjectList[projectId]
 	if Project == nil then print("Project 为空"..projectId) return end
-	if Project.ComList == nil then
+	if Project.ComList == nil or next(Project.ComList) == nil then
 		local nm = NW.msg("WORK.CS.GETCOMLIST")
 		nm:writeU32(projectId)
 		NW.send(nm)
 		return
 	end
 	print("ComList init:"..#Project.ComList..JSON:encode(Project.ComList))
-	on_ui_init()
+	on_ui_init(false)
 
 
 end

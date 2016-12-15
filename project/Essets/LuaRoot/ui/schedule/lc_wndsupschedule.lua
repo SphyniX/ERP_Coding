@@ -20,7 +20,7 @@ local TempSchProjectList
 
 local function on_ui_init(brandid)
 	if brandid == nil then brandid = 0 end
-	SchProjectLis = DY_DATA.get_schproject_list(false)
+	SchProjectLis = DY_DATA.get_schproject_list()
 	if SchProjectLis == nil then 
 		print("SchProjectLis is nil")
 		libunity.SetActive(Ref.SubProject.spNil, true)
@@ -41,7 +41,7 @@ local function on_ui_init(brandid)
 	Ref.SubProject.GrpProject:dup(#TempSchProjectList, function (i, Ent, isNew)
 		local Project = TempSchProjectList[i]
 		Ent.SubWorkProject.lbText.text = Project.name
-		UIMGR.get_photo(Ent.spIcon, Project.icon)
+		UIMGR.get_photo(Ent.SubWorkProject.spIcon, Project.icon)
 	end)
 end
 
@@ -86,7 +86,7 @@ local function on_subproject_grpproject_entproject_subworkproject_click(btn)
 	print("index in on_subproject_grpproject_entproject_subworkproject_click is :"  .. index)
 	print("SchProjectLis in WNDSupSchedule is :" .. JSON:encode(SchProjectLis))
 	UI_DATA.WNDSelectStore.type = 2
-	UI_DATA.WNDSelectStore.projectId = TempSchProjectList[index].id
+	UI_DATA.WNDSupSelectStore.projectId = TempSchProjectList[index].id
 	UIMGR.create_window("UI/WNDSupSelectStore")
 end
 
@@ -111,7 +111,7 @@ local function init_view()
 end
 
 local function init_logic()
-
+	UI_DATA.WNDMsgHint.state = true
 	NW.subscribe("WORK.SC.GETPROJECT", on_ui_init)
 	
 	if DY_DATA.SchProjectLis == nil or next(DY_DATA.SchProjectLis) == nil then
@@ -141,7 +141,8 @@ local function update_view()
 end
 
 local function on_recycle()
-	NW.unsubscribe("ATTENCE.SC.GETWORK",on_ui_init)
+		UI_DATA.WNDMsgHint.state = false
+	NW.unsubscribe("WORK.SC.GETPROJECT",on_ui_init)
 end
 
 local P = {

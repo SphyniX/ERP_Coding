@@ -60,6 +60,7 @@ end
 
 local function on_select_place_callback( id )
 	Ref.SubMain.SubInfo.SubCity.lbcity.text = _G.CFG.CityLib.get_city(id).name
+	CityChoose = id
 end
 
 local function on_submain_subinfo_subcity_click(btn)
@@ -78,9 +79,14 @@ local function on_submain_btnenter_click(btn)
 	if UI_DATA.WNDRegist.UserInfo == nil then UI_DATA.WNDRegist.UserInfo = {} end
 	local UserInfo = UI_DATA.WNDRegist.UserInfo
 	UserInfo.name = inpName
-	UserInfo.city = inpCity
+	UserInfo.city = CityChoose
 	UserInfo.supname = inpCode
-	LOGIN.try_bind_supervisor(inpSupname, inpName, inpCode, on_bind_supervisored)
+	if CityChoose ~= nil then
+		LOGIN.try_bind_supervisor(inpSupname, inpName, inpCode, on_bind_supervisored)
+	else
+		_G.UI.Toast:make(nil,"请选择城市"):show()
+		return
+	end
 end
 
 local function on_submain_subselect_btnsave_click(btn)

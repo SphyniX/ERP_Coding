@@ -41,8 +41,8 @@ local function on_ui_init( )
 		Ent.lbName.text = SampleRe.name
 		Ent.lbPeople.text = SampleRe.username
 		Ent.lbPer.text = SampleRe.per
-		Ent.lbNumber = SampleRe.number
-		Ent.lbValue = SampleRe.value
+		Ent.lbNumber.text = SampleRe.number
+		Ent.lbValue.text = SampleRe.value
 
 	end)
 

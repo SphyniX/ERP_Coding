@@ -32,8 +32,9 @@ local function init_logic()
             -- day = nm:readString(),
             -- time = nm:readString(),
             -- state = nm:readString()
-            local data = DY_DATA.MsgList[UI_DATA.WNDsupmsgData.MsgIndex]
+            local data = DY_DATA.MsgList[UI_DATA.WNDsupmsgData.listdata.MsgIndex]
             print("data.context -----------is:"..data.context)
+            Ref.SubTitle.usermame.text =  UI_DATA.WNDsupmsgData.listdata.username
             Ref.lbText.text=data.context
             Ref.SubTitle.date.text=data.day.." "..data.time
 end

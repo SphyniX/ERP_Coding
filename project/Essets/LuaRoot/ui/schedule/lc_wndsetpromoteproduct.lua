@@ -19,6 +19,15 @@ local ProductList
 local ProductListOld
 local ProductListForUpdate
 --!*以下：自动生成的回调函数*--
+local function stringTypeCtrl(str)
+		local strTemp=string.gsub(str,"<size=36>","")
+		strTemp=string.gsub(strTemp,"</size>","")
+		strTemp=string.sub(strTemp,1,#strTemp-3)
+		local n= tonumber(strTemp)
+		print("--------------stringTypeCtr1---strTemp------"..tostring(n))
+		return strTemp
+end
+
 
 local function on_submain_grp_ent_click(btn)
 	NowEnt = tonumber(btn.name:sub(4))
@@ -49,9 +58,9 @@ end
 local function on_subset_btnsubmit_click(btn)
 	Ref.SubMain.Grp:dup(#ProductList, function (i, Ent, isNew)
 		if i == NowEnt then 
-			Ent.lbVolume.text = Ref.SubSet.inpVolume.text .. ProductList[i].per
-			Ent.lbPrice.text = Ref.SubSet.inpPrice.text .. "元"
-			Ent.lbSale.text = Ref.SubSet.lbSale.text .. "元"
+			Ent.lbVolume.text = "<size=36>" .. Ref.SubSet.inpVolume.text .. "</size>" .. ProductList[i].per
+			Ent.lbPrice.text = "<size=36>" .. Ref.SubSet.inpPrice.text .. "</size>" .. "元"
+			Ent.lbSale.text = "<size=36>" .. Ref.SubSet.lbSale.text .. "</size>" .. "元"
 			Ref.SubSet.inpVolume.text = nil
 			Ref.SubSet.inpPrice.text = nil
 			Ref.SubSet.lbSale.text = nil
@@ -68,9 +77,9 @@ end
 local function on_btnsave_click(btn)
 	ProductListForUpdate = {}
 	Ref.SubMain.Grp:dup(#ProductList, function (i, Ent, isNew)
-		local price = Ent.lbPrice.text:sub(1,string.len(Ent.lbPrice.text)-3)
-		local volume = Ent.lbVolume.text:sub(1,string.len(Ent.lbVolume.text)-3)
-		local sale = Ent.lbSale.text:sub(1,string.len(Ent.lbSale.text)-3)
+		local price = stringTypeCtrl(Ent.lbPrice.text)
+		local volume = stringTypeCtrl(Ent.lbVolume.text)
+		local sale = stringTypeCtrl(Ent.lbSale.text)
 		local value = ""
 		if price == "   "then 
 			price = ""
@@ -102,6 +111,8 @@ local function on_ui_init()
 	Ref.SubMain.Grp:dup(#ProductList, function (i, Ent, isNew)
 		local Product = ProductList[i]
 		Ent.lbName.text = Product.name
+		print("Product.icon---------------------"..tostring(Product.icon))
+		UIMGR.get_photo(Ent.spIcon, Product.icon)
 	end)
 	on_subtop_btnclear_click()
 	ProductListForUpdate = UI_DATA.WNDSubmitSchedule.ProductList
@@ -118,9 +129,9 @@ local function on_ui_init()
 			if Product.sale == ""then 
 				Product.sale = "   "
 			end
-			Ent.lbVolume.text = Product.volume .. ProductList[i].per
-			Ent.lbPrice.text = Product.price .. "元"
-			Ent.lbSale.text = Product.sale .. "元"
+			Ent.lbVolume.text = "<size=36>" .. Product.volume .. "</size>" .. ProductList[i].per
+			Ent.lbPrice.text = "<size=36>" .. Product.price .. "</size>" .. "元"
+			Ent.lbSale.text = "<size=36>" .. Product.sale .. "</size>" .. "元"
 		end)
 	end
 end

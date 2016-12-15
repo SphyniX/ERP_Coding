@@ -88,7 +88,7 @@ namespace Assets.Editor.Utils
         public static string getVerInfo()
         {
             //return getBranch()+"_"+getGitVersion();
-            return "1.0.6.10";
+            return "1.0.1.1";
         }
     }
 }

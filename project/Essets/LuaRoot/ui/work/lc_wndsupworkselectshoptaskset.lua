@@ -18,11 +18,14 @@ local Ref
 local storeId
 local PersonListForUpdate
 local PersonListForUpdateCallBack
+local data
  --local dateState = true
 
 --!*以下：自动生成的回调函数*--
 local function time_to_string(Time)
-	return string.format("%d-%d-%d %d:%d", Time.year, Time.month, Time.day, Time.hour, Time.minute)
+
+
+	return string.format("%s-%s-%s %s:%s", Time.year, Time.month, Time.day, Time.hour, Time.minute)
 end
 
 
@@ -66,7 +69,7 @@ local function on_subtop_nextweek_click(btn)
 		if PersonListForUpdateCallBack[i].StateNumber == 1 then	
 			print("增加任务-------------------------------------"..JSON:encode(PersonListForUpdateCallBack))
 			local nm = NW.msg("WORK.CS.ISSUED")
-			nm:writeU32(storeId)
+			nm:writeU32(tonumber(storeId))
 			print("增加任务-----------storeId--------------------------"..storeId)
 			nm:writeU32(1)
 			nm:writeU32(PersonListForUpdateCallBack[i].id)
@@ -119,16 +122,57 @@ end
 
 local function on_substarttime_btnbutton_click(btn)
 	UI_DATA.WNDSetTime.on_call_back = function (Time)
-		Ref.SubStartTime.data.text = time_to_string(Time) .. ":00"
+	Ref.SubStartTime.data.text = time_to_string(Time) .. ":00"
 	end
+
+	local SourceTime = {
+
+		year = data:sub(1,4),
+		month = data:sub(6,7),
+		day = data:sub(9,10),
+	}	
+
+	local SetInteractable = {
+
+		year = 1,
+		month = 1,
+		day = 1,
+	}
+	UI_DATA.WNDSetTime.SourceTime = SourceTime
+	UI_DATA.WNDSetTime.SetInteractable = SetInteractable
 	UIMGR.create("UI/WNDSetTime")
 end
 
 local function on_subendtime_btnbutton_click(btn)
-	UI_DATA.WNDSetTime.on_call_back = function (Time)
+	if Ref.SubStartTime.data.text ~= "请输入时间" then
+		UI_DATA.WNDSetTime.on_call_back = function (Time)
 		Ref.SubEndTime.data.text = time_to_string(Time) .. ":00"
+		end
+
+			local SourceTime = {
+
+			year = data:sub(1,4),
+			month = data:sub(6,7),
+			day = data:sub(9,10),
+		}	
+
+		local SetInteractable = {
+
+			year = 1,
+			month = 1,
+		}
+		UI_DATA.WNDSetTime.SourceTime = SourceTime
+		UI_DATA.WNDSetTime.SetInteractable = SetInteractable
+		UI_DATA.WNDSetTime.Task = 1
+		UI_DATA.WNDSetTime.TaskData = {
+			hour = tonumber(Ref.SubStartTime.data.text:sub(12,13)),
+			minute = tonumber(Ref.SubStartTime.data.text:sub(15,16)),
+		}
+
+		UIMGR.create("UI/WNDSetTime")
+	else
+		_G.UI.Toast:make(nil,"请录入开始时间"):show()
 	end
-	UIMGR.create("UI/WNDSetTime")
 end
 
 local function on_subselectpeople_btnbutton_click(btn)
@@ -149,8 +193,9 @@ local function init_view()
 	--!*以上：自动注册的回调函数*--
 end
 local function init_logic()
-
-		storeId = UI_DATA.WNDSubmitSchedule.storeId
+		data = UI_DATA.WNDSupWorkSelectShopTaskSet.data
+		--UI_DATA.WNDSupWorkSelectShopTaskSet.data = nil
+		storeId = UI_DATA.WNDSupWorkSelectShopTask.storeIdtrue
 	    local TaskList = UI_DATA.WNDSupWorkSelectShopTask.TaskList
 	    local Tempn = UI_DATA.WNDSupWorkSelectShopTask.index
 	    local n = tonumber(Tempn)

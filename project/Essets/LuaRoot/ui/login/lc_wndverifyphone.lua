@@ -78,9 +78,13 @@ local function init_logic()
 	local UserInfo = UI_DATA.WNDRegist.UserInfo
 	phone = UserInfo.phone
 	Ref.SubMain.SubPhone.lbPhone.text = phone
-	UsingTimer = false
-	libunity.SetActive(Ref.SubMain.SubVerifyCode.lbs,false)
-	Ref.SubMain.SubVerifyCode.lbTime.text = "重新发送"
+	Ref.SubMain.SubVerifyCode.lbTime.text = "60"
+	libunity.SetActive(Ref.SubMain.SubVerifyCode.lbs,true)
+	UsingTimer = true
+	-- local typed = UI_DATA.WNDVerifyPhone.type
+	-- print(typed)
+	-- LOGIN.try_get_verify(phone, typed ,on_get_verifyed)
+
 
 end
 

@@ -231,11 +231,11 @@ public static class LibUnity
 
         if (obj != null)
         {
-            Debug.Log("<color=#0f0>GetGameObject--获取对象成功</color>");
+            //Debug.Log("<color=#0f0>GetGameObject--获取对象成功</color>");
             lua.PushLightUserData(obj);
         }
         else {
-            Debug.Log("<color=#0f0>GetGameObject--获取对象失败--查看你是否忘记添加或者删除“root”</color>");
+            //Debug.Log("<color=#0f0>GetGameObject--获取对象失败--查看你是否忘记添加或者删除“root”</color>");
             lua.PushNil();
         }
         return 1;
@@ -393,6 +393,7 @@ public static class LibUnity
     {
         GameObject go = lua.ToGameObject(1);
         bool active = lua.ToBoolean(2);
+        //Debug.Log(go.name);
         float delay = (float)lua.OptNumber(3, 0f);
         if (go != null) {
             if (delay > 0) {

@@ -15,6 +15,25 @@ local UI_DATA = MERequire "datamgr/uidata.lua"
 local NW = MERequire "network/networkmgr"
 local LOGIN = MERequire "libmgr/login.lua"
 local Ref
+local function on_msg_init()
+	if DY_DATA.MsgList == nil then
+		local nm = NW.msg("MESSAGE.CS.GETMESSAGELIST")
+		nm:writeU32(DY_DATA.User.id)
+		NW.send(nm)
+		return
+	end
+	local MsgList = DY_DATA.MsgList
+	if MsgList ~= nil then 
+		if #MsgList ~= 0 then
+			libunity.SetActive(Ref.SubBtm.SetRed, true)
+		else
+			libunity.SetActive(Ref.SubBtm.SetRed, false)
+		end
+	
+	end
+
+	-- body
+end
 
 local function on_set_photo(Photolist)
 	-- local nPhoto = 0
@@ -100,6 +119,8 @@ end
 
 local function on_submain_btnlogout_click(btn)
 	_G.PKG["libmgr/login"].do_logout()
+	UIMGR.close("UI/WNDMsgHint") 
+	
 end
 
 local function on_subbtm_btnatt_click(btn)
@@ -122,16 +143,8 @@ local function on_subbtm_btnmsg_click(btn)
 	UIMGR.create_window("UI/WNDMainMsg")
 end
 
-local function on_set_red()
-	if DY_DATA.SetRed then
-		libunity.SetActive(Ref.SubBtm.SetRed,true)
-	else
-		libunity.SetActive(Ref.SubBtm.SetRed,false)
-	end
-end
-
-
 local function on_ui_init()
+	on_msg_init()
 	local Ref_SubMain = Ref.SubMain
 	local User = DY_DATA.User
 	Ref_SubMain.SubIcon.lbName.text = User.name
@@ -139,13 +152,6 @@ local function on_ui_init()
 	-- Ref_SubMain.SubAddress.lbText.text =_G.CFG.CityLib.get_city(User.cityid).name
 	-- Ref_SubMain.SubPhone.lbText.text = User.phone
 	UIMGR.get_photo(Ref_SubMain.SubIcon.spIcon, User.icon)
-	if DY_DATA.MsgList == nil or next(DY_DATA.MsgList) == nil then
-		local nm = NW.msg("MESSAGE.CS.GETMESSAGELIST")
-		nm:writeU32(DY_DATA.User.id)
-		NW.send(nm)
-	else
-		on_set_red()
-	end
 end
 
 local function init_view()
@@ -163,9 +169,10 @@ local function init_view()
 end
 
 local function init_logic()
+	UI_DATA.WNDMsgHint.state = true
 	on_ui_init()
 	NW.subscribe("USER.SC.GETUSERINFOR", on_ui_init)
-	NW.subscribe("MESSAGE.SC.GETMESSAGELIST", on_set_red)
+	NW.subscribe("MESSAGE.SC.GETMESSAGELIST",on_msg_init)
 end
 
 local function start(self)
@@ -181,8 +188,9 @@ local function update_view()
 end
 
 local function on_recycle()
-	
+	UI_DATA.WNDMsgHint.state = false
 	NW.unsubscribe("USER.SC.GETUSERINFOR", on_ui_init)
+	NW.unsubscribe("MESSAGE.SC.GETMESSAGELIST",on_msg_init)
 end
 
 local P = {

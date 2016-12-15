@@ -222,18 +222,18 @@ public static class LibNetwork {
         if (joPost != null) {
             wf = KeyValue2Form(joPost);
         }
-        for (int i = 0; i < 6; i++) {
-            var obj = lua.ToAnyObject(4 + i);
-            if (obj.Equals(null)){
+        //for (int i = 0; i < 6; i++) {
+        //    var obj = lua.ToAnyObject(4 + i);
+        //    if (obj.Equals(null)) {
 
-                continue;
-            }
-            Texture2D texture = obj as Texture2D;
-            if (texture.Equals(null)) {
-                continue;
-            }
-            wf.AddBinaryData("photo", texture.EncodeToPNG());
-        }
+        //        continue;
+        //    }
+        //    Texture2D texture = obj as Texture2D;
+        //    if (texture.Equals(null)) {
+        //        continue;
+        //    }
+        //    wf.AddBinaryData("photo", texture.EncodeToPNG());
+        //}
 
         // "key:value\nkey:value"
         Dictionary<string, string> headers = new Dictionary<string, string>();

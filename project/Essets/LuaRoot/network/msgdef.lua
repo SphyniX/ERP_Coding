@@ -31,6 +31,12 @@ do
             GETATTSTORE = ID_BASE + 13,
             GETCITY = ID_BASE + 14,
             GETKAO = ID_BASE + 15,
+            GETATTSUP = ID_BASE + 16,
+            GETLEAVELIST = ID_BASE + 17,
+            SALESLEAVE = ID_BASE + 18,
+            GETLEAVEINFOR = ID_BASE + 19,
+            GETLEAVELS = ID_BASE + 20,
+            CARDVERIFICATION = ID_BASE + 21,
         }
     end
     function  Funcs.attence_sc()
@@ -51,6 +57,12 @@ do
             GETATTSTORE = ID_BASE + 13,
             GETCITY = ID_BASE + 14,
             GETKAO = ID_BASE + 15,
+            GETATTSUP = ID_BASE + 16,
+            GETLEAVELIST = ID_BASE + 17,
+            SALESLEAVE = ID_BASE + 18,
+            GETLEAVEINFOR = ID_BASE + 19,
+            GETLEAVELS = ID_BASE + 20,
+            CARDVERIFICATION = ID_BASE + 21,
         }
     end
 
@@ -126,6 +138,7 @@ do
             GETSUPGUPLOADPHOTO = ID_BASE + 25,
             GETSUPUPLOADFEEDBACK = ID_BASE + 26,
             GETSUPUPLOADCOMANALYSIS = ID_BASE + 27,
+            GETPERSONALREP = ID_BASE + 28,
         }
     end
 
@@ -159,6 +172,7 @@ do
             GETSUPGUPLOADPHOTO = ID_BASE + 25,
             GETSUPUPLOADFEEDBACK = ID_BASE + 26,
             GETSUPUPLOADCOMANALYSIS = ID_BASE + 27,
+            GETPERSONALREP = ID_BASE + 28,
         }
     end
 
@@ -168,6 +182,8 @@ do
         return {
             GETPROINFOR = ID_BASE + 1,
             GETSTOREINFOR = ID_BASE + 2,
+            GETSAlESWORKFLOW = ID_BASE + 3,
+            GETSUPWORKFLOW = ID_BASE + 4,
         }
     end
 
@@ -176,6 +192,8 @@ do
         return {
             GETPROINFOR = ID_BASE + 1,
             GETSTOREINFOR = ID_BASE + 2,
+            GETSAlESWORKFLOW = ID_BASE + 3,
+            GETSUPWORKFLOW = ID_BASE + 4,
         }
     end
 
@@ -197,6 +215,7 @@ do
             DELETEASS = ID_BASE + 12,
             GETSELLPHOTO = ID_BASE + 13,
             GETBRAND = ID_BASE + 14,
+            GETSUPPHOTO = ID_BASE + 15,
         }
     end
     function Funcs.work_sc()
@@ -216,6 +235,7 @@ do
             DELETEASS = ID_BASE + 12,
             GETSELLPHOTO = ID_BASE + 13,
             GETBRAND = ID_BASE + 14,
+            GETSUPPHOTO = ID_BASE + 15,
         }
     end
 
@@ -310,6 +330,20 @@ do
         } 
     end
 
+    local SEND_BASE = 9000
+    function Funcs.send_cs()
+        local ID_BASE = SEND_BASE + 10
+        return {
+            SENDMESSAGE = ID_BASE + 1,
+        } 
+    end
+    function Funcs.send_sc()
+        local ID_BASE = SEND_BASE + 510
+        return {
+            SENDMESSAGE = ID_BASE + 1,
+        } 
+    end
+
     local function make_msg_map(module)
         local func = module:lower()
         local CS, SC = Funcs[func.."_cs"](), Funcs[func.."_sc"]()
@@ -331,6 +365,7 @@ do
     make_msg_map("WORK")
     make_msg_map("DISTRICTMAG")
     make_msg_map("MESSAGE")
+    make_msg_map("SEND")
 
     P.get_msg_name = function (code)
         for k,v in pairs(P) do

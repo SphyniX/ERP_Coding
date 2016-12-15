@@ -11,6 +11,7 @@ local libugui = require "libugui.cs"
 local libunity = require "libunity.cs"
 local UIMGR = MERequire "ui/uimgr"
 local DY_DATA = MERequire "datamgr/dydata.lua"
+local UI_DATA = MERequire "datamgr/uidata.lua"
 local Ref
 --!*以下：自动生成的回调函数*--
 
@@ -20,7 +21,7 @@ local function on_subtop_btnback_click(btn)
 end
 
 local function on_sublist_btncellimg_click(btn)
-	UIMGR.create_window("UI/WNDSupDataUpLoadPhoto")
+	UIMGR.create_window("UI/WNDSubmitPhotoForReport")
 end
 
 local function on_sublist_btncellmsg_click(btn)

@@ -19,9 +19,16 @@ local AttendanceList
 
 local function on_subproject_grpproject_entproject_click(btn)
 	local index = tonumber(btn.name:sub(11))
-	local id = AttendanceList[index].Assignmentid
+	if DY_DATA.User.limit == 1 then
+		local id = AttendanceList[index].Assignmentid
+	end
+	local projectId = AttendanceList[index].id
 	local on_call_back = UI_DATA.WNDSelectProject.on_call_back
-	if on_call_back ~= nil then on_call_back(index,DY_DATA.AttendanceList) end
+	if DY_DATA.User.limit == 1 then
+		if on_call_back ~= nil then on_call_back(index,DY_DATA.AttendanceList) end
+	else
+		if on_call_back ~= nil then on_call_back(projectId,DY_DATA.AttendanceList) end
+	end
 	UIMGR.close_window(Ref.root)
 end
 
@@ -32,7 +39,7 @@ end
 local function on_ui_init()
 	print("try init ui")
 	AttendanceList = DY_DATA.get_attendance_list(false)
-	if AttendanceList == nil then 
+	if AttendanceList == nil or AttendanceList == {} then 
 		libunity.SetActive(Ref.SubProject.spNil, true)
 		return 
 	end
@@ -42,9 +49,14 @@ local function on_ui_init()
 	Ref.SubProject.GrpProject:dup(#AttendanceList, function ( i, Ent, isNew)
 		local Attendance = AttendanceList[i]
 		Ent.lbName.text = Attendance.name
-		Ent.SupName.text = Attendance.supervisor
-
+		if DY_DATA.User.limit == 1 then
+			libunity.SetActive(Ent.SupName,true)
+			Ent.SupName.text = Attendance.supervisor
+		else
+			libunity.SetActive(Ent.SupName,false)
+		end
 		UIMGR.get_photo(Ent.spIcon, Attendance.icon)
+
 	end)
 end
 
@@ -60,8 +72,9 @@ end
 local function init_logic()
 
 	if DY_DATA.User.limit == 1 then
+		print("______________________________Init Limit 1 ______________________________")
 		NW.subscribe("ATTENCE.SC.GETWORK",on_ui_init)
-
+		libunity.SetActive(Ref.SubLimit.root,true)
 		if DY_DATA.AttendanceList == nil or next(DY_DATA.AttendanceList) == nil then
 			print("AttendanceList is nil")
 			if NW.connected() then
@@ -76,7 +89,8 @@ local function init_logic()
 	end
 	if DY_DATA.User.limit == 2 then 
 		NW.subscribe("WORK.SC.GETPROJECT",on_ui_init)
-
+		print("______________________________Init Limit 2 ______________________________")
+		libunity.SetActive(Ref.SubLimit.root,false)
 		if DY_DATA.AttendanceList == nil or next(DY_DATA.AttendanceList) == nil then
 			print("AttendanceList is nil")
 			if NW.connected() then

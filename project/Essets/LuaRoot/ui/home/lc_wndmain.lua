@@ -17,13 +17,13 @@ local NW = MERequire "network/networkmgr"
 local MB = _G.UI.MessageBox
 local LOGIN = MERequire "libmgr/login.lua"
 local Ref
-local FristTime = true
 
 MERequire "datamgr/dydatactr"
 MERequire "datamgr/dydataop"
 
 local function on_sc_entergame(Ret)
 	_G.UI.Waiting.hide()
+
 	local limit = DY_DATA.User.limit
 
 	if limit == 1 then
@@ -43,17 +43,30 @@ end
 
 
 local function on_get_data(Ret)
-	if FristTime then
-	else
-		libunity.LogD("on_get_data return :{0}",JSON:encode(Ret))
-		if Ret.ret ~= 1 then
-			MB:make("", TEXT.tipPleaseReloginLong, true):set_event(function ()      
-	            LOGIN.do_logout()
-	    	end):show()
-			return 
-		end
+	print(JSON:encode(Ret))
+	if Ret.ret ~= 1 then
+		MB:make("", TEXT.tipPleaseReloginLong, true):set_event(function ()      
+            LOGIN.do_logout()
+    	end):show()
+		return 
 	end
     
+	-- local nm = NW.msg("MESSAGE.CS.GETLOWER")
+	-- nm:writeU32(DY_DATA.User.id)
+	-- NW.send(nm)
+	
+	-- local nm = NW.msg("USER.CS.GETSUPERLIST")
+	-- nm:writeU32(DY_DATA.User.id)
+	-- NW.send(nm)
+
+	-- local nm = NW.msg("MESSAGE.CS.GETMESSAGELIST")
+	-- nm:writeU32(DY_DATA.User.id)
+	-- NW.send(nm)
+
+	-- local nm = NW.msg("WORK.CS.GETPROJECT")
+	-- nm:writeU32(DY_DATA.User.id)
+	-- NW.send(nm)
+	print("------------Requiring Base Data !-------------")
 	local nm = NW.msg("ATTENCE.CS.GETTIME")
 	NW.send(nm)
 	
@@ -61,22 +74,14 @@ local function on_get_data(Ret)
     local id = UI_DATA.WNDLogin.id
     nm:writeU32(id)
     NW.send(nm)
-
+    print("------------Requiring End!-------------")
 end
 --!*以下：自动生成的回调函数*--
 
 local function on_btnrelogin_click(btn)
-	if FristTime then
-		FristTime = false
-		local Ret = {
-			ret = 1,
-		}
-		on_get_data(Ret)
-	else
-		MB:make("", TEXT.tipPleaseReloginLong, true):set_event(function ()      
-	        LOGIN.do_logout()
-		end):show()
-	end
+	MB:make("", TEXT.tipPleaseReloginLong, true):set_event(function ()      
+        LOGIN.do_logout()
+	end):show()
 end
 
 local function on_btnregisted_click(btn)
@@ -85,12 +90,16 @@ local function on_btnregisted_click(btn)
 end
 --判断用户类型
 local function on_ui_init()
+	UIMGR.create("UI/WNDMsgHint")     -----加载红点界面
+	UI_DATA.WNDMsgHint.state = false   ----初始化消息红点是否显示
+
 	if _G.Debug then
 		local id = DY_DATA.User.id
 		MERequire "datamgr/localdata.lua"
 		DY_DATA.User.id = id
 		if id == 1 then
 			UIMGR.create_window("UI/WNDMainAttendance")
+
 		elseif id == 2 then
 			UIMGR.create_window("UI/WNDSupAttendance")
 		elseif id == 3 then

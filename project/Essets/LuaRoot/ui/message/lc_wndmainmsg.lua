@@ -15,14 +15,60 @@ local UI_DATA = MERequire "datamgr/uidata.lua"
 local NW = MERequire "network/networkmgr"
 local Ref
 
+local function on_ui_init()
+	local MsgList = DY_DATA.MsgList
+	if MsgList == nil then 
+		libunity.SetActive(Ref.SubMsg.spNil, true)
+		return 
+	end
+	libunity.SetActive(Ref.SubMsg.spNil, #MsgList == 0)
+	
+	local LowerList = DY_DATA.LowerList
+	print("LowerList :"..JSON:encode(LowerList))
+	
+	Ref.SubMsg.GrpMsg:dup( #MsgList, function (i, Ent, isNew)
+		local Msg = MsgList[i]
+		
+		UIMGR.get_photo(Ent.SubContext.spIcon, Msg.icon)
+		libunity.SetActive(Ent.SubContext.spTip, Msg.state == 1)
+
+		if Msg.people == 0 then 
+			Ent.SubContext.lbTitle.text = "系统消息"
+		else
+			for i=1,#LowerList do
+				if LowerList[i].id == Msg.people then
+					Ent.SubContext.lbTitle.text = LowerList[i].name
+				end
+			end
+		end
+
+		if tonumber(Msg.state) == 1 then
+			libunity.SetActive(Ent.SubContext.spTip, true)
+		else
+			libunity.SetActive(Ent.SubContext.spTip, false)
+		end
+
+		Ent.SubContext.lbText.text = Msg.context
+		Ent.SubContext.lbTime.text = Msg.time:sub(0,8)
+		Ent.SubContext.lbDay.text = Msg.day
+	end)
+end
+
+
 local function on_read_msg(index)
 	local MsgList = DY_DATA.MsgList
+	print("信息列表-----------------"..JSON:encode(MsgList))
 	local Msg = MsgList[index]
-	print(JSON:encode(Msg))
+	print("信息--------------"..JSON:encode(Msg))
 	if Msg.type == 1 then
 		UIMGR.create_window("UI/WNDMainWork")
 	elseif Msg.type == 2 then
 		UI_DATA.WNDMsgContext.Msg = Msg
+		Ref.SubMsg.GrpMsg:dup( #MsgList, function (i, Ent, isNew)
+				if i == index then
+					UI_DATA.WNDMsgContext.Username = Ent.SubContext.lbTitle.text
+				end
+			end)
 		UIMGR.create_window("UI/WNDMsgContext")
 	elseif Msg.type == 3 then
 
@@ -35,7 +81,7 @@ local function on_submsg_grpmsg_entmsg_subcontext_btncontext_click(btn)
 	local index = tonumber(btn.transform.parent.parent.name:sub(7))
 	local MsgList = DY_DATA.MsgList
 	local Msg = MsgList[index]
-	if Msg.state == 1 then
+	if tonumber(Msg.state) == 1 then
 		local nm = NW.msg("MESSAGE.CS.UPSTATU")
 		nm:writeU32(Msg.id)
 		NW.send(nm)
@@ -50,10 +96,8 @@ local function on_submsg_grpmsg_entmsg_subcontext_btndel_click(btn)
 	local nm = NW.msg("MESSAGE.CS.DELETE")
 	nm:writeU32(Msg.id)
 	NW.send(nm)
-	local nm = NW.msg("MESSAGE.CS.GETMESSAGELIST")
-	nm:writeU32(DY_DATA.User.id)
-	NW.send(nm)
-	return
+	Ref.SubMsg.GrpMsg:dup(0)
+	on_ui_init()
 end
 
 local function on_subbtm_btnatt_click(btn)
@@ -76,37 +120,7 @@ local function on_subbtm_btnuser_click(btn)
 	UIMGR.create_window("UI/WNDMainUser")
 end
 
-local function on_ui_init()
-	local MsgList = DY_DATA.MsgList
-	if MsgList == nil then 
-		libunity.SetActive(Ref.SubMsg.spNil, true)
-		return 
-	end
-	libunity.SetActive(Ref.SubMsg.spNil, #MsgList == 0)
-	if DY_DATA.SetRed then
-		libunity.SetActive(Ref.SubBtm.SetRed,true)
-	else
-		libunity.SetActive(Ref.SubBtm.SetRed,false)
-	end
-	local LowerList = DY_DATA.LowerList
-	print("LowerList :"..JSON:encode(LowerList))
-	
-	Ref.SubMsg.GrpMsg:dup( #MsgList, function (i, Ent, isNew)
-		local Msg = MsgList[i]
-		
-		UIMGR.get_photo(Ent.SubContext.spIcon, Msg.icon)
-		libunity.SetActive(Ent.SubContext.spTip, Msg.state == 1)
 
-		if Msg.people == 0 then 
-			Ent.SubContext.lbTitle.text = "系统消息"
-		else
-			Ent.SubContext.lbTitle.text = LowerList[Msg.people] and LowerList[Msg.people].name or Msg.people
-		end
-		Ent.SubContext.lbText.text = Msg.context
-		Ent.SubContext.lbTime.text = Msg.time
-		Ent.SubContext.lbDay.text = Msg.day
-	end)
-end
 
 local function init_view()
 	Ref.SubMsg.GrpMsg.Ent.SubContext.btnContext.onAction = on_submsg_grpmsg_entmsg_subcontext_btncontext_click
@@ -123,8 +137,10 @@ local function init_view()
 end
 
 local function init_logic()
+	UI_DATA.WNDMsgHint.state = true
 	NW.subscribe("MESSAGE.SC.GETMESSAGELIST", on_ui_init)
-	NW.subscribe("MESSAGE.SC.GETLOWER", on_ui_init)
+	-- NW.subscribe("MESSAGE.SC.GETINFOR", on_people_back)
+	NW.subscribe("MESSAGE.CS.GETLOWER", on_ui_init)
 	if DY_DATA.LowerList == nil or next(DY_DATA.LowerList) == nil then
 		local nm = NW.msg("MESSAGE.CS.GETLOWER")
 		nm:writeU32(DY_DATA.User.id)
@@ -153,6 +169,7 @@ local function update_view()
 end
 
 local function on_recycle()
+	UI_DATA.WNDMsgHint.state = false
 	NW.unsubscribe("MESSAGE.SC.GETMESSAGELIST", on_ui_init)
 	NW.unsubscribe("MESSAGE.SC.GETLOWER", on_ui_init)
 end

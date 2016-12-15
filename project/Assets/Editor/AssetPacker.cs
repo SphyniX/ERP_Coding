@@ -166,12 +166,12 @@ public static class AssetPacker
         AssetDatabase.Refresh();
         
         BuildPipeline.BuildAssetBundles(EditorStreamingAssetsPath, options, buildTarget);
-        
+
         // 更新资源版本号
         VersionMgr.SaveAssetVersion(GitTools.getVerInfo());
         AssetDatabase.Refresh();
 
-		Log("BuildAssetBundles success.\n => {0}", EditorStreamingAssetsPath);
+        Log("BuildAssetBundles success.\n => {0}", EditorStreamingAssetsPath);
     }
 
     class AssetInf

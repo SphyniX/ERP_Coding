@@ -1,4 +1,4 @@
---
+ --
 -- @file    ui/uimgr.lua
 -- @authors xingweizhen
 -- @date    2015-04=08 19:19:23
@@ -186,6 +186,31 @@ function P.on_sdk_take_photo(name, tex, callBack)
 	libsystem.SubmitGameData("com.rongygame.sdk.SDKApi", "OnGameMessageReturn", Param)
 end
 
+function P.on_sdk_take_photo_selecttype(name, tex, type ,callBack)
+	print("开始拍照")
+	if name == nil or name == "" then 
+		if callBack then callBack(false, nil, nil) end 
+		return 
+	end
+	if _G.PhotoDebug then
+		P.load_photo(tex, name, callBack)
+		return
+	end
+		print("开始拍照1")
+	local UI_DATA = MERequire "datamgr/uidata.lua"
+	UI_DATA.WNDPhoto.on_get_photo_callback = function (name)
+		P.load_photo(tex, name, callBack)
+	end
+	local Param = {
+		method = "doTakePhoto",
+		param =  {
+			type = type,
+			name = name,
+		},
+	}
+	libsystem.SubmitGameData("com.rongygame.sdk.SDKApi", "OnGameMessageReturn", Param)
+end
+
 function P.update_photo(tex, name, callBack)
 	if name == nil or name == "" then 
 		if callBack then callBack(false, nil, nil) end 
@@ -205,19 +230,24 @@ function P.update_photo(tex, name, callBack)
 end
 
 function P.get_photo(tex, name, callBack)
+	print("---------------------------Starting GetPhoto! ----------------------")
 	if name == nil or name == "" then 
+		print("---------------------------No Name! ----------------------")
 		if callBack then callBack(false, nil, nil) end 
 		return 
 	end
 	P.load_photo(tex, name, function ( succ, name, image)
 		if succ == true then
+			print("---------------------------Loading Succ! ----------------------")
 			if callBack then callBack(succ, name, image) end
 		else
+			print("---------------------------Loading false! ----------------------")
 			P.update_photo( tex, name, function ()
 				P.load_photo(tex, name, callBack)
 			end)
 		end
 	end)
+	print("---------------------------Ending GetPhoto! ----------------------")
 end
 
 -- 隐藏公共背景图

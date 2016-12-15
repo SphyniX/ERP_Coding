@@ -76,6 +76,38 @@ local function on_submain_subselect_subcity_grp_ent_click(btn)
 	
 end
 
+local function on_submain_subselect_btncancle_click(btn)
+	if NeedGetCityList then 
+		if CityList ~= nil then
+			Ref.SubMain.SubSelect.SubCity.Grp:dup(#CityList, function (i, Ent, isNew)
+				Ent.lbName.text = nil
+			end)
+		end
+		Ref.SubMain.SubSelect.SubProvince.Grp:dup(#ProvinceList+1, function (i, Ent, isNew)
+			Ent.lbName.text = nil
+		end)
+	else
+		if CityList ~= nil then
+			Ref.SubMain.SubSelect.SubCity.Grp:dup(#CityList, function (i, Ent, isNew)
+				Ent.lbName.text = nil
+			end)
+		end
+		Ref.SubMain.SubSelect.SubProvince.Grp:dup(#ProvinceList, function (i, Ent, isNew)
+			Ent.lbName.text = nil
+		end)
+	end
+	Ref.SubMain.SubSelect.lbCity.text = nil
+	ProvinceList = nil
+	CityList = nil
+	FromWhere = nil
+	cityid =nil
+	callbackfunc = nil
+	CityChoose = nil
+	ProvinceNow = nil
+	UIMGR.close(Ref.root)
+end
+
+
 local function on_submain_subselect_btnsave_click(btn)
 	if CityChoose == nil then
 		_G.UI.Toast:make(nil, "请选择城市"):show()
@@ -114,38 +146,6 @@ local function on_submain_subselect_btnsave_click(btn)
 	
 	UIMGR.close(Ref.root)
 end
-
-local function on_submain_subselect_btncancle_click(btn)
-	if NeedGetCityList then 
-		if CityList ~= nil then
-			Ref.SubMain.SubSelect.SubCity.Grp:dup(#CityList, function (i, Ent, isNew)
-				Ent.lbName.text = nil
-			end)
-		end
-		Ref.SubMain.SubSelect.SubProvince.Grp:dup(#ProvinceList+1, function (i, Ent, isNew)
-			Ent.lbName.text = nil
-		end)
-	else
-		if CityList ~= nil then
-			Ref.SubMain.SubSelect.SubCity.Grp:dup(#CityList, function (i, Ent, isNew)
-				Ent.lbName.text = nil
-			end)
-		end
-		Ref.SubMain.SubSelect.SubProvince.Grp:dup(#ProvinceList, function (i, Ent, isNew)
-			Ent.lbName.text = nil
-		end)
-	end
-	Ref.SubMain.SubSelect.lbCity.text = nil
-	ProvinceList = nil
-	CityList = nil
-	FromWhere = nil
-	cityid =nil
-	callbackfunc = nil
-	CityChoose = nil
-	ProvinceNow = nil
-	UIMGR.close(Ref.root)
-end
-
 
 local function on_place_init()
 	if NeedGetCityList then
@@ -192,8 +192,8 @@ end
 local function init_view()
 	Ref.SubMain.SubSelect.SubProvince.Grp.Ent.btn.onAction = on_submain_subselect_subprovince_grp_ent_click
 	Ref.SubMain.SubSelect.SubCity.Grp.Ent.btn.onAction = on_submain_subselect_subcity_grp_ent_click
-	Ref.SubMain.SubSelect.btnSave.onAction = on_submain_subselect_btnsave_click
 	Ref.SubMain.SubSelect.btnCancle.onAction = on_submain_subselect_btncancle_click
+	Ref.SubMain.SubSelect.btnSave.onAction = on_submain_subselect_btnsave_click
 	UIMGR.make_group(Ref.SubMain.SubSelect.SubProvince.Grp, function (New, Ent)
 		New.btn.onAction = Ent.btn.onAction
 	end)

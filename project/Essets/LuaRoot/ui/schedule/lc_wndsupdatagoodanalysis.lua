@@ -23,6 +23,7 @@ local function on_submain_grp_ent_click(btn)
 end
 
 local function on_subtop_back_click(btn)
+	Ref.SubMain.Grp:dup(0)
 	UIMGR.close_window(Ref.root)
 end
 
@@ -34,8 +35,8 @@ local function on_subcell1_click(btn)
 	
 end
 local function on_panel_init()
-	local roject =  DY_DATA.SchProjectList[UI_DATA.WNDSelectStore.projectId] -- DY_DATA.StoreData.ComListRe
-	local ComListRe = roject.ComList
+	local Project =  DY_DATA.SchProjectList[UI_DATA.WNDSupStoreData.projectId] -- DY_DATA.StoreData.ComListRe
+	local ComListRe = Project.ComList
 	if ComListRe == nil and #ComListRe == 0 then 
 
 	else
@@ -60,15 +61,16 @@ end
 
 local function init_logic()
 	NW.subscribe("WORK.SC.GETCOMLIST",on_panel_init)
-	local roject =   DY_DATA.SchProjectList[UI_DATA.WNDSelectStore.projectId] -- DY_DATA.StoreData.ComListRe
-	local ComListRe = roject.ComList
-	ComListRe=nil
-	if ComListRe == nil or #ComListRe == 0 then
+	print("UI_DATA.WNDSupStoreData.storeId-------------"..UI_DATA.WNDSupStoreData.projectId)
+	 local Project =   DY_DATA.SchProjectList[UI_DATA.WNDSupStoreData.projectId] -- DY_DATA.StoreData.ComListRe
+	 local ComListRe = Project.ComList
+	 ComListRe = nil
+	 if ComListRe == nil or #ComListRe == 0 then
 	 	local nm = NW.msg("WORK.CS.GETCOMLIST")
-	 	print("UI_DATA.WNDSupStoreData.storeId-------------"..UI_DATA.WNDSelectStore.projectId)
-	 	nm:writeU32(UI_DATA.WNDSelectStore.projectId)
-		NW.send(nm)
-	end
+	 	
+	 	nm:writeU32(UI_DATA.WNDSupStoreData.projectId)
+	 	NW.send(nm)
+	 end
 
 end
 
@@ -85,7 +87,7 @@ local function update_view()
 end
 
 local function on_recycle()
-	
+	NW.unsubscribe("WORK.SC.GETCOMLIST",on_panel_init)
 end
 
 local P = {

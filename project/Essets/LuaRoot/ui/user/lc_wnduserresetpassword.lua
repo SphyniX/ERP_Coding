@@ -13,7 +13,7 @@ local UIMGR = MERequire "ui/uimgr"
 local NW = MERequire "network/networkmgr"
 local DY_DATA = MERequire "datamgr/dydata.lua"
 local Ref
-
+local PasswordCtrl = true
 
 local function on_reset_pass(Ret)
 	if Ret.ret == 1 then
@@ -79,11 +79,15 @@ end
 
 
 local function on_submain_btnenter_click(btn)
-	local oldpass = Ref.SubMain.SubOldPassword.inpPassword.text
-	local nm = NW.msg("USER.CS.VALPWD")
-	nm:writeU32(DY_DATA.User.id)
-	nm:writeString(oldpass)
-	NW.send(nm)
+	if PasswordCtrl then
+		local oldpass = Ref.SubMain.SubOldPassword.inpPassword.text
+		local nm = NW.msg("USER.CS.VALPWD")
+		nm:writeU32(DY_DATA.User.id)
+		nm:writeString(oldpass)
+		NW.send(nm)
+	else
+		_G.UI.Toast:make(nil, "密码设定过于简单，请重设"):show()
+	end
 end
 
 local function on_subtop_btnback_click(btn)
@@ -101,11 +105,23 @@ local function init_view()
 	Ref.SubTop.btnBack.onAction = on_subtop_btnback_click
 	--!*以上：自动注册的回调函数*--
 end
+local function onSubPassword(input)
+	if #Ref.SubMain.SubPassword.inpPassword.text > 8 then
+		libunity.SetActive(Ref.SubMain.SubPassword.lbHint,false)
+		PasswordCtrl = true
+	else
+		libunity.SetActive(Ref.SubMain.SubPassword.lbHint,true)
+		PasswordCtrl = false
+	end
+end
+local function onSubPasswordTwo(input)
+end
 
 local function init_logic()
 	NW.subscribe("USER.SC.VALPWD", on_val_pass)
 	NW.subscribe("USER.SC.UPDATE", on_reset_pass)
-
+	Ref.SubMain.SubPassword.inpPassword.onSubmit = onSubPassword
+	Ref.SubMain.SubPasswordTwo.inpPassword.onSubmit = onSubPasswordTwo
 	Ref.SubMain.SubOldPassword.inpPassword.text = ""
 	Ref.SubMain.SubPassword.inpPassword.text = ""
 	Ref.SubMain.SubPasswordTwo.inpPassword.text = ""

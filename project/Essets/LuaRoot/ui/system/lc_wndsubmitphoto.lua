@@ -14,7 +14,7 @@ local UI_DATA = MERequire "datamgr/uidata.lua"
 local Ref
 
 local callback, PhotoList
-local input,inputvalue
+local input,inputvalue,characterLimit
 
 --!*以下：自动生成的回调函数*--
 
@@ -32,7 +32,7 @@ local function on_subtop_btnback_click(btn)
 	UIMGR.close_window()
 end
 
-local function on_subtop_btnsave_click(btn)
+local function on_btnsave_click(btn)
 	local n = #PhotoList
 	for i,v in ipairs(PhotoList) do
 		if v.need and v.image == nil then 
@@ -55,7 +55,7 @@ end
 local function init_view()
 	Ref.SubPhoto.GrpPhoto.Ent.btn.onAction = on_subphoto_grpphoto_entphoto_click
 	Ref.SubTop.btnBack.onAction = on_subtop_btnback_click
-	Ref.SubTop.btnSave.onAction = on_subtop_btnsave_click
+	Ref.btnSave.onAction = on_btnsave_click
 	UIMGR.make_group(Ref.SubPhoto.GrpPhoto, function (New, Ent)
 		New.btn.onAction = Ent.btn.onAction
 	end)
@@ -79,6 +79,11 @@ local function init_logic()
 	UI_DATA.WNDShowPhoto.inputvalue = nil
 	Ref.SubPhoto.GrpPhoto.lbInput.text = input or ""
 	Ref.SubPhoto.GrpPhoto.inpInput.text = inputvalue or ""
+
+	if UI_DATA.WNDShowPhoto.characterLimit ~= nil then
+		characterLimit = tonumber(UI_DATA.WNDShowPhoto.characterLimit)
+		Ref.SubPhoto.GrpPhoto.inpInput.characterLimit = characterLimit
+	end
 
 	UI_DATA.WNDShowPhoto = {}
 

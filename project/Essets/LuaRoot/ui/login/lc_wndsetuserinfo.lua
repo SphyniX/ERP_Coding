@@ -14,6 +14,7 @@ local UIMGR = MERequire "ui/uimgr"
 local UI_DATA = MERequire "datamgr/uidata.lua"
 local LOGIN = MERequire "libmgr/login.lua"
 local Ref
+local NowType = 1
 
 local function on_validatenumed(Ret)
 	if Ret.ret == 1 then
@@ -21,15 +22,32 @@ local function on_validatenumed(Ret)
 	end
 end
 
+local function on_upload_photo_callback(Ret)
+	if UI_DATA.WNDRegist.UserInfo == nil then UI_DATA.WNDRegist.UserInfo = {} end
+	local UserInfo = UI_DATA.WNDRegist.UserInfo
+	if UserInfo.PhotoList == nil then UserInfo.PhotoList = {} end
+	if Ret.ret == 1 then
+		print("<color = gray>Photoid Back is: " .. Ret.photoid .. "</color>")
+		UserInfo.PhotoList[NowType] = Ret.photoid,
+		_G.UI.Toast:make(nil, "成功"):show()
+	end
+end
+
+local function on_take_photo_call_back(image)
+
+	LOGIN.try_uploadphotoforuserinfo(NowType,image,on_upload_photo_callback)
+end 
+
 --!*以下：自动生成的回调函数*--
 
 local function on_submain_subcontext_subicon_click(btn)
 	UIMGR.on_sdk_take_photo("1.png", Ref.SubMain.SubContext.SubIcon.spIcon, function ( succ, name, image )
-		if UI_DATA.WNDRegist.UserInfo == nil then UI_DATA.WNDRegist.UserInfo = {} end
-		local UserInfo = UI_DATA.WNDRegist.UserInfo
-		if UserInfo.PhotoList == nil then UserInfo.PhotoList = {} end
-		UserInfo.PhotoList[1] = image
+		NowType = 1
+		if succ then
+			on_take_photo_call_back(image)
+		end
 	end)
+
 end
 
 local function on_submain_subcontext_subinfo_subbaseinfo_subone_subage_click(btn)
@@ -55,23 +73,19 @@ end
 
 local function on_submain_subcontext_subinfo_subidcard_subphotolist_subphotofront_click(btn)
 	UIMGR.on_sdk_take_photo("2.png", Ref.SubMain.SubContext.SubInfo.SubIDCard.SubPhotoList.SubPhotoFront.spImage, function ( succ, name, image )
-		if UI_DATA.WNDRegist.UserInfo == nil then UI_DATA.WNDRegist.UserInfo = {} end
-		local UserInfo = UI_DATA.WNDRegist.UserInfo
-		if UserInfo.PhotoList == nil then UserInfo.PhotoList = {} end
-		UserInfo.PhotoList[2] = image
+		NowType = 2
+		if succ then
+			on_take_photo_call_back(image)
+		end
 	end)
 
 end
 
 local function on_submain_subcontext_subinfo_subidcard_subphotolist_subphotoback_click(btn)
 	UIMGR.on_sdk_take_photo("3.png", Ref.SubMain.SubContext.SubInfo.SubIDCard.SubPhotoList.SubPhotoBack.spImage, function ( succ, name, image )
+		NowType = 3
 		if succ then
-			if UI_DATA.WNDRegist.UserInfo == nil then UI_DATA.WNDRegist.UserInfo = {} end
-			local UserInfo = UI_DATA.WNDRegist.UserInfo
-			if UserInfo.PhotoList == nil then UserInfo.PhotoList = {} end
-			UserInfo.PhotoList[3] = image
-		else
-			UserInfo.PhotoList[3] = nil
+			on_take_photo_call_back(image)
 		end
 	end)
 
@@ -80,29 +94,29 @@ end
 local function on_submain_subcontext_subinfo_subidcard_subphotolist_subphotoall_click(btn)
 	
 	UIMGR.on_sdk_take_photo("4.png", Ref.SubMain.SubContext.SubInfo.SubIDCard.SubPhotoList.SubPhotoAll.spImage, function ( succ, name, image )
-		if UI_DATA.WNDRegist.UserInfo == nil then UI_DATA.WNDRegist.UserInfo = {} end
-		local UserInfo = UI_DATA.WNDRegist.UserInfo
-		if UserInfo.PhotoList == nil then UserInfo.PhotoList = {} end
-		UserInfo.PhotoList[4] = image
+		NowType = 4
+		if succ then
+			on_take_photo_call_back(image)
+		end
 	end)
 
 end
 
 local function on_submain_subcontext_subinfo_subbankcard_subphotolist_subphotofront_click(btn)
 	UIMGR.on_sdk_take_photo("5.png", Ref.SubMain.SubContext.SubInfo.SubBankCard.SubPhotoList.SubPhotoFront.spImage, function ( succ, name, image )
-		if UI_DATA.WNDRegist.UserInfo == nil then UI_DATA.WNDRegist.UserInfo = {} end
-		local UserInfo = UI_DATA.WNDRegist.UserInfo
-		if UserInfo.PhotoList == nil then UserInfo.PhotoList = {} end
-		UserInfo.PhotoList[5] = image
+		NowType = 5
+		if succ then
+			on_take_photo_call_back(image)
+		end
 	end)
 end
 
 local function on_submain_subcontext_subinfo_subbankcard_subphotolist_subphotoback_click(btn)
 	UIMGR.on_sdk_take_photo("6.png", Ref.SubMain.SubContext.SubInfo.SubBankCard.SubPhotoList.SubPhotoBack.spImage, function ( succ, name, image )
-		if UI_DATA.WNDRegist.UserInfo == nil then UI_DATA.WNDRegist.UserInfo = {} end
-		local UserInfo = UI_DATA.WNDRegist.UserInfo
-		if UserInfo.PhotoList == nil then UserInfo.PhotoList = {} end
-		UserInfo.PhotoList[6] = image
+		NowType = 6
+		if succ then
+			on_take_photo_call_back(image)
+		end
 	end)
 end
 
@@ -154,66 +168,66 @@ local function init_logic()
 	Ref_Info.SubContact.SubPhone.lbText.text = UserInfo.phone
 	UserInfo.PhotoList = {}
 	---- test ----
-	-- UIMGR.get_photo(Ref.SubMain.SubContext.SubIcon.spIcon,"1.png",function ( succ, name, image )
-	-- 	if succ then
-	-- 		if UI_DATA.WNDRegist.UserInfo == nil then UI_DATA.WNDRegist.UserInfo = {} end
-	-- 		local UserInfo = UI_DATA.WNDRegist.UserInfo
-	-- 		if UserInfo.PhotoList == nil then UserInfo.PhotoList = {} end
-	-- 		UserInfo.PhotoList[1] = image
-	-- 	else
-	-- 		UserInfo.PhotoList[1] = nil
-	-- 	end
-	-- end)
-	-- UIMGR.get_photo(Ref.SubMain.SubContext.SubInfo.SubIDCard.SubPhotoList.SubPhotoFront.spImage,"1.png",function ( succ, name, image )
-	-- 	if succ then
-	-- 		if UI_DATA.WNDRegist.UserInfo == nil then UI_DATA.WNDRegist.UserInfo = {} end
-	-- 		local UserInfo = UI_DATA.WNDRegist.UserInfo
-	-- 		if UserInfo.PhotoList == nil then UserInfo.PhotoList = {} end
-	-- 		UserInfo.PhotoList[2] = image
-	-- 	else
-	-- 		UserInfo.PhotoList[2] = nil
-	-- 	end
-	-- end)
-	-- UIMGR.get_photo(Ref.SubMain.SubContext.SubInfo.SubIDCard.SubPhotoList.SubPhotoBack.spImage,"1.png",function ( succ, name, image )
-	-- 	if succ then
-	-- 		if UI_DATA.WNDRegist.UserInfo == nil then UI_DATA.WNDRegist.UserInfo = {} end
-	-- 		local UserInfo = UI_DATA.WNDRegist.UserInfo
-	-- 		if UserInfo.PhotoList == nil then UserInfo.PhotoList = {} end
-	-- 		UserInfo.PhotoList[3] = image
-	-- 	else
-	-- 		UserInfo.PhotoList[3] = nil
-	-- 	end
-	-- end)
-	-- UIMGR.get_photo(Ref.SubMain.SubContext.SubInfo.SubIDCard.SubPhotoList.SubPhotoAll.spImage,"1.png",function ( succ, name, image )
-	-- 	if succ then
-	-- 		if UI_DATA.WNDRegist.UserInfo == nil then UI_DATA.WNDRegist.UserInfo = {} end
-	-- 		local UserInfo = UI_DATA.WNDRegist.UserInfo
-	-- 		if UserInfo.PhotoList == nil then UserInfo.PhotoList = {} end
-	-- 		UserInfo.PhotoList[4] = image
-	-- 	else
-	-- 		UserInfo.PhotoList[4] = nil
-	-- 	end
-	-- end)
-	-- UIMGR.get_photo(Ref.SubMain.SubContext.SubInfo.SubBankCard.SubPhotoList.SubPhotoFront.spImage,"1.png",function ( succ, name, image )
-	-- 	if succ then
-	-- 		if UI_DATA.WNDRegist.UserInfo == nil then UI_DATA.WNDRegist.UserInfo = {} end
-	-- 		local UserInfo = UI_DATA.WNDRegist.UserInfo
-	-- 		if UserInfo.PhotoList == nil then UserInfo.PhotoList = {} end
-	-- 		UserInfo.PhotoList[5] = image
-	-- 	else
-	-- 		UserInfo.PhotoList[5] = nil
-	-- 	end
-	-- end)
-	-- UIMGR.get_photo(Ref.SubMain.SubContext.SubInfo.SubBankCard.SubPhotoList.SubPhotoBack.spImage,"1.png",function ( succ, name, image )
-	-- 	if succ then
-	-- 		if UI_DATA.WNDRegist.UserInfo == nil then UI_DATA.WNDRegist.UserInfo = {} end
-	-- 		local UserInfo = UI_DATA.WNDRegist.UserInfo
-	-- 		if UserInfo.PhotoList == nil then UserInfo.PhotoList = {} end
-	-- 		UserInfo.PhotoList[6] = image
-	-- 	else
-	-- 		UserInfo.PhotoList[6] = nil
-	-- 	end
-	-- end)
+	UIMGR.get_photo(Ref.SubMain.SubContext.SubIcon.spIcon,"1.png",function ( succ, name, image )
+		if succ then
+			if UI_DATA.WNDRegist.UserInfo == nil then UI_DATA.WNDRegist.UserInfo = {} end
+			local UserInfo = UI_DATA.WNDRegist.UserInfo
+			if UserInfo.PhotoList == nil then UserInfo.PhotoList = {} end
+			UserInfo.PhotoList[1] = image
+		else
+			UserInfo.PhotoList[1] = nil
+		end
+	end)
+	UIMGR.get_photo(Ref.SubMain.SubContext.SubInfo.SubIDCard.SubPhotoList.SubPhotoFront.spImage,"1.png",function ( succ, name, image )
+		if succ then
+			if UI_DATA.WNDRegist.UserInfo == nil then UI_DATA.WNDRegist.UserInfo = {} end
+			local UserInfo = UI_DATA.WNDRegist.UserInfo
+			if UserInfo.PhotoList == nil then UserInfo.PhotoList = {} end
+			UserInfo.PhotoList[2] = image
+		else
+			UserInfo.PhotoList[2] = nil
+		end
+	end)
+	UIMGR.get_photo(Ref.SubMain.SubContext.SubInfo.SubIDCard.SubPhotoList.SubPhotoBack.spImage,"1.png",function ( succ, name, image )
+		if succ then
+			if UI_DATA.WNDRegist.UserInfo == nil then UI_DATA.WNDRegist.UserInfo = {} end
+			local UserInfo = UI_DATA.WNDRegist.UserInfo
+			if UserInfo.PhotoList == nil then UserInfo.PhotoList = {} end
+			UserInfo.PhotoList[3] = image
+		else
+			UserInfo.PhotoList[3] = nil
+		end
+	end)
+	UIMGR.get_photo(Ref.SubMain.SubContext.SubInfo.SubIDCard.SubPhotoList.SubPhotoAll.spImage,"1.png",function ( succ, name, image )
+		if succ then
+			if UI_DATA.WNDRegist.UserInfo == nil then UI_DATA.WNDRegist.UserInfo = {} end
+			local UserInfo = UI_DATA.WNDRegist.UserInfo
+			if UserInfo.PhotoList == nil then UserInfo.PhotoList = {} end
+			UserInfo.PhotoList[4] = image
+		else
+			UserInfo.PhotoList[4] = nil
+		end
+	end)
+	UIMGR.get_photo(Ref.SubMain.SubContext.SubInfo.SubBankCard.SubPhotoList.SubPhotoFront.spImage,"1.png",function ( succ, name, image )
+		if succ then
+			if UI_DATA.WNDRegist.UserInfo == nil then UI_DATA.WNDRegist.UserInfo = {} end
+			local UserInfo = UI_DATA.WNDRegist.UserInfo
+			if UserInfo.PhotoList == nil then UserInfo.PhotoList = {} end
+			UserInfo.PhotoList[5] = image
+		else
+			UserInfo.PhotoList[5] = nil
+		end
+	end)
+	UIMGR.get_photo(Ref.SubMain.SubContext.SubInfo.SubBankCard.SubPhotoList.SubPhotoBack.spImage,"1.png",function ( succ, name, image )
+		if succ then
+			if UI_DATA.WNDRegist.UserInfo == nil then UI_DATA.WNDRegist.UserInfo = {} end
+			local UserInfo = UI_DATA.WNDRegist.UserInfo
+			if UserInfo.PhotoList == nil then UserInfo.PhotoList = {} end
+			UserInfo.PhotoList[6] = image
+		else
+			UserInfo.PhotoList[6] = nil
+		end
+	end)
 	-- UIMGR.get_photo(Ref.SubMain.SubContext.SubInfo.SubBankCard.SubPhotoAll.spImage,"1.png")
 
 end

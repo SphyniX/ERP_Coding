@@ -16,6 +16,7 @@ local LOGIN = MERequire "libmgr/login.lua"
 local NW = MERequire "network/networkmgr"
 local Ref
 local state
+local typeid
 local IfcanPunch
 --!*以下：自动生成的回调函数*--
 local function on_upload_photo_callback( Ret )
@@ -37,10 +38,12 @@ end
 
 local function on_submain_btnsubmit_click(btn)
 	if IfcanPunch then
-		print("督导考勤")
+		
+		local state = tonumber(DY_DATA.WNDsupShopSelectPunch.state)+2
+		print("督导考勤" .. "______State is ______  " .. state .. "  _ ___________")
 		local nm = NW.msg("ATTENCE.CS.PHUNCH")
 		nm:writeU32(DY_DATA.WNDsupShopSelect.StoreId)			
-		nm:writeU32(DY_DATA.WNDsupShopSelectPunch.state)
+		nm:writeU32(state)
 		NW.send(nm)
 		UIMGR.close_window(Ref.root)
 	else
@@ -57,7 +60,6 @@ local function on_submain_btnimg_click(btn)
 		print("拍图片1------"..DY_DATA.WNDsupShopSelect.StoreId)
 	UIMGR.on_sdk_take_photo("1.png", tex, function (succ, name, image)
 
-		local typeid 
 		if DY_DATA.WNDsupShopSelectPunch.state==1 then
 			typeid=7
 		else
@@ -74,7 +76,6 @@ local function on_submain_btnimg_click(btn)
 	-----test ----
 	UIMGR.load_photo( tex, "1.png",function (succ, name, image)
 
-		local typeid 
 		if DY_DATA.WNDsupShopSelectPunch.state==1 then
 			typeid=7
 		else

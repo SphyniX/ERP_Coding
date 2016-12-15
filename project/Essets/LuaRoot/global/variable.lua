@@ -93,8 +93,8 @@ end
     _G.ENV.TEXT = libasset.DoLua("localize/".._G.ENV.lang..".lua")
     setmetatable(_G.ENV, _G.MT.Const)
 -------------------------------zzg---add-----------------
-_G.ENV.WorkTEXT =libasset.DoLua("localize/".."WNDSupWorkSelectPage"..".lua")
-setmetatable(_G.ENV, _G.MT.Const)
+    _G.ENV.WorkTEXT =libasset.DoLua("localize/".."WNDSupWorkSelectPage"..".lua")
+    setmetatable(_G.ENV, _G.MT.Const)
     -------------------------------zzg---add-----------------
 
 

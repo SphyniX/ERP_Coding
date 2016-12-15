@@ -23,28 +23,30 @@ local Project, StoreList,CityList,TempStoreList
 
 local function on_ui_init(cityid)
 	if cityid == nil then cityid = 0 end
-	local projectId = UI_DATA.WNDSelectStore.projectId
+	local projectId = UI_DATA.WNDSupSelectStore.projectId
 	local Project = DY_DATA.SchProjectList[projectId]
-	StoreList = Project.StoreList
+	StoreList = Project.SchStoreList
 	if StoreList == nil then
 		libunity.SetActive(Ref.SubStore.spNil, true)
 		return 
 	end
 	libunity.SetActive(Ref.SubStore.spNil, #StoreList == 0)
-	print("StoreList in WNDSelectStore" .. JSON:encode(StoreList))
+	print("StoreList in WNDSupSelectStore" .. JSON:encode(StoreList))
 	TempStoreList = {}
 	if cityid == 0 then
 		TempStoreList = StoreList
 	else
 		for i=1,#StoreList do
-			if StoreList[i].cityid == cityid then
+			if tonumber(StoreList[i].cityid) == cityid then
 				table.insert(TempStoreList,StoreList[i])
 			end
 		end
 	end
 	Ref.SubStore.GrpStore:dup(#TempStoreList, function ( i, Ent, isNew)
+		local TEXT = _G.ENV.TEXT
 		local Store = TempStoreList[i]
 		Ent.lbName.text = Store.name
+		Ent.StoreState.text = TEXT.StoreState[tonumber(Store.takeorupload)]
 		UIMGR.get_photo(Ent.spIcon, Store.icon)
 
 	end)
@@ -57,7 +59,7 @@ end
 
 local function on_substore_grpstore_entstore_click(btn)
 	local index = tonumber(btn.name:sub(9))
-	UI_DATA.WNDSupStoreData.projectId = UI_DATA.WNDSelectStore.projectId
+	UI_DATA.WNDSupStoreData.projectId = UI_DATA.WNDSupSelectStore.projectId
 	UI_DATA.WNDSupStoreData.storeId = TempStoreList[index].id
 	UIMGR.create_window("UI/WNDSupStoreData")
 end
@@ -71,7 +73,7 @@ end
 local function on_subtop_btncity_click(btn)
 		UI_DATA.WNDSelectPlace.FromWhere = "fromserver"
 		UI_DATA.WNDSelectPlace.NeedGetCityList = true
-		UI_DATA.WNDSelectPlace.projectId = UI_DATA.WNDSelectStore.projectId
+		UI_DATA.WNDSelectPlace.projectId = UI_DATA.WNDSupSelectStore.projectId
 		UI_DATA.WNDSelectPlace.callbackfunc = on_select_city_callback
 		UIMGR.create("UI/WNDSelectPlace")
 end
@@ -90,13 +92,15 @@ local function init_view()
 end
 
 local function init_logic()
-	NW.subscribe("ATTENCE.SC.GETATTSTORE", on_ui_init)
-	local projectId = UI_DATA.WNDSelectStore.projectId
-	local Project = DY_DATA.ProjectList[projectId]
-	if Project.StoreList == nil or #Project.StoreList == 0 then
-		local nm = NW.msg("ATTENCE.CS.GETATTSTORE")
-		nm:writeU32(DY_DATA.User.id)
+	NW.subscribe("WORK.SC.GETSTORE", on_ui_init)
+	local projectId = UI_DATA.WNDSupSelectStore.projectId
+	local Project = DY_DATA.SchProjectList[projectId]
+	print("projectId in WNDSupSelectStore is " .. projectId)
+	if Project.SchStoreList == nil or #Project.SchStoreList == 0 then
+		local nm = NW.msg("WORK.CS.GETSTORE")
 		nm:writeU32(projectId)
+		nm:writeU32(DY_DATA.User.id)
+		
 		NW.send(nm)
 		return
 	end
