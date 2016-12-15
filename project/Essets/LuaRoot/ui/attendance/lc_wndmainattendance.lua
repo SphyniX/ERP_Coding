@@ -32,9 +32,7 @@ local on_project_init
 local ringOutState = nil
 local punch_type -- 1 上班， 2 下班
 
-local function on_ringout_back()
-ringOutState = DY_DATA.AttenceCardverification.state
-end
+
 
 on_project_init = function ()
 	if projectId == nil then
@@ -118,6 +116,32 @@ local function on_try_punch(Ret)
 	end
 end
 
+local function on_ringout_back()
+	ringOutState = DY_DATA.AttenceCardverification.state
+	if tonumber(ringOutState) == 1 then
+	-- 下班
+		local workstate = DY_DATA.User.workstate -- 1 下班， 2， 上班中， 3 离岗
+		if workstate == 2 then 
+			punch_type = 2
+			-- local nm = NW.msg("ATTENCE.CS.VERIFYLATLNG")
+			-- local gps = libsystem.GetGps()
+			-- nm:writeU32(projectId)
+			-- nm:writeString(gps)
+			-- NW.send(nm)
+			on_try_punch({ret = 1})
+		else
+			if workstate == 1 then
+				_G.UI.Toast:make(nil, "当前不在上班状态"):show()
+			else
+				_G.UI.Toast:make(nil, "请先复岗后方可下班"):show()
+			end
+		end
+	else
+		_G.UI.Toast:make(nil, "打卡异常，无法进行"):show()
+	end
+end
+
+
 --!*以下：自动生成的回调函数*--
 
 local function on_submain_subproject_click(btn)
@@ -153,32 +177,12 @@ local function on_submain_subatton_btnbutton_click(btn)
 end
 
 local function on_submain_subattoff_btnbutton_click(btn)
-	if Assignmentid ~=nil then 
-		local nm = NW.msg("ATTENCE.CS.VERIFYLATLNG")
-		nm:writeU32(Assignmentid)
-		NW.send(nm)
+	if Assignmentid ~=nil then
+			local nm = NW.msg("ATTENCE.CS.CARDVERIFICATION")
+			nm:writeU32(Assignmentid)
+			NW.send(nm)
 	end
-	if ringOutState == 1 then
-	-- 下班
-		local workstate = DY_DATA.User.workstate -- 1 下班， 2， 上班中， 3 离岗
-		if workstate == 2 then 
-			punch_type = 2
-			-- local nm = NW.msg("ATTENCE.CS.VERIFYLATLNG")
-			-- local gps = libsystem.GetGps()
-			-- nm:writeU32(projectId)
-			-- nm:writeString(gps)
-			-- NW.send(nm)
-			on_try_punch({ret = 1})
-		else
-			if workstate == 1 then
-				_G.UI.Toast:make(nil, "当前不在上班状态"):show()
-			else
-				_G.UI.Toast:make(nil, "请先复岗后方可下班"):show()
-			end
-		end
-	else
-		_G.UI.Toast:make(nil, "打卡异常，无法进行"):show()
-	end
+	
 end
 
 local function on_submain_subleave_btnbutton_click(btn)
@@ -271,7 +275,7 @@ local function init_logic()
 	NW.subscribe("USER.SC.GETUSERINFOR", on_ui_init)
 	NW.subscribe("ATTENCE.SC.GETTIME",refreshtime)
 	NW.subscribe("MESSAGE.SC.GETMESSAGELIST",on_msg_init)
-	NW.subscribe("ATTENCE.SC.VERIFYLATLNG", on_ringout_back)
+	NW.subscribe("ATTENCE.SC.CARDVERIFICATION", on_ringout_back)
 
 	-- libsystem.StartGps()
 	on_ui_init()
