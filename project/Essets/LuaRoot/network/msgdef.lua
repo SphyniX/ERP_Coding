@@ -330,20 +330,6 @@ do
         } 
     end
 
-    local SEND_BASE = 9000
-    function Funcs.send_cs()
-        local ID_BASE = SEND_BASE + 10
-        return {
-            SENDMESSAGE = ID_BASE + 1,
-        } 
-    end
-    function Funcs.send_sc()
-        local ID_BASE = SEND_BASE + 510
-        return {
-            SENDMESSAGE = ID_BASE + 1,
-        } 
-    end
-
     local function make_msg_map(module)
         local func = module:lower()
         local CS, SC = Funcs[func.."_cs"](), Funcs[func.."_sc"]()
@@ -365,7 +351,6 @@ do
     make_msg_map("WORK")
     make_msg_map("DISTRICTMAG")
     make_msg_map("MESSAGE")
-    make_msg_map("SEND")
 
     P.get_msg_name = function (code)
         for k,v in pairs(P) do

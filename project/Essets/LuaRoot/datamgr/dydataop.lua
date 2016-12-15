@@ -110,16 +110,6 @@ NW.regist("WORK.SC.DELETEASS", common_op_ret_suc)
 
 NW.regist("MESSAGE.SC.SENDMESSAGE", common_op_ret_suc)
 
-NW.regist("SEND.SC.SENDMESSAGE",  function (nm)
-
-		local DY_DATA = MERequire "datamgr/dydata.lua"
-		local NW = MERequire "network/networkmgr"
-		local nm = NW.msg("MESSAGE.CS.GETMESSAGELIST")
-		nm:writeU32(DY_DATA.User.id)
-		NW.send(nm)
-		return 1
-end)
-
 NW.regist("MESSAGE.SC.UPSTATU", function (nm)
 	local Ret = common_op_ret(nm)
 	if Ret.ret == 1 then

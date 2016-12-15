@@ -71,8 +71,7 @@ end
 local function update_view()
 	
 end
-local function fun()
-end
+
 local function on_recycle()
 	NW.unsubscribe("MESSAGE.SC.GETMESSAGELIST", on_ui_init)
 end
