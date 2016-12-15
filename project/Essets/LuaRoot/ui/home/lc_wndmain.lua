@@ -54,7 +54,6 @@ local function on_get_data(Ret)
 	-- local nm = NW.msg("MESSAGE.CS.GETLOWER")
 	-- nm:writeU32(DY_DATA.User.id)
 	-- NW.send(nm)
-	
 	-- local nm = NW.msg("USER.CS.GETSUPERLIST")
 	-- nm:writeU32(DY_DATA.User.id)
 	-- NW.send(nm)
@@ -92,7 +91,6 @@ end
 local function on_ui_init()
 	UIMGR.create("UI/WNDMsgHint")     -----加载红点界面
 	UI_DATA.WNDMsgHint.state = false   ----初始化消息红点是否显示
-
 	if _G.Debug then
 		local id = DY_DATA.User.id
 		MERequire "datamgr/localdata.lua"
