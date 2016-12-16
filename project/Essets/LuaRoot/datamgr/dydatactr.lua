@@ -1295,13 +1295,14 @@ local function sc_work_getstore(nm)
                 
          table.insert(InfoList,Info)
      end
-               
+    print("InfoList------------"..JSON:encode(InfoList))        
 
-    if #InfoList > 0 then
+    if #InfoList > 0 then  
 
-        print("LifoList is " .. JSON:encode(InfoList))
+        print("LifoList is --------------" .. JSON:encode(InfoList))
 
         if DY_DATA.User.limit == 1 then
+            print("LifoList is    DY_DATA.User.limit == 1----" .. JSON:encode(InfoList))
             local Project = DY_DATA.ProjectList[projectId]
             local SchProject = DY_DATA.SchProjectList[projectId]
             local StoreList = Project.StoreList
@@ -1309,17 +1310,24 @@ local function sc_work_getstore(nm)
             if StoreList == nil then
                 StoreList = {}
                 Project.StoreList = StoreList
+            else
+                StoreList = {}
             end
             if SchStoreList == nil then
                 SchStoreList = {}
-                SchProject.SchStoreList = SchStoreList  
+                SchProject.SchStoreList = SchStoreList
+            else
+                SchStoreList = {}
             end
             for i=1,#InfoList do
                 table.insert(StoreList,InfoList[i])
                 table.insert(SchStoreList,InfoList[i])
+
             end
-        
+            print("LifoList is    DY_DATA.User.limit == 1--2--" .. JSON:encode(StoreList))
+            print("LifoList is    DY_DATA.User.limit == 1--2--" .. JSON:encode(SchStoreList))
         else
+            print("LifoList is    DY_DATA.User.limit == 2----" .. JSON:encode(InfoList))
             local AttProject = DY_DATA.AttendanceList[projectId]
             local Project = DY_DATA.ProjectList[projectId]
             local SchProject = DY_DATA.SchProjectList[projectId]
@@ -1348,13 +1356,20 @@ local function sc_work_getstore(nm)
                 table.insert(StoreList,InfoList[i])
                 table.insert(SchStoreList,InfoList[i])
                 table.insert(AttStoreList,InfoList[i])
+
             end
+            print("LifoList is    DY_DATA.User.limit == 1--2--" .. JSON:encode(StoreList))
+            print("LifoList is    DY_DATA.User.limit == 1--2--" .. JSON:encode(SchStoreList))
         end
-            
+        DY_DATA.SchProjectList.InfoList = InfoList
+        --UI_DATA.WNDSubmitSchedule.InfoList = InfoList
         print("N in Work.SC.GETSTORE is " .. n)
         print("<color=#EEB422>DY_DATA.AttendanceList" .. projectId ..  " is :" .. JSON:encode(DY_DATA.AttendanceList[projectId]) .. "</color>")
         print("<color=#EEB422>DY_DATA.ProjectList" .. projectId ..  " is :" .. JSON:encode(DY_DATA.ProjectList[projectId]) .. "</color>")
         print("<color=#EEB422>DY_DATA.SchProjectList" .. projectId ..  " is :" .. JSON:encode(DY_DATA.SchProjectList[projectId]) .. "</color>")
+    --       print("<color=#EEB422>DY_DATA.AttendanceList--1" .. projectId ..  " is :" .. JSON:encode(StoreList) .. "</color>")
+    --     print("<color=#EEB422>DY_DATA.ProjectList--1" .. projectId ..  " is :" .. JSON:encode(SchStoreList) .. "</color>")
+    --     print("<color=#EEB422>DY_DATA.SchProjectList--1" .. projectId ..  " is :" .. JSON:encode(AttStoreList) .. "</color>")
     end
 end
 NW.regist("WORK.SC.GETSTORE", sc_work_getstore)

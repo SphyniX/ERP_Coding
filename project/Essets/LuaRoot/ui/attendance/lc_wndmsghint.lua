@@ -50,8 +50,10 @@ end
 
 local function init_logic()
 	NW.subscribe("MESSAGE.SC.GETMESSAGELIST", on_ui_init)
+			print("MESSAGE.SC.GETMESSAGELIST------------table---------"..JSON:encode(DY_DATA.MsgList))
 	if DY_DATA.MsgList == nil or next(DY_DATA.MsgList) == nil then
 		local nm = NW.msg("MESSAGE.CS.GETMESSAGELIST")
+		print("MESSAGE.SC.GETMESSAGELIST---------------------"..tostring(DY_DATA.User.id))
 		nm:writeU32(DY_DATA.User.id)
 		NW.send(nm)
 		return

@@ -166,6 +166,8 @@ local function init_logic()
 	local UserInfo = UI_DATA.WNDRegist.UserInfo
 	local Ref_Info = Ref.SubMain.SubContext.SubInfo
 	Ref_Info.SubContact.SubPhone.lbText.text = UserInfo.phone
+	print("用户信息"..UserInfo.name)
+	Ref.SubMain.SubContext.SubIcon.name.text = UserInfo.name
 	UserInfo.PhotoList = {}
 	---- test ----
 	UIMGR.get_photo(Ref.SubMain.SubContext.SubIcon.spIcon,"1.png",function ( succ, name, image )

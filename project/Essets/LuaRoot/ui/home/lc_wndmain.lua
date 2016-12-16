@@ -23,7 +23,8 @@ MERequire "datamgr/dydataop"
 
 local function on_sc_entergame(Ret)
 	_G.UI.Waiting.hide()
-
+	UIMGR.create("UI/WNDMsgHint")     -----加载红点界面
+	UI_DATA.WNDMsgHint.state = false   ----初始化消息红点是否显示
 	local limit = DY_DATA.User.limit
 
 	if limit == 1 then
@@ -90,8 +91,7 @@ local function on_btnregisted_click(btn)
 end
 --判断用户类型
 local function on_ui_init()
-	UIMGR.create("UI/WNDMsgHint")     -----加载红点界面
-	UI_DATA.WNDMsgHint.state = false   ----初始化消息红点是否显示
+
 
 	if _G.Debug then
 		local id = DY_DATA.User.id
@@ -133,6 +133,8 @@ local function init_logic()
 	UI_DATA.WNDMain.regist = nil
 	libunity.SetActive(Ref.btnRegisted, regist)
 	if regist then
+		local LoginedAcc = {acc = UI_DATA.WNDRegist.UserInfo.phone, pass = true and "" or nil}
+		UI_DATA.save_account(LoginedAcc)   --保存用户名
 		return
 	else
 		on_ui_init()

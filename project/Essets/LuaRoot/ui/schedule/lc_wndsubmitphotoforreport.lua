@@ -25,7 +25,7 @@ local NowNumber
 --!*以下：自动生成的回调函数*--
 
 local function on_ui_init(NWStata)
-	UI_DATA.WNDSubmitSchedule.WNDSubmitPhotoForReportNWStata=NWStata
+	UI_DATA.WNDSubmitSchedule.WNDSubmitPhotoForReportNWStata = NWStata
 	local projectId
 	if DY_DATA.User.limit == 1 then
 		projectId = UI_DATA.WNDSubmitSchedule.projectId
@@ -115,15 +115,7 @@ local function on_subphoto_grpphoto_entphoto_click(btn)
 	NowNumber = tonumber(btn.name:sub(9))
 	NowBtn = Ref.SubPhoto.GrpPhoto.Ents[tonumber(btn.name:sub(9))]
 	local tex = NowBtn.spPhoto
-	-- -- 				-- test ---
-	-- UIMGR.load_photo(tex, name, function (succ, name, image)
-	-- 	if succ then
-	-- 		on_take_photo_call_back(image)
-	-- 	else
-		
-	-- 	end
-	-- end)
-	---------------------------
+
 	if DY_DATA.User.Limit == 1 then
 		
 		UIMGR.on_sdk_take_photo(name, tex, function (succ, name, image)
@@ -143,7 +135,15 @@ local function on_subphoto_grpphoto_entphoto_click(btn)
 		end)
 	end
 
-	-- test ---
+	-- -- 				-- test ---
+	-- UIMGR.load_photo(tex, name, function (succ, name, image)
+	-- 	if succ then
+	-- 		on_take_photo_call_back(image)
+	-- 	else
+		
+	-- 	end
+	-- end)
+	---------------------------
 
 end
 
@@ -151,7 +151,7 @@ local function on_subtop_btnback_click(btn)
 	UIMGR.close_window(Ref.root)
 end
 
-local function on_subtop_btnsave_click(btn)
+local function on_btnsave_click(btn)
 	local need = 0
 	local nowtrue = 0
 
@@ -191,7 +191,7 @@ end
 local function init_view()
 	Ref.SubPhoto.GrpPhoto.Ent.btn.onAction = on_subphoto_grpphoto_entphoto_click
 	Ref.SubTop.btnBack.onAction = on_subtop_btnback_click
-	Ref.SubTop.btnSave.onAction = on_subtop_btnsave_click
+	Ref.btnSave.onAction = on_btnsave_click
 	UIMGR.make_group(Ref.SubPhoto.GrpPhoto, function (New, Ent)
 		New.btn.onAction = Ent.btn.onAction
 	end)

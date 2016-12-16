@@ -26,17 +26,17 @@ local function on_submain_subcontent_subinfolist_btnproduct_click(btn)
 end
 
 local function on_submain_subcontent_subinfolist_btncompeteproduct_click(btn)
-	UI_DATA.WNDSubmitSchedule.WNDSetComProductNWStata=false
+	--UI_DATA.WNDSubmitSchedule.WNDSetComProductNWStata=false
 	UIMGR.create_window("UI/WNDSetComProduct")
 end
 
 local function on_submain_subcontent_subinfolist_btnsupplies_click(btn)
-	UI_DATA.WNDSubmitSchedule.WNDSetSuppliesNWStata=false
+	--UI_DATA.WNDSubmitSchedule.WNDSetSuppliesNWStata=false
 	libunity.SetActive(Ref.SubMain.SubSupplies.root, true)
 end
 
 local function on_submain_subcontent_subinfolist_btninfo_click(btn)
-	UI_DATA.WNDSubmitSchedule.WNDSetInforNWStata=false
+	--UI_DATA.WNDSubmitSchedule.WNDSetInforNWStata=false
 	UIMGR.create_window("UI/WNDSetInfor")
 end
 
@@ -183,9 +183,14 @@ local function on_submain_subcontent_btnbutton_click(btn)
 		nm:writeU32(projectId)
 		nm:writeU32(DY_DATA.User.id)
 		NW.send(nm)
-
-		return
-		_G.UI.Waiting.show()
+		-- local projectId = UI_DATA.WNDSubmitSchedule.projectId
+		-- local storeId = UI_DATA.WNDSubmitSchedule.storeId
+		-- local nm = NW.msg("REPORTED.CS.GETSTOREINFOR")
+		-- nm:writeU32(projectId)
+		-- nm:writeU32(storeId)
+		-- nm:writeU32(DY_DATA.User.id)
+		-- NW.send(nm)
+		-- _G.UI.Waiting.show()
 	end
 end
 
@@ -209,7 +214,7 @@ end
 
 -- 照片
 local function on_submain_subproduct_btn2_click(btn)
-	UI_DATA.WNDSubmitSchedule.WNDSubmitPhotoForReportNWStata = false
+	--UI_DATA.WNDSubmitSchedule.WNDSubmitPhotoForReportNWStata = false
 	libunity.SetActive(Ref.SubMain.SubProduct.root, false)
 	UIMGR.create_window("UI/WNDSubmitPhotoForReport")
 end
@@ -223,14 +228,14 @@ end
 
 -- 体验品
 local function on_submain_subproduct_btn4_click(btn)
-	UI_DATA.WNDSubmitSchedule.ProductListForetasteNWStata=false
+	--UI_DATA.WNDSubmitSchedule.ProductListForetasteNWStata=false
 	libunity.SetActive(Ref.SubMain.SubProduct.root, false)
 	UIMGR.create_window("UI/WNDSetForetaste")
 end
 
 -- 赠品
 local function on_submain_subproduct_btn5_click(btn)
-	UI_DATA.WNDSubmitSchedule.ProductListGiftNWStata=false
+	--UI_DATA.WNDSubmitSchedule.ProductListGiftNWStata=false
 	libunity.SetActive(Ref.SubMain.SubProduct.root, false)
 	UIMGR.create_window("UI/WNDSetGift")
 end
@@ -368,9 +373,12 @@ local function on_store_init()
 	print("on_store_init-----------------")
 	local storeId = UI_DATA.WNDSubmitSchedule.storeId
 	local projectId = UI_DATA.WNDSubmitSchedule.projectId
-	print("UI_DATA.WNDSubmitSchedule.ProductList--------"..JSON:encode(UI_DATA.WNDSubmitSchedule.ProductList))
+	print("UI_DATA.WNDSubmitSchedule.ProductList--------"..JSON:encode(UI_DATA.WNDSubmitSchedule))
 	-- local type = UI_DATA.WNDSubmitSchedule.type
+	Project = {}
 	Project = DY_DATA.SchProjectList[projectId]
+	print("UI_DATA.WNDSubmitSchedule.ProductList----Project----"..JSON:encode(Project))
+	print("UI_DATA.WNDSubmitSchedule.ProductList----Project.StoreList----"..JSON:encode(Project.StoreList))
 	if Project.StoreList == nil then print("StoreList 为空"..projectId) return end
 	local StoreList = Project.StoreList
 	Store = nil
@@ -379,8 +387,19 @@ local function on_store_init()
 			Store = v
 		end
 	end
+
 	if Store == nil or next(Store) == nil then print("Store 为空"..storeId) return end
-	local state = UI_DATA.WNDSubmitSchedule.state
+	print("UI_DATA.WNDSubmitSchedule.ProductList----Project.StoreList----"..JSON:encode(Store))
+	local state = nil
+	local InfoList = DY_DATA.SchProjectList.InfoList
+	print("DY_DATA.SchProjectList.InfoList------"..JSON:encode(InfoList))
+	for i,v in ipairs(InfoList) do
+		if v.id == storeId then
+			state = v.state
+		end
+	end
+	print("state -------------------111"..tostring(state))
+	--local state = Store.state        --UI_DATA.WNDSubmitSchedule.state
 	--------- 提取已上报进度在这里 ---------
 	if state == 2 then
 		Ref.SubMain.SubContent.lbTip.text = "<color=red>已上报进度</color>"
@@ -494,6 +513,7 @@ local function update_view()
 end
 
 local function on_recycle()
+	NW.unsubscribe("WORK.SC.GETSTORE", on_store_init)
 	NW.unsubscribe("REPORTED.SC.GETSTOREINFOR",on_store_init)
 	NW.unsubscribe("REPORTED.SC.GETPERSONALREP",on_store_init)
 end

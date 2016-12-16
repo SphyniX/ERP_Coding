@@ -20,9 +20,15 @@ local SampleList
 local NowEnt
 
 --!*以下：自动生成的回调函数*--
-
+local function stringTypeCtrl(str)
+	local strTemp=string.gsub(str,"<size=36>","")
+	strTemp=string.gsub(strTemp,"</size>","")
+	strTemp=string.sub(strTemp,1,#strTemp-3)
+	local n= tonumber(strTemp)
+	print("--------------stringTypeCtr1---strTemp------"..tostring(n))
+	return strTemp
+end
 local function on_submain_grp_ent_click(btn)
-	
 	NowEnt = tonumber(btn.name:sub(4))
 	print("NowEnt : " .. NowEnt)
 	Ref.SubSet.lbVolumeper.text = SampleList[NowEnt].per
@@ -40,6 +46,7 @@ local function on_subtop_btnclear_click(btn)
 end
 
 local function on_subtop_btnback_click(btn)
+	UI_DATA.WNDSubmitSchedule.ProductListForetasteNWStata = true
 	UIMGR.close_window(Ref.root)
 end
 
@@ -63,6 +70,7 @@ local function on_subset_btnback_click(btn)
 end
 
 local function on_btnsave_click(btn)
+	print("UI_DATA.WNDSubmitSchedule.ProductListForetasteNWStata"..tostring(UI_DATA.WNDSubmitSchedule.ProductListForetasteNWStata))
 	if not UI_DATA.WNDSubmitSchedule.ProductListForetasteNWStata then
 		_G.UI.Toast:make(nil, "网络请求失败，请重新登陆"):show()
 	end
@@ -72,8 +80,8 @@ local function on_btnsave_click(btn)
 	print("#SampleList".. tostring(#SampleList) .. JSON:encode(SampleList))
 	Ref.SubMain.Grp:dup(#SampleList, function (i, Ent, isNew)
 		local id = SampleList[i].id
-		local value = Ent.lbVolume.text:sub(1,string.len(Ent.lbVolume.text)-3)
-		local number = Ent.lbNumber.text:sub(1,string.len(Ent.lbNumber.text)-3)
+		local value = stringTypeCtrl(Ent.lbVolume.text)
+		local number = stringTypeCtrl(Ent.lbNumber.text)
 		if value ~= "   " then
 			table.insert(ProductListForUpdate,{id = id ,value =value,number = number})
 		end
@@ -88,7 +96,7 @@ local function on_submain_grp_btnsave_click(btn)
 end
 
 local function on_ui_init(NWStata)
-	print("回调--------------体验品")
+	print("回调--------------体验品"..tostring(NWStata))
 	UI_DATA.WNDSubmitSchedule.ProductListForetasteNWStata = NWStata
 
 	UI_DATA.WNDSubmitSchedule.ProductListForetaste = {}
@@ -114,7 +122,7 @@ local function on_ui_init(NWStata)
 	end)
 	ProductListForUpdate = UI_DATA.WNDSubmitSchedule.ProductListForetaste
 
-	if ProductListForUpdate ~= nil then 
+	if ProductListForUpdate ~= nil and next(ProductListForUpdate) ~=nil then 
 		print("ProductListForUpdate in WNDSetForetaste is :" .. JSON:encode(ProductListForUpdate))
 		Ref.SubMain.Grp:dup(#SampleList, function (i, Ent, isNew)
 			local Sample = SampleList[i]
@@ -155,7 +163,7 @@ local function init_logic()
 		NW.send(nm)
 		return
 	end
-	on_ui_init(false)
+	on_ui_init(true)
 end
 
 local function start(self)

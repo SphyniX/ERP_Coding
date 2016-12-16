@@ -30,8 +30,8 @@ end
 
 local function on_submain_sptex_click(btn)
 
-	local name = "upload".. btn.name:sub(4) .. "png"
-	local tex = Ref.SubMain.spTex
+	local name = "upload".. btn.name:sub(4) .. ".png"
+	local tex = Ref.SubMain.spTexImg
 	-- local tex = Ent.spPhoto
 	UIMGR.on_sdk_take_photo(name, tex, function (succ, name, image)
 		if succ then
@@ -116,7 +116,7 @@ local function init_view()
 end
 
 local function init_logic()
-	
+	Ref.SubTop.lbText.text = UI_DATA.WNDSetComPhoto.name
 end
 
 local function start(self)

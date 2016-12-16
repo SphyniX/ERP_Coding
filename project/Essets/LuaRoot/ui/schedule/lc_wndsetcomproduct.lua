@@ -21,6 +21,7 @@ local ComList
 
 local function on_submain_grp_ent_click(btn)
 	UI_DATA.WNDSetComPhoto.id = btn.name:sub(4)
+	UI_DATA.WNDSetComPhoto.name = ComList[tonumber(UI_DATA.WNDSetComPhoto.id)].name
 	UIMGR.create_window("UI/WNDSetComPhoto")
 end
 
@@ -28,6 +29,7 @@ local function on_subtop_btnback_click(btn)
 	if not UI_DATA.WNDSubmitSchedule.WNDSetComProductNWStata then
 		_G.UI.Toast:make(nil, "网络请求失败，请重新登陆"):show()
 	end
+	UI_DATA.WNDSubmitSchedule.WNDSetComProductNWStata = true
 
 	UIMGR.close_window(Ref.root)
 end
@@ -35,7 +37,7 @@ end
 
 local function on_ui_init(NWStata)
 	print("竞品分析回调" .. tostring(NWStata))
-	UI_DATA.WNDSubmitSchedule.WNDSetComProductNWStata=NWStata
+	UI_DATA.WNDSubmitSchedule.WNDSetComProductNWStata = NWStata
 	if UI_DATA.WNDSubmitSchedule.ComList == nil then
     	UI_DATA.WNDSubmitSchedule.ComList = {}
    	end
@@ -43,7 +45,7 @@ local function on_ui_init(NWStata)
  	local Project = DY_DATA.SchProjectList[projectId]
 
  	ComList = Project.ComList
- 	if ComList == nil then
+ 	if ComList == nil  then
 		libunity.SetActive(Ref.SubMain.Grp.spNil, true)
 		return 
 	end
@@ -53,14 +55,14 @@ local function on_ui_init(NWStata)
 		Ent.lbName.text = Com.name
 		UIMGR.get_photo(Ent.spIcon, Com.icon)
 	end)
-	local ComListUpdate = UI_DATA.WNDSubmitSchedule.ComList
-	if ComListUpdate ~= nil then
-		Ref.SubMain.Grp:dup(#ComListUpdate, function (i, Ent, isNew)
-			local Com = ComListUpdate[i]
-			Ent.lbName.text = Com.name
-			UIMGR.get_photo(Ent.spIcon, Com.icon)
-		end)
-	end
+	-- local ComListUpdate = UI_DATA.WNDSubmitSchedule.ComList
+	-- if ComListUpdate ~= nil then
+	-- 	Ref.SubMain.Grp:dup(#ComListUpdate, function (i, Ent, isNew)
+	-- 		local Com = ComListUpdate[i]
+	-- 		Ent.lbName.text = Com.name
+	-- 		UIMGR.get_photo(Ent.spIcon, Com.icon)
+	-- 	end)
+	-- end
 
 
 end
@@ -94,7 +96,7 @@ local function init_logic()
 		return
 	end
 	print("ComList init:"..#Project.ComList..JSON:encode(Project.ComList))
-	on_ui_init(false)
+	on_ui_init(true)
 
 
 end

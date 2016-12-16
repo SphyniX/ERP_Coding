@@ -58,12 +58,10 @@ local function init_logic()
 	NW.subscribe("USER.SC.GETSUPERLIST", on_ui_init)
 
 	SupervisorList = DY_DATA.get_super_list()
-	if SupervisorList == nil or #SupervisorList == 0 then
-		local nm = NW.msg("USER.CS.GETSUPERLIST")
-		nm:writeU32(DY_DATA.User.id)
-		NW.send(nm)
-		return
-	end
+	local nm = NW.msg("USER.CS.GETSUPERLIST")
+	nm:writeU32(DY_DATA.User.id)
+	NW.send(nm)
+	return
 	on_ui_init()
 end
 

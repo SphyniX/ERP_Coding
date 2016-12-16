@@ -81,6 +81,7 @@ local function on_submain_btnenter_click(btn)
 	UserInfo.name = inpName
 	UserInfo.city = CityChoose
 	UserInfo.supname = inpCode
+	--UI_DATA.WNDRegist.UserInfo = UserInfo
 	if CityChoose ~= nil then
 		LOGIN.try_bind_supervisor(inpSupname, inpName, inpCode, on_bind_supervisored)
 	else

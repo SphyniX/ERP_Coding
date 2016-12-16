@@ -35,8 +35,8 @@ local function on_subtop_btnclear_click(btn)
 end
 
 local function on_subtop_btnback_click(btn)
-	UIMGR.close_window(Ref.root)
 	UI_DATA.WNDSubmitSchedule.ProductListGiftNWStata = true
+	UIMGR.close_window(Ref.root)
 end
 
 local function on_subset_btnsubmit_click(btn)
@@ -141,7 +141,7 @@ local function init_logic()
 		NW.send(nm)
 		return
 	end
-	on_ui_init(false)
+	on_ui_init(true)
 end
 
 local function start(self)

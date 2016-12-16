@@ -41,6 +41,7 @@ local function init_view()
 end
 
 local function init_logic()
+	print("--------------------------"..JSON:encode(UI_DATA.WNDRegist.UserInfo))
 	type = UI_DATA.WNDBindPhone.type
 	UI_DATA.WNDVerifyPhone.type = type
 	UI_DATA.WNDBindPhone.type = nil

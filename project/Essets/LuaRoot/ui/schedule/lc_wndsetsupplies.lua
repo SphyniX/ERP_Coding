@@ -131,7 +131,9 @@ local function on_subtop_btnclear_click(btn)
 end
 
 local function on_subtop_btnback_click(btn)
+	UI_DATA.WNDSubmitSchedule.WNDSetSuppliesNWStata = true
 	UIMGR.close_window(Ref.root)
+
 end
 
 local function on_substate_tglgood_change(tgl)
@@ -156,6 +158,8 @@ local function on_btnsave_click(btn)
 	if not UI_DATA.WNDSubmitSchedule.WNDSetSuppliesNWStata then
 		_G.UI.Toast:make(nil, "网络请求失败，请重新登陆"):show()
 	end
+	UI_DATA.WNDSubmitSchedule.WNDSetSuppliesNWStata = true
+
 	MaterListForUpdate = {}
 
 	Ref.SubMain.Grp:dup(#MaterList, function (i, Ent, isNew)
@@ -190,7 +194,7 @@ end
 
 local function on_ui_init(NWStata)
 	print("on_ui_init--"..tostring(NWStata))
-
+	UI_DATA.WNDSubmitSchedule.WNDSetSuppliesNWStata=NWStata
 	DY_DATA.WNDSubmitSchedule.MaterList = {}
 	UI_DATA.WNDSubmitSchedule.WNDSetSuppliesNWStata=NWStata
 	local projectId = UI_DATA.WNDSubmitSchedule.projectId
@@ -222,7 +226,6 @@ local function init_view()
 	Ref.SubState.btnBack.onAction = on_substate_btnback_click
 	Ref.btnSave.onAction = on_btnsave_click
 	UIMGR.make_group(Ref.SubMain.Grp, function (New, Ent)
-		UI_DATA.WNDSubmitSchedule.WNDSetSuppliesNWStata=NWStata
 		New.btnState.onAction = Ent.btnState.onAction
 		New.btnPhoto.onAction = Ent.btnPhoto.onAction
 	end)
@@ -245,7 +248,7 @@ local function init_logic()
 		NW.send(nm)
 		return
 	end
-	on_ui_init(false)
+	on_ui_init(true)
 end
 
 local function start(self)

@@ -46,7 +46,7 @@ public class LuaComponent : MonoBehavior
         dictLuaComs.AddIfNotExists(this.name, this);
         CallMethod(FUNC_START, true, 0, gameObject);
         if (OnStart != null) {
-            OnStart.Invoke(this);
+            OnStart.Invoke(this); 
         }
     }
 
