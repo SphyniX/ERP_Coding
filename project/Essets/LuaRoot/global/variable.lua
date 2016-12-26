@@ -121,7 +121,8 @@ end
     dofile "util/table.lua"
     dofile "util/bit32.lua"
     dofile "util/class.lua"
-
+    dofile "util/FileInfo.lua"
+    
     dofile "ui/_tool/messagebox.lua"
     dofile "ui/_tool/normtip.lua"
     dofile "ui/_tool/toast.lua"

@@ -40,6 +40,7 @@ namespace ZFrame
                         li.Add(jo);
                         li.AddRange(args);
                         return jc_info.CallStatic<T>(method, li.ToArray());
+
                     }
                 }
             }

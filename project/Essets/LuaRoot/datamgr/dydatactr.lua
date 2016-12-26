@@ -961,7 +961,7 @@ local function sc_reported_getpersonalrep ( nm )
         table.insert(ProductList, ProductListUpdate) 
     end
  print("请求回调-ProductList-----------------sc_reported_getpersonalrep"..JSON:encode(ProductList))
-    local n = tonumber(nm:readString())  or 0   
+    n = tonumber(nm:readString())  or 0   
     local ComList = {}
     for i=1,n do
         local ComListUpdate = {
@@ -975,7 +975,8 @@ local function sc_reported_getpersonalrep ( nm )
         table.insert(ComList, ComListUpdate) 
     end
 
-    local n = tonumber(nm:readString()) or 0
+    n = tonumber(nm:readString()) or 0
+    print("REPORTED.SC.GETPERSONALREP-----n"..n)
     local MaterList = {}
     for i=1,n do
         local MaterListUpdate = {
@@ -990,29 +991,30 @@ local function sc_reported_getpersonalrep ( nm )
         table.insert(MaterList, MaterListUpdate) 
     end
 
-    local n = tonumber(nm:readString()) or 0
-    local SchedulePhoto = {}
+    n = tonumber(nm:readString()) or 0
+    print("<color=#EEB422>REPORTED.SC.GETPERSONALREP---n--- is ----:"..tostring(n).."</color>")
+    local SchedulePhotoList = {}
     for i=1,n do
-        local SchedulePhotoUpdate = {
-            productPhotoid = tonumber(nm:readString()),
-            PhotoId = tonumber(nm:readString()),
-        }
+        local SchedulePhotoListUpdate = {}
         local icon = nm:readString()
-        SchedulePhotoUpdate.productIcon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
+        SchedulePhotoListUpdate.productIcon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
 
         icon = nm:readString()
-        SchedulePhotoUpdate.PhotoIcon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
+        SchedulePhotoListUpdate.PhotoIcon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
 
-        table.insert(SchedulePhoto, SchedulePhotoUpdate) 
+        table.insert(SchedulePhotoList, SchedulePhotoListUpdate) 
     end
     local Infor = nm:readString()
 
     DY_DATA.WNDSubmitScheduleData.ProductList = ProductList
     DY_DATA.WNDSubmitScheduleData.ComList = ComList
     DY_DATA.WNDSubmitScheduleData.MaterList = MaterList
-    DY_DATA.WNDSubmitScheduleData.SchedulePhoto = SchedulePhoto
+    DY_DATA.WNDSubmitScheduleData.SchedulePhotoList = SchedulePhotoList
     DY_DATA.WNDSubmitScheduleData.Infor = Infor
-    print("<color=#EEB422>REPORTED.SC.GETPERSONALREP------ is :" .. JSON:encode(DY_DATA.WNDSubmitScheduleData) .. "</color>")
+    print("<color=#EEB422>REPORTED.SC.GETPERSONALREP----ProductList-- is :" .. JSON:encode(ProductList) .. "</color>")
+    print("<color=#EEB422>REPORTED.SC.GETPERSONALREP---ComList--- is :" .. JSON:encode(ComList) .. "</color>")
+    print("<color=#EEB422>REPORTED.SC.GETPERSONALREP------ is :" .. JSON:encode(MaterList) .. "</color>")
+    print("<color=#EEB422>REPORTED.SC.GETPERSONALREP------ is :" .. JSON:encode(SchedulePhotoList) .. "</color>")
 end
 NW.regist("REPORTED.SC.GETPERSONALREP",sc_reported_getpersonalrep)
 
@@ -1471,7 +1473,7 @@ local function sc_work_getmater(nm)
     }
     table.insert(MaterList, Info)
 end
-print("MaterList is : " .. JSON:encode(MaterList))
+print("dydatactr---- MaterList is : " .. JSON:encode(MaterList))
 end
 NW.regist("WORK.SC.GETMATER", sc_work_getmater)
 

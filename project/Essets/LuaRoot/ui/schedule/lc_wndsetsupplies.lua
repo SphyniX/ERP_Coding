@@ -176,16 +176,9 @@ local function on_btnsave_click(btn)
 			table.insert(MaterListForUpdate,{id = id,name = name , photo = photo , state = state , discribe = discribe})
 		end
 	end)
-	if DY_DATA.WNDSubmitSchedule.MaterList == nil then
-		DY_DATA.WNDSubmitSchedule.MaterList = {}
-	end
 	DY_DATA.WNDSubmitSchedule.MaterList = MaterListForUpdate
-	print("WNDSubmitSchedule.MaterList in WNDSetSupplies is :" .. JSON:encode(DY_DATA.WNDSubmitSchedule.MaterList) )
+	print("WNDSubmitSchedule.MaterList in WNDSetSupplies is :" .. JSON:encode(DY_DATA.WNDSubmitSchedule.MaterList).."/"..#MaterList )
 	UIMGR.close_window(Ref.root)
-end
-
-local function on_submain_grp_ent_click(btn)
-	
 end
 
 local function on_submain_grp_btnsave_click(btn)
@@ -195,19 +188,32 @@ end
 local function on_ui_init(NWStata)
 	print("on_ui_init--"..tostring(NWStata))
 	UI_DATA.WNDSubmitSchedule.WNDSetSuppliesNWStata=NWStata
-	DY_DATA.WNDSubmitSchedule.MaterList = {}
-	UI_DATA.WNDSubmitSchedule.WNDSetSuppliesNWStata=NWStata
+
 	local projectId = UI_DATA.WNDSubmitSchedule.projectId
 	local storeId = UI_DATA.WNDSubmitSchedule.storeId
 
 
 	MaterList = DY_DATA.SchProjectList[projectId].MaterList
+	print("WNDSetSupplies"..JSON:encode(MaterList).."/"..projectId..""..storeId)
+
 	Ref.SubMain.Grp:dup(#MaterList, function (i, Ent, isNew)
 		Ent.lbName.text = MaterList[i].name
 	end)
 
+	MaterListForUpdate = DY_DATA.WNDSubmitScheduleData.MaterList
+	print("MaterListForUpdate"..JSON:encode(MaterListForUpdate))
+	if MaterListForUpdate ~= nil and next(MaterListForUpdate) ~= nil then 
+		print("MaterListForUpdate"..JSON:encode(MaterListForUpdate))
+		Ref.SubMain.Grp:dup(#MaterListForUpdate, function (i, Ent, isNew)
+			Ent.lbState.text = MaterListForUpdate[i].state
+			Ent.lbPhoto.text = MaterListForUpdate[i].photo
+			Ent.inpInput.text = MaterListForUpdate[i].discribe
+		end)
+	end
 	MaterListForUpdate = UI_DATA.WNDSubmitSchedule.MaterList
-	if MaterListForUpdate ~= nil then 
+	print("MaterListForUpdate"..JSON:encode(MaterListForUpdate))
+	if MaterListForUpdate ~= nil and next(MaterListForUpdate) ~= nil then 
+		print("MaterListForUpdate"..JSON:encode(MaterListForUpdate))
 		Ref.SubMain.Grp:dup(#MaterListForUpdate, function (i, Ent, isNew)
 			Ent.lbState.text = MaterListForUpdate[i].state
 			Ent.lbPhoto.text = MaterListForUpdate[i].photo
@@ -237,7 +243,9 @@ end
 local function init_logic()
 	NW.subscribe("WORK.SC.GETMATER", on_ui_initBack)
 	libunity.SetActive(Ref.SubState.root, false)
-
+	if 	DY_DATA.WNDSubmitSchedule.MaterList == nil then 
+		DY_DATA.WNDSubmitSchedule.MaterList = {}
+	end
 	local projectId = UI_DATA.WNDSubmitSchedule.projectId
 	local storeId = UI_DATA.WNDSubmitSchedule.storeId
 

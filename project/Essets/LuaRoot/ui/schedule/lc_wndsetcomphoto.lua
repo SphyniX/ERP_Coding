@@ -20,6 +20,8 @@ local callback, PhotoList
 local PhotoName
 --!*以下：自动生成的回调函数*--
 
+
+
 local function on_upload_photo_callback( Ret )
 	-- body
 	if Ret.ret == 1 then
@@ -28,6 +30,11 @@ local function on_upload_photo_callback( Ret )
 	end
 end
 
+ local function on_take_photo_call_back(image)
+
+	LOGIN.try_uploadphotoforreport(DY_DATA.User.id,image,on_upload_photo_callback)
+
+end 
 local function on_submain_sptex_click(btn)
 
 	local name = "upload".. btn.name:sub(4) .. ".png"
@@ -41,14 +48,23 @@ local function on_submain_sptex_click(btn)
 		end
 	end)
 
-	-----test ----
-	-- UIMGR.load_photo(tex, "1.png", function (succ, name, image)
-	-- 	if succ then
-	-- 		LOGIN.try_uploadphotoforreport(DY_DATA.User.id,image,on_upload_photo_callback)
-	-- 	else
-	-- 		-- PhotoList[i].image = nil
-	-- 	end
-	-- end)
+
+	local platform = ENV.unity_platform
+    local standalone = platform == "OSXEditor" 
+                   or platform == "OSXPlayer" 
+                   or platform == "WindowsEditor" 
+                   or platform == "WindowsPlayer"
+	if standalone then
+	-- -- 				-- test ---
+		UIMGR.load_photo(tex, "1.png", function (succ, name, image)
+			if succ then
+				on_take_photo_call_back(image)
+			else
+			
+			end
+		end)
+	end
+
 end
 
 local function on_submain_btnsave_click(btn)
@@ -80,7 +96,8 @@ end
 local function on_subtop_btnback_click(btn)
 	UIMGR.close_window(Ref.root)
 end
- 
+
+
 local function init_view()
 
 	Ref.SubMain.spTex.onAction = on_submain_sptex_click
@@ -98,15 +115,40 @@ local function init_view()
 			end
 		end
 	end
+
+	ComListForUpdate = UI_DATA.WNDSubmitSchedule.ComList
 	print("ComListForUpdate Now is :" .. JSON:encode(ComListForUpdate))
-	if ComListForUpdate ~= nil then 
-		Ref.SubMain.inpPrice.text = ComListForUpdate.price
-		Ref.SubMain.inInfo.text = ComListForUpdate.info
-		-- UIMGR.load_photo(Ref.SubMain.spTex, ComListForUpdate.name, function (succ, name, image)
+
+	if ComListForUpdate ~= nil and next(ComListForUpdate) ~= nil then 
+		local id = tonumber(UI_DATA.WNDSetComPhoto.id)
+		local Com = ComListForUpdate[id]
+		print("ComListForUpdate Now is :-yes--" .. JSON:encode(Com))
+		if Com ~= nil and next(Com) ~= nil then 
+			Ref.SubMain.inpPrice.text = Com.price
+			Ref.SubMain.inInfo.text = Com.info
+			print("ComListForUpdate Now is----price---info- :" .. tostring(Com.price).."/"..tostring(Com.info))
+			local tex = Ref.SubMain.spTexImg
+			UIMGR.get_photo(tex, Com.icon)
+		else
+			Ref.SubMain.inpPrice.text = ""
+			Ref.SubMain.inInfo.text = ""
+		end
+
+
+
+
+		-- UIMGR.on_sdk_take_photo(ComListForUpdate[id].icon, tex, function (succ, name, image)
+		-- 	if succ then
+		-- 		on_take_photo_call_back(image)
+		-- 	else
+		
+		-- 	end
+		-- end)
+		-- UIMGR.load_photo(Ref.SubMain.spTex, "ww", function (succ, name, image)
 		-- 		if succ then
-		-- 			PhotoList[1].image = image
+		-- 			--PhotoList[1].image = image
 		-- 		else
-		-- 			PhotoList[1].image = nil
+		-- 			--PhotoList[1].image = nil
 		-- 		end
 		-- 	end)
 	end

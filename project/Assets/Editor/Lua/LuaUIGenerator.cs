@@ -33,8 +33,8 @@ public class LuaUIGenerator : EditorWindow
     {
 
         EditorWindow edtWnd = EditorWindow.GetWindow(typeof(LuaUIGenerator));
-        edtWnd.minSize = new Vector2(800, 650);
-        edtWnd.maxSize = edtWnd.minSize;
+        edtWnd.minSize = new Vector2(1400, 1500);
+        edtWnd.maxSize = new Vector2(1400, 1500);
     }
 
     const string AUTO_DEFINE = "--!*以下：自动生成的回调函数*--";
@@ -116,33 +116,50 @@ public class LuaUIGenerator : EditorWindow
     // *_logic.lua的结构
     string codeDefined = null;
     string codeInited = null;
+    
     Dictionary<string, string> dictFunc = new Dictionary<string, string>();
 
     public void OnGUI()
     {
-        if (GUI.Button(new Rect(0, 0, 100, 20), "生成脚本")) {
+
+        if (GUI.Button(new Rect(0, 0, 200, 100), "生成脚本")) {
             generateWithSelected();
         }
-        if (GUI.Button(new Rect(100, 0, 100, 20), "写入脚本")) {
+        if (GUI.Button(new Rect(300, 0, 200, 100), "写入脚本")) {
             saveLogic();
         }
-        if (GUI.Button(new Rect(200, 0, 100, 20), "生成并写入脚本")) {
+        if (GUI.Button(new Rect(600, 0, 200, 100), "生成并写入脚本")) {
             generateWithSelected();
             saveLogic();
         }
         GUI.color = Color.red;
-        GUI.Label(new Rect(0, 25, 800, 20), opTips);
+        GUI.Label(new Rect(0, 150, 1400, 100), opTips);
         GUI.color = Color.white;
 
-        GUI.BeginGroup(new Rect(0, 50, 800, 650));
+        GUI.BeginGroup(new Rect(0, 150, 1400, 1500));
 
-        scroll = GUILayout.BeginScrollView(scroll, GUILayout.Width(800), GUILayout.Height(600));
+        scroll = GUILayout.BeginScrollView(scroll, GUILayout.Width(1400), GUILayout.Height(1500));
 
         GUILayout.Label(logicFile);
-        if (GUILayout.Button("写入脚本" + logicFile)) {
+        if (GUILayout.Button( "写入脚本" + logicFile,GUILayout.Height(40))) {
             saveLogic();
         }
-        GUILayout.TextField(scriptLogic);
+        if (scriptLogic.Length > 3000)
+        {
+            string[] tempscriptLogic = new string[5];
+            int templength = (scriptLogic.Length / 5);
+            for (int i = 0; i < 5; i++)
+            {
+                tempscriptLogic[i] = scriptLogic.Substring(templength * i, templength);
+                GUILayout.TextField(tempscriptLogic[i]);
+            }
+        }
+        else
+        {
+            GUILayout.TextField(scriptLogic);
+        }
+     
+
 
         GUILayout.EndScrollView();
         GUI.EndGroup();

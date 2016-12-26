@@ -19,7 +19,7 @@ local Ref
 local PhotoList
 local PhotoListForUpdate
 local IfDone
-
+local PhotoListForSaveData
 local NowBtn
 local NowNumber
 --!*以下：自动生成的回调函数*--
@@ -32,7 +32,7 @@ local function on_ui_init(NWStata)
 	else
 		projectId = UI_DATA.WNDSupStoreData.projectId
 	end
-
+	--UIMGR.get_photo(tex, Com.icon)
 	-- PhotoListInit = DY_DATA.WNDSubmitScheduleData.SchedulePhoto
 	-- print("PhotoList in WNDSubmitPhotoForReport is " .. JSON:encode(PhotoList))
 	-- Ref.SubPhoto.GrpPhoto:dup(#PhotoList, function (i, Ent, isNew)
@@ -48,11 +48,12 @@ local function on_ui_init(NWStata)
 	-- 	libunity.SetActive(Ent.spIfsucc,false)
 	-- end)
 
-
+	PhotoListForSaveData = {}
 	PhotoList = DY_DATA.SchProjectList[projectId].SellPhoto
-	print("PhotoList in WNDSubmitPhotoForReport is " .. JSON:encode(PhotoList))
 	Ref.SubPhoto.GrpPhoto:dup(#PhotoList, function (i, Ent, isNew)
 		local Photo = PhotoList[i]
+		table.insert(PhotoListForSaveData,Photo)
+		UI_DATA.WNDSubmitSchedule.PhotoListForSaveData = PhotoListForSaveData
 		if Photo.state == 1 then 
 			Ent.lbTitle.text = Photo.name
 			libunity.SetActive(Ent.spState,true)
@@ -61,8 +62,49 @@ local function on_ui_init(NWStata)
 			libunity.SetActive(Ent.spState,false)
 		end
 		libunity.SetActive(Ent.spIfsucc,false)
+		
 	end)
 
+	local SchedulePhotoListUpdate = DY_DATA.WNDSubmitScheduleData.SchedulePhotoList
+
+	if SchedulePhotoListUpdate == nil and next(SchedulePhotoListUpdate) == nil then
+		Ref.SubPhoto.GrpPhoto:dup(#SchedulePhotoListUpdate, function (i, Ent, isNew)
+		local Photo = SchedulePhotoListUpdate[i]
+			UIMGR.get_photo(Ent.spPhoto, Photo.productIcon)
+				--libunity.SetActive(Ent.spState,false)
+		end)
+	end
+
+	--本地加载图片
+
+
+	local loadPhotoList = UI_DATA.WNDSubmitSchedule.LoadPhotoListForSaveData
+	print("PhotoList in WNDSubmitPhotoForReport is011 " .. JSON:encode(loadPhotoList))
+	if loadPhotoList ~= nil and next(loadPhotoList) ~= nil then
+		print("PhotoList in WNDSubmitPhotoForReport is0 " .. JSON:encode(loadPhotoList))
+		Ref.SubPhoto.GrpPhoto:dup(#loadPhotoList, function (i, Ent, isNew)
+			print("PhotoList in WNDSubmitPhotoForReport is1 " .. JSON:encode(loadPhotoList))
+			local Photo = loadPhotoList[i]
+			print("PhotoList in WNDSubmitPhotoForReport is2 " .. JSON:encode(loadPhotoList))
+			if Photo.state == 1 then 
+				Ent.lbTitle.text = Photo.name
+				libunity.SetActive(Ent.spState,true)
+			else
+				Ent.lbTitle.text = Photo.name
+				libunity.SetActive(Ent.spState,false)
+			end
+			libunity.SetActive(Ent.spIfsucc,false)
+			if Photo.PicPath ~= nil then
+							print("PhotoList in WNDSubmitPhotoForReport is3 " .. JSON:encode(Photo.PicPath))
+				local tex = Ent.spPhoto
+				libugui.SetPhoto( tex, Photo.PicPath, function (o, p)
+					if p then
+						_G.UI.Toast:make(nil,"图片加载成功"):show()
+					end
+				end)
+			end
+		end)
+	end
 
 end
 
@@ -110,22 +152,19 @@ end
 
 
 local function on_subphoto_grpphoto_entphoto_click(btn)
-
+	local storeId = UI_DATA.WNDSubmitSchedule.storeId
+	local projectId = UI_DATA.WNDSubmitSchedule.projectId
 	local name = btn.name:sub(9) .. ".png"
+	name = "WNDSubmitPhotoForReport_".."PId"..projectId.."_SId"..storeId.."_Id"..name
 	NowNumber = tonumber(btn.name:sub(9))
+	if PhotoListForSaveData[NowNumber] then
+		PhotoListForSaveData[NowNumber].PicPath = name
+	end
+	UI_DATA.WNDSubmitSchedule.PhotoListForSaveData = PhotoListForSaveData
 	NowBtn = Ref.SubPhoto.GrpPhoto.Ents[tonumber(btn.name:sub(9))]
 	local tex = NowBtn.spPhoto
 
-	if DY_DATA.User.Limit == 1 then
-		
-		UIMGR.on_sdk_take_photo(name, tex, function (succ, name, image)
-			if succ then
-				on_take_photo_call_back(image)
-			else
-		
-			end
-		end)
-	else
+	if DY_DATA.User.limit == 1 then
 		UIMGR.on_sdk_take_photo_selecttype(name, tex, "nottakephoto" , function (succ, name, image)
 			if succ then
 				on_take_photo_call_back(image)
@@ -133,16 +172,41 @@ local function on_subphoto_grpphoto_entphoto_click(btn)
 		
 			end
 		end)
+	else
+		UIMGR.on_sdk_take_photo(name, tex, function (succ, name, image)
+			if succ then
+				on_take_photo_call_back(image)
+			else
+		
+			end
+		end)
+
 	end
 
 	-- -- 				-- test ---
-	-- UIMGR.load_photo(tex, name, function (succ, name, image)
-	-- 	if succ then
-	-- 		on_take_photo_call_back(image)
-	-- 	else
-		
-	-- 	end
-	-- end)
+	local platform = ENV.unity_platform
+    local standalone = platform == "OSXEditor" 
+                   or platform == "OSXPlayer" 
+                   or platform == "WindowsEditor" 
+                   or platform == "WindowsPlayer"
+	if standalone then
+		if name ~= nil then
+			libugui.SetPhoto( tex, name, function (o, p)
+			if p then
+				on_take_photo_call_back(o)
+				_G.UI.Toast:make(nil,"图片加载成功"):show()
+			end
+			end)
+		end
+	-- -- 				-- test ---
+		-- UIMGR.load_photo(tex, name, function (succ, name, image)
+		-- 	if succ then
+		-- 		on_take_photo_call_back(image)
+		-- 	else
+			
+		-- 	end
+		-- end)
+	end
 	---------------------------
 
 end
@@ -185,6 +249,7 @@ local function on_btnsave_click(btn)
 		end
 		UIMGR.close_window(Ref.root)
 	end
+	print("UI_DATA.WNDSubmitSchedule.PhotoListForSaveData----"..JSON:encode(UI_DATA.WNDSubmitSchedule.PhotoListForSaveData))
 
 end
 
@@ -203,7 +268,9 @@ end
 local function init_logic()
 	NW.subscribe("WORK.SC.GETSELLPHOTO",on_ui_initBack)
 	NW.subscribe("WORK.SC.GETSUPPHOTO",on_ui_init)
-	PhotoListForUpdate = {}
+	if PhotoListForUpdate == nil then
+		PhotoListForUpdate = {}
+	end
 	local projectId
 	if DY_DATA.User.limit == 1 then
 		projectId = UI_DATA.WNDSubmitSchedule.projectId
@@ -224,7 +291,7 @@ local function init_logic()
 			return
 		end
 	end
-	on_ui_init(false)
+	on_ui_init(true)
 
 
 end

@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,6 +6,7 @@ using ZFrame;
 using ZFrame.UGUI;
 using ZFrame.Tween;
 using LuaInterface;
+using System.IO;
 using NameFuncPair = LuaMethod;
 using ILuaState = System.IntPtr;
 
@@ -66,7 +67,11 @@ public static class LibUGUI
             // Layout Controll
             new NameFuncPair("SetArray", SetArray),
 
-		};
+            new NameFuncPair("GetFileList", GetFileList),
+            new NameFuncPair("CreateDirectory", CreateDirectory),
+            new NameFuncPair("DeleteAllFile", DeleteAllFile),
+
+        };
 
         lua.L_Register(LIB_NAME, define);
         lua.Pop(1);
@@ -870,6 +875,85 @@ public static class LibUGUI
             LogMgr.W("SetArray: 不存在的根节点");
         }
         return 0;
+    }
+    [MonoPInvokeCallback(typeof(LuaCSFunction))]
+    private static int GetFileList(ILuaState lua)
+    {
+    
+        string path = lua.ChkString(1);
+        string filter = lua.ChkString(2);
+        LogMgr.W(path);
+        Debug.Log(path);
+        if (string.IsNullOrEmpty(path))
+        {
+            lua.PushNil();
+        }
+        else
+        {
+            if (filter == null || string.IsNullOrEmpty(path)) filter = "*.*";
+            List<string> fileList = getFlList(path, filter);
+            lua.PushUData(fileList);
+            lua.PushNumber(fileList.Count);
+            
+
+        }
+        return 2;
+    }
+    [MonoPInvokeCallback(typeof(LuaCSFunction))]
+    private static int CreateDirectory(ILuaState lua)
+    {
+        string path = lua.ChkString(1);
+        if (string.IsNullOrEmpty(path))
+        {
+            lua.PushNil();
+        }
+        else
+        {
+            DirectoryInfo folder = new DirectoryInfo(path);
+            folder.Create();
+            folder = null;
+        }
+        return 1;
+    }
+    [MonoPInvokeCallback(typeof(LuaCSFunction))]
+    private static int DeleteAllFile(ILuaState lua)
+    {
+        string path = lua.ChkString(1);
+        string filter = lua.ChkString(2);
+        if (string.IsNullOrEmpty(path))
+        {
+            lua.PushNil();
+        }
+        else
+        {
+            if (filter == null || string.IsNullOrEmpty(path)) filter = "*.*";
+            List<string> fileList = getFlList(path, filter);
+            FileInfo fileTemp;
+            foreach (string fileName in fileList)
+            {
+                fileTemp = new FileInfo(fileName);
+                fileTemp.Delete();
+                fileTemp = null;
+                
+            }
+
+        }
+        return 1;
+    }
+    private static List<string> getFlList(string path,string filter)
+    {
+        
+        List<string> fileList = new List<string>();
+        DirectoryInfo folder = new DirectoryInfo(path);
+        LogMgr.W(path);
+        foreach (FileInfo file in folder.GetFiles(filter))
+        {
+            fileList.Add(file.FullName);
+        }
+        folder = null;
+        folder = null;
+        return fileList;
+
     }
 
 }

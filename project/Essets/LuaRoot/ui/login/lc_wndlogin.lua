@@ -77,7 +77,7 @@ local function on_btnenter_click(btn)
 end
 
 local function on_btnregist_click(btn)
-		--UIMGR.create("UI/WNDSupWorkSelectPageMsg")
+	--UIMGR.create("UI/CamareTool")
 	UIMGR.create_window("UI/WNDRegist")
 end
 

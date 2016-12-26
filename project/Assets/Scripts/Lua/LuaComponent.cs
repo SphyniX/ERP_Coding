@@ -13,7 +13,6 @@ public class LuaComponent : MonoBehavior
     public const string FUNC_UPDATE = "update";
     public static System.Action<LuaComponent> OnStart;
     public static Dictionary<string, LuaComponent> dictLuaComs = new Dictionary<string, LuaComponent>();
-
     [HideInInspector]
     public string luaScript;
 #if UNITY_EDITOR
@@ -40,7 +39,6 @@ public class LuaComponent : MonoBehavior
             }
         }
     }
-
     private void Start()
     {
         dictLuaComs.AddIfNotExists(this.name, this);

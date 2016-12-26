@@ -99,7 +99,6 @@ local function on_ui_init(NWStata)
 	print("回调--------------体验品"..tostring(NWStata))
 	UI_DATA.WNDSubmitSchedule.ProductListForetasteNWStata = NWStata
 
-	UI_DATA.WNDSubmitSchedule.ProductListForetaste = {}
 	libunity.SetActive(Ref.SubSet.root,false)
 	local projectId = UI_DATA.WNDSubmitSchedule.projectId
 	local Project = DY_DATA.SchProjectList[projectId]
@@ -121,9 +120,9 @@ local function on_ui_init(NWStata)
 		Ent.lbNumber.text = "   ".. "次"
 	end)
 	ProductListForUpdate = UI_DATA.WNDSubmitSchedule.ProductListForetaste
-
+	print("ProductListForUpdate in WNDSetForetaste is :" .. JSON:encode(ProductListForUpdate))
 	if ProductListForUpdate ~= nil and next(ProductListForUpdate) ~=nil then 
-		print("ProductListForUpdate in WNDSetForetaste is :" .. JSON:encode(ProductListForUpdate))
+		print("ProductListForUpdate in WNDSetForetaste is1 :" .. JSON:encode(ProductListForUpdate))
 		Ref.SubMain.Grp:dup(#SampleList, function (i, Ent, isNew)
 			local Sample = SampleList[i]
 			-- Ent.lbName.text = Sample.name
@@ -150,7 +149,9 @@ local function on_ui_initBack()
 end
 local function init_logic()
 
-	
+	if UI_DATA.WNDSubmitSchedule.ProductListForetaste == nil then
+		UI_DATA.WNDSubmitSchedule.ProductListForetaste = {}	
+	end
 	NW.subscribe("REPORTED.SC.GETSAMPLE", on_ui_initBack)
 	libunity.SetActive(Ref.SubSet.root, false)
 

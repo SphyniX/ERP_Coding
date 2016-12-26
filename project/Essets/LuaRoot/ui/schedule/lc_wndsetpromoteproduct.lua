@@ -20,10 +20,13 @@ local ProductListOld
 local ProductListForUpdate
 --!*以下：自动生成的回调函数*--
 local function stringTypeCtrl(str)
-		local strTemp=string.gsub(str,"<size=36>","")
-		strTemp=string.gsub(strTemp,"</size>","")
-		strTemp=string.sub(strTemp,1,#strTemp-3)
-		local n= tonumber(strTemp)
+		local strTemp = string.gsub(str,"<size=36>","")
+		strTemp = string.gsub(strTemp,"</size>","")
+		strTemp = string.sub(strTemp,1,#strTemp-3)
+		local n = tonumber(strTemp)
+		if n == nil then
+			strTemp = 0
+		end
 		print("--------------stringTypeCtr1---strTemp------"..tostring(n))
 		return strTemp
 end
@@ -76,6 +79,7 @@ end
 
 local function on_btnsave_click(btn)
 	ProductListForUpdate = {}
+	print("产品iD"..JSON:encode(ProductList))
 	Ref.SubMain.Grp:dup(#ProductList, function (i, Ent, isNew)
 		local price = stringTypeCtrl(Ent.lbPrice.text)
 		local volume = stringTypeCtrl(Ent.lbVolume.text)
@@ -88,10 +92,11 @@ local function on_btnsave_click(btn)
 			volume = ""
 		end
 		local id = ProductList[i].id
+		print("id------------------"..tostring(id)..""..tostring(i))
 		table.insert(ProductListForUpdate,{id = id , price = price , volume = volume , sale = sale})
 	end)
 	UI_DATA.WNDSubmitSchedule.ProductList = ProductListForUpdate
-	
+	print("产品"..JSON:encode(ProductListForUpdate))
 	UIMGR.close_window(Ref.root)
 end
 
@@ -158,6 +163,7 @@ local function init_logic()
 	local Project = DY_DATA.SchProjectList[projectId]
 	if Project == nil then print("Project 为空"..projectId) return end
 	if Project.ProductList == nil then
+		print("初始化Project.ProductList")
 		local nm = NW.msg("REPORTED.CS.GETPRODUCT")
 		nm:writeU32(projectId)
 		NW.send(nm)

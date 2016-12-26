@@ -83,6 +83,7 @@ local function on_substore_grpstore_entstore_click(btn)
 	UI_DATA.WNDSupWorkSelectShopTask.projectId = Store.projectId
 	UI_DATA.WNDSupWorkSelectShopTask.storeId = index
 	UI_DATA.WNDSupWorkSelectShopTask.storeIdtrue = Store.id
+	print("UI_DATA.WNDSupWorkSelectShopTask.storeIdtrue is---xxxx----- " .. Store.id)
 	print("UI_DATA.WNDSupWorkSelectShopTask.storeId is " .. UI_DATA.WNDSupWorkSelectShopTask.storeId)
 	--print("on_substore_grpstore_entstore_click--------"..tostring(btn.name)..tostring(btn.name))
 	--DY_DATA.
