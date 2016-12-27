@@ -65,7 +65,7 @@ local function on_ui_init(NWStata)
 		
 	end)
 
-	local SchedulePhotoListtUpdate = UI_DATA.WNDSubmitSchedule.SchedulePhotoListtUpdate1
+	local SchedulePhotoListtUpdate = UI_DATA.WNDSubmitSchedule.SchedulePhotoListtUpdate
 	print("图片SchedulePhotoListtUpdate---图片---"..tostring(JSON:encode(UI_DATA.WNDSubmitSchedule.SchedulePhotoListtUpdate1)))
 	if SchedulePhotoListtUpdate ~= nil then
 		if SchedulePhotoListtUpdate ~= nil and next(SchedulePhotoListtUpdate) ~= nil then

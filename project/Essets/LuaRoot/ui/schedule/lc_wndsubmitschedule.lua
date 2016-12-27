@@ -457,7 +457,7 @@ local function wndSubmitScheduleDataInit()
 	        local PhotoId = photos.PhotoIcon
 	        table.insert(SchedulePhotoListtUpdate, {PhotoId = PhotoId, productPhotoid = productPhotoid})
 		end
-		UI_DATA.WNDSubmitSchedule.SchedulePhotoListtUpdate1 = SchedulePhotoListtUpdate
+		UI_DATA.WNDSubmitSchedule.SchedulePhotoListtUpdate = SchedulePhotoListtUpdate
 	end
 
 	print("wndSubmitScheduleDataInit--UI_DATA.WNDSubmitSchedule.SchedulePhotoListtUpdate---图片---"..tostring(JSON:encode(UI_DATA.WNDSubmitSchedule.SchedulePhotoListtUpdate1)))
@@ -499,13 +499,13 @@ local function wndSubmitScheduleDataInit()
 	UI_DATA.WNDSubmitSchedule.DataInitStata = true    ---控制只初始化一次
 end
 
-local  function deleteOidFile(storeId ,projectId)
-	local tempStoreId = storeId
-	local tempProjectId = projectId
+local  function deleteOidFile()
 	local dataName = "WNDSubmitSchedule/WNDSubmitSchedule"
 	local fileName =FileInfo.getPath(dataName,"")
 	--print("lc_wndprojectschedule.lua---"..fileName)
+	print("开始删除文件")
 	local files = FileInfo.deleteFiles(FileInfo.path.."WNDSubmitSchedule","*.data",dataName);
+		print("删除文件失败")
 	-- body
 end
 
@@ -514,7 +514,7 @@ local function on_store_init()
 	local storeId = UI_DATA.WNDSubmitSchedule.storeId
 	local projectId = UI_DATA.WNDSubmitSchedule.projectId
 
-	deleteOidFile(storeId ,projectId)    ---清除旧文件
+	deleteOidFile()    ---清除旧文件
 
 	print("UI_DATA.WNDSubmitSchedule.ProductList--------"..JSON:encode(UI_DATA.WNDSubmitSchedule))
 	-- local type = UI_DATA.WNDSubmitSchedule.type
@@ -556,7 +556,7 @@ local function on_store_init()
 		Ref.SubMain.SubContent.SubTime.lbStart.text = Store.Info.starttime
 		Ref.SubMain.SubContent.SubTime.lbEnd.text = Store.Info.endtime
 	end
-	wndSubmitScheduleDataInit()
+	--wndSubmitScheduleDataInit()
 end
 
 local function init_view()
@@ -625,6 +625,17 @@ local function init_logic()
 	nm:writeU32(storeId)
 	nm:writeU32(DY_DATA.User.id)
 	NW.send(nm)
+
+-- 
+	-- 	local WNDSubmitScheduleData = DY_DATA.WNDSubmitScheduleData
+	-- print("WNDSubmitScheduleData---xxxxxxx-----"..JSON:encode(WNDSubmitScheduleData))
+	-- if WNDSubmitScheduleData ==nil or next(WNDSubmitScheduleData)==nil then
+	-- 	print("发送请求----REPORTED.CS.GETPERSONALREP")
+	-- 	local nm = NW.msg("REPORTED.CS.GETPERSONALREP")
+	-- 	nm:writeU32(DY_DATA.User.id)
+	-- 	nm:writeU32(storeId)
+	-- 	NW.send(nm)
+	-- end
 
 	-- if not UI_DATA.WNDSubmitSchedule.DataInitStata then       -------UI_DATA.WNDSubmitSchedule.DataInitStata控制进度界面初始化第一次，在WNDSelectSchStore界面初始化此变量
 	-- 		print("  wndSubmitScheduleDataInit1---初始化数据-------------"..tostring(UI_DATA.WNDSubmitSchedule.DataInitStata))

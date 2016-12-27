@@ -892,8 +892,16 @@ public static class LibUGUI
         {
             if (filter == null || string.IsNullOrEmpty(path)) filter = "*.*";
             List<string> fileList = getFlList(path, filter);
-            lua.PushUData(fileList);
-            lua.PushNumber(fileList.Count);
+            if (fileList != null)
+            {
+                lua.PushUData(fileList);
+                lua.PushNumber(fileList.Count);
+            }
+            else
+            {
+                lua.PushNil();
+                lua.PushNil();
+            }
             
 
         }
@@ -945,7 +953,12 @@ public static class LibUGUI
         
         List<string> fileList = new List<string>();
         DirectoryInfo folder = new DirectoryInfo(path);
-        LogMgr.W(path);
+        Debug.Log("lua调用c#IO类获取文件列表："+path);
+        if (!folder.Exists)
+        {
+            Debug.LogError("lua调用c#IO类获取文件列表---不存在：" + path);
+            return null;
+        }
         foreach (FileInfo file in folder.GetFiles(filter))
         {
             fileList.Add(file.FullName);

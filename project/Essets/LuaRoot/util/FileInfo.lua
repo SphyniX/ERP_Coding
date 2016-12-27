@@ -200,18 +200,27 @@ function FileInfo.getFileList(path,filter)
 end
 
 function FileInfo.deleteFiles(path,filter,fileName)
-	print("1--"..fileName)
+	print("1-fileName----xxxx-"..fileName)
 	local files ,Count = FileInfo.getFileList(path,filter)
+	print("1-xx---fine-----files-Count---"..tostring(JSON:encode(files)).."/"..tostring(Count))
 	local date = FileInfo.getTime()
 	fileName = FileInfo.path..fileName.."_D"..date
-	print("1-xx-"..fileName)
+	print("1-xx--------"..fileName)
+
+	if files == nil then
+		print("1-xx---文件为空-")
+		return
+	end
+	print("1-xx---Count--读取成功-"..tostring(Count))
 	for i=0,Count - 1 do
+		print("1-xx---Count-文件删除-for------开始-")
 		local fileNameLoad = files[i]
 		fileNameLoad = string.gsub(fileNameLoad,"\\","/")
 		local pathSplit = fileNameLoad:split("_") --string.split(fileNameLoad,)
 		local fileNameLoadDate = pathSplit[1] .."_"..pathSplit[2]
 		print("2----"..fileNameLoadDate)
 		if fileNameLoadDate ~= fileName then
+			print("2-xxx-----lu删除文件方法--"..fileNameLoadDate)
 			os.remove(fileNameLoad)
 		end
 		
