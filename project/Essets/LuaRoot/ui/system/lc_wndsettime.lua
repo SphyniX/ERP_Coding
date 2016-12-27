@@ -150,8 +150,9 @@ local function on_subbtm_btnconfirm_click(btn)
 		
 		_G.UI.Toast:make(nil, "请填写小时"):show()
 		return
-	end
-	if tonumber(Time.hour) < 0 or tonumber(Time.hour) > 24 then
+	end 
+
+	if tonumber(Time.hour) < 0 or tonumber(Time.hour) >= 24 then
 		_G.UI.Toast:make(nil, "小时超出范围错误"):show()
 		return
 	end
@@ -179,7 +180,7 @@ local function on_subbtm_btnconfirm_click(btn)
 			end
 		end
 	end
-	if tonumber(Time.minute) < 0 or tonumber(Time.minute) > 60 then
+	if tonumber(Time.minute) < 0 or tonumber(Time.minute) >= 60 then
 		_G.UI.Toast:make(nil, "分钟超出范围错误"):show()
 		return
 	end
