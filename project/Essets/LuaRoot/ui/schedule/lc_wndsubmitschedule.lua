@@ -505,7 +505,7 @@ local  function deleteOidFile()
 	--print("lc_wndprojectschedule.lua---"..fileName)
 	print("开始删除文件")
 	local files = FileInfo.deleteFiles(FileInfo.path.."WNDSubmitSchedule","*.data",dataName);
-		print("删除文件失败")
+		print("删除文件结束")
 	-- body
 end
 
@@ -556,7 +556,7 @@ local function on_store_init()
 		Ref.SubMain.SubContent.SubTime.lbStart.text = Store.Info.starttime
 		Ref.SubMain.SubContent.SubTime.lbEnd.text = Store.Info.endtime
 	end
-	--wndSubmitScheduleDataInit()
+	wndSubmitScheduleDataInit()
 end
 
 local function init_view()

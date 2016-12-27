@@ -882,8 +882,8 @@ public static class LibUGUI
     
         string path = lua.ChkString(1);
         string filter = lua.ChkString(2);
-        LogMgr.W(path);
-        Debug.Log(path);
+ 
+        Debug.Log("获取文件路径"+path);
         if (string.IsNullOrEmpty(path))
         {
             lua.PushNil();
