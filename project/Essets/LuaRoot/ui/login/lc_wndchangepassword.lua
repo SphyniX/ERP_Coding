@@ -72,7 +72,7 @@ end
 
 local function init_logic()
 	-- phone = UI_DATA.WNDInputPhone.phone
-	r
+	
 	phone = UI_DATA.WNDRegist.UserInfo.phone
 end
 

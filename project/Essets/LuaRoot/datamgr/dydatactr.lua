@@ -1004,17 +1004,48 @@ local function sc_reported_getpersonalrep ( nm )
 
         table.insert(SchedulePhotoList, SchedulePhotoListUpdate) 
     end
+
+    n = tonumber(nm:readString()) or 0
+    print("<color=#EEB422>REPORTED.SC.GETPERSONALREP---n--- is ----:"..tostring(n).."</color>")
+    local ProductListGift = {}
+    for i=1,n do
+            local ProductListGiftUpdate = {
+            id = tonumber(nm:readString()),
+            number = nm:readString()
+        }
+
+        table.insert(ProductListGift, ProductListGiftUpdate) 
+    end
+
+    n = tonumber(nm:readString()) or 0
+    print("<color=#EEB422>REPORTED.SC.GETPERSONALREP---n--- is ----:"..tostring(n).."</color>")
+    local ProductListFor = {}
+    for i=1,n do
+            local ProductListForUpdate = {
+            id = tonumber(nm:readString()),
+            value = nm:readString(),
+            number = nm:readString()
+        }
+        table.insert(ProductListFor, ProductListForUpdate) 
+    end
     local Infor = nm:readString()
 
     DY_DATA.WNDSubmitScheduleData.ProductList = ProductList
     DY_DATA.WNDSubmitScheduleData.ComList = ComList
     DY_DATA.WNDSubmitScheduleData.MaterList = MaterList
     DY_DATA.WNDSubmitScheduleData.SchedulePhotoList = SchedulePhotoList
+    DY_DATA.WNDSubmitScheduleData.ProductListGift = ProductListGift
+    DY_DATA.WNDSubmitScheduleData.ProductListFor = ProductListFor
     DY_DATA.WNDSubmitScheduleData.Infor = Infor
-    print("<color=#EEB422>REPORTED.SC.GETPERSONALREP----ProductList-- is :" .. JSON:encode(ProductList) .. "</color>")
-    print("<color=#EEB422>REPORTED.SC.GETPERSONALREP---ComList--- is :" .. JSON:encode(ComList) .. "</color>")
-    print("<color=#EEB422>REPORTED.SC.GETPERSONALREP------ is :" .. JSON:encode(MaterList) .. "</color>")
-    print("<color=#EEB422>REPORTED.SC.GETPERSONALREP------ is :" .. JSON:encode(SchedulePhotoList) .. "</color>")
+    print("<color=#EEB422>REPORTED.SC.GETPERSONALREP----产品-- is :" .. JSON:encode(ProductList) .. "</color>")
+    print("<color=#EEB422>REPORTED.SC.GETPERSONALREP---机制-- is :" .. JSON:encode(ComList) .. "</color>")
+    print("<color=#EEB422>REPORTED.SC.GETPERSONALREP---物料--- is :" .. JSON:encode(MaterList) .. "</color>")
+    print("<color=#EEB422>REPORTED.SC.GETPERSONALREP--图片上传---- is :" .. JSON:encode(SchedulePhotoList) .. "</color>")
+    print("<color=#EEB422>REPORTED.SC.GETPERSONALREP---赠品--- is :" .. JSON:encode(ProductListGift) .. "</color>")
+    print("<color=#EEB422>REPORTED.SC.GETPERSONALREP--体验品---- is :" .. JSON:encode(ProductListFor) .. "</color>")
+    print("<color=#EEB422>REPORTED.SC.GETPERSONALREP---信息--- is :" .. JSON:encode(DY_DATA.WNDSubmitScheduleData.Infor) .. "</color>")
+
+
 end
 NW.regist("REPORTED.SC.GETPERSONALREP",sc_reported_getpersonalrep)
 

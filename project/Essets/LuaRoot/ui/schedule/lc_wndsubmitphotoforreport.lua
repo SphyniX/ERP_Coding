@@ -65,18 +65,21 @@ local function on_ui_init(NWStata)
 		
 	end)
 
-	local SchedulePhotoListUpdate = DY_DATA.WNDSubmitScheduleData.SchedulePhotoList
-
-	if SchedulePhotoListUpdate == nil and next(SchedulePhotoListUpdate) == nil then
-		Ref.SubPhoto.GrpPhoto:dup(#SchedulePhotoListUpdate, function (i, Ent, isNew)
-		local Photo = SchedulePhotoListUpdate[i]
-			UIMGR.get_photo(Ent.spPhoto, Photo.productIcon)
-				--libunity.SetActive(Ent.spState,false)
-		end)
+	local SchedulePhotoListtUpdate = UI_DATA.WNDSubmitSchedule.SchedulePhotoListtUpdate1
+	print("图片SchedulePhotoListtUpdate---图片---"..tostring(JSON:encode(UI_DATA.WNDSubmitSchedule.SchedulePhotoListtUpdate1)))
+	if SchedulePhotoListtUpdate ~= nil then
+		if SchedulePhotoListtUpdate ~= nil and next(SchedulePhotoListtUpdate) ~= nil then
+			Ref.SubPhoto.GrpPhoto:dup(#SchedulePhotoListtUpdate, function (i, Ent, isNew)
+			local Photo = SchedulePhotoListtUpdate[i]
+			print("图片Id"..Photo.productPhotoid)
+				UIMGR.get_photo(Ent.spPhoto, Photo.productPhotoid)
+					--libunity.SetActive(Ent.spState,false)
+			end)
+		end
 	end
 
-	--本地加载图片
 
+	--本地加载图片
 
 	local loadPhotoList = UI_DATA.WNDSubmitSchedule.LoadPhotoListForSaveData
 	print("PhotoList in WNDSubmitPhotoForReport is011 " .. JSON:encode(loadPhotoList))

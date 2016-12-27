@@ -102,13 +102,20 @@ local function on_ui_init(NWStata)
 		Ent.lbVolume.text = "   " .. Gift.per
 
 	end)
-	ProductListForUpdate = UI_DATA.WNDSubmitSchedule.ProductListGift
-	if ProductListForUpdate ~= nil then
-		Ref.SubMain.Grp:dup(#GiftList, function (i, Ent, isNew)
-			local Gift = GiftList[i]	
-			Ent.lbVolume.text = ProductListForUpdate[i].volume .. Gift.per
+	local ProductListGiftUpdate = UI_DATA.WNDSubmitSchedule.ProductListGiftUpdate
+	if ProductListGiftUpdate ~= nil then
+		Ref.SubMain.Grp:dup(#ProductListGiftUpdate, function (i, Ent, isNew)
+			local Gift = ProductListGiftUpdate[i]	
+			Ent.lbVolume.text = Gift.number
 		end)
 	end
+	-- ProductListForUpdate = UI_DATA.WNDSubmitSchedule.ProductListGift
+	-- if ProductListForUpdate ~= nil then
+	-- 	Ref.SubMain.Grp:dup(#GiftList, function (i, Ent, isNew)
+	-- 		local Gift = GiftList[i]	
+	-- 		Ent.lbVolume.text = ProductListForUpdate[i].volume .. Gift.per
+	-- 	end)
+	-- end
 
 	
 end

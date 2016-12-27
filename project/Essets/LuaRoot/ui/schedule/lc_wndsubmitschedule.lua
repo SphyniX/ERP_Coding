@@ -377,7 +377,7 @@ local function wndSubmitScheduleDataInit()
 
 
 	local ProductList = DY_DATA.WNDSubmitScheduleData.ProductList
-	print("  wndSubmitScheduleDataInit1--wndSubmitScheduleDataInit1----------------"..JSON:encode(DY_DATA.WNDSubmitScheduleData))
+	print("  wndSubmitScheduleDataInit1--wndSubmitScheduleDataInit1---------所有数据-------"..JSON:encode(DY_DATA.WNDSubmitScheduleData))
 	print("  wndSubmitScheduleDataInit1--wndSubmitScheduleDataInit2----------------"..JSON:encode(ProductList))
 	if ProductList ~=nil and next(ProductList) ~= nil then
 		UI_DATA.WNDSubmitSchedule.ProductList = {}
@@ -399,15 +399,15 @@ local function wndSubmitScheduleDataInit()
 			UI_DATA.WNDSubmitSchedule.ProductList = tempProductLis
 			UI_DATA.WNDSubmitSchedule.ProductListInfo = tempProductListInfo
 		end
-		print("wndSubmitScheduleDataInit1--UI_DATA.WNDSubmitSchedule.ProductListInfo--产品---"..JSON:encode(UI_DATA.WNDSubmitSchedule.ProductList))
+		
 	end
 
-	
+	print("wndSubmitScheduleDataInit1--UI_DATA.WNDSubmitSchedule.ProductList--产品---"..JSON:encode(UI_DATA.WNDSubmitSchedule.ProductList))
+	print("wndSubmitScheduleDataInit1--UI_DATA.WNDSubmitSchedule.ProductListInfo--机制---"..JSON:encode(UI_DATA.WNDSubmitSchedule.ProductListInfo))
+
 	local ComList = DY_DATA.WNDSubmitScheduleData.ComList
-	print("wndSubmitScheduleDataInit1--DY_DATA.WNDSubmitScheduleData.ComList--xxxx---"..tostring(JSON:encode(ComList)))
 	if ComList ~=nil and next(ComList)  ~=nil then
 		UI_DATA.WNDSubmitSchedule.ComList = {}
-		print("wndSubmitScheduleDataInit1--DY_DATA.WNDSubmitScheduleData.ComList-----"..tostring(JSON:encode(DY_DATA.WNDSubmitScheduleData.ComList)))
 		local ComListUpdate = {}
 		if ComList ~= nil and next(ComList) then 
 		    for i = 1,#ComList do
@@ -444,24 +444,57 @@ local function wndSubmitScheduleDataInit()
 		UI_DATA.WNDSubmitSchedule.MaterList = MaterListtUpdate
 	end
 
-	print("wndSubmitScheduleDataInit--DY_DATA.WNDSubmitScheduleData.ComList--物料---"..tostring(JSON:encode(DY_DATA.WNDSubmitScheduleData.MaterList)))
+	print("wndSubmitScheduleDataInit--UI_DATA.WNDSubmitSchedule.MaterList--物料---"..tostring(JSON:encode(DY_DATA.WNDSubmitScheduleData.MaterList)))
 	
 
 	local SchedulePhotoList = DY_DATA.WNDSubmitScheduleData.SchedulePhotoList
 	if SchedulePhotoList ~=nil and next(SchedulePhotoList) ~=nil then
 		--UI_DATA.WNDSubmitSchedule.SchedulePhoto = {}		
 		local SchedulePhotoListtUpdate = {}
-		print("wndSubmitScheduleDataInit--DY_DATA.WNDSubmitScheduleData.ComList---图片---"..JSON:encode(SchedulePhotoList))
 	    for i = 1,#SchedulePhotoList do
 	    	local photos = SchedulePhotoList[i]
 	    	local productPhotoid = photos.productIcon
 	        local PhotoId = photos.PhotoIcon
 	        table.insert(SchedulePhotoListtUpdate, {PhotoId = PhotoId, productPhotoid = productPhotoid})
 		end
-		UI_DATA.WNDSubmitSchedule.SchedulePhotoListtUpdate = SchedulePhotoListtUpdate
+		UI_DATA.WNDSubmitSchedule.SchedulePhotoListtUpdate1 = SchedulePhotoListtUpdate
 	end
 
-	print("wndSubmitScheduleDataInit--DY_DATA.WNDSubmitScheduleData.ComList---图片---"..tostring(JSON:encode(UI_DATA.WNDSubmitSchedule.SchedulePhotoListtUpdate)))
+	print("wndSubmitScheduleDataInit--UI_DATA.WNDSubmitSchedule.SchedulePhotoListtUpdate---图片---"..tostring(JSON:encode(UI_DATA.WNDSubmitSchedule.SchedulePhotoListtUpdate1)))
+
+
+	local ProductListGift = DY_DATA.WNDSubmitScheduleData.ProductListGift
+	if ProductListGift ~=nil and next(ProductListGift) ~=nil then
+		--UI_DATA.WNDSubmitSchedule.SchedulePhoto = {}		
+		local ProductListGiftUpdate = {}
+	    for i = 1,#ProductListGift do
+	    	local Gift = ProductListGift[i]
+	    	local id = Gift.id
+	        local number = Gift.number
+	        table.insert(ProductListGiftUpdate, {id = id, number = number})
+		end
+		UI_DATA.WNDSubmitSchedule.ProductListGiftUpdate = ProductListGiftUpdate
+	end
+
+	print("wndSubmitScheduleDataInit--UI_DATA.WNDSubmitSchedule.SchedulePhotoListtUpdate---赠品---"..tostring(JSON:encode(UI_DATA.WNDSubmitSchedule.ProductListGiftUpdate)))
+
+	local ProductListFor = DY_DATA.WNDSubmitScheduleData.ProductListFor
+	if ProductListFor ~=nil and next(ProductListFor) ~=nil then
+		--UI_DATA.WNDSubmitSchedule.SchedulePhoto = {}		
+		local ProductListForUpdate = {}
+	    for i = 1,#ProductListFor do
+	    	local For = ProductListFor[i]
+	    	local id = For.id
+	    	local value = For.value
+	        local number = For.number
+	        table.insert(ProductListForUpdate, {id = id, value =value, number = number})
+		end
+		UI_DATA.WNDSubmitSchedule.ProductListForUpdate = ProductListForUpdate
+	end
+
+	print("wndSubmitScheduleDataInit--UI_DATA.WNDSubmitSchedule.SchedulePhotoListtUpdate---体验品---"..tostring(JSON:encode(UI_DATA.WNDSubmitSchedule.ProductListForUpdate)))
+
+
 
 	UI_DATA.WNDSubmitSchedule.DataInitStata = true    ---控制只初始化一次
 end
@@ -469,10 +502,10 @@ end
 local  function deleteOidFile(storeId ,projectId)
 	local tempStoreId = storeId
 	local tempProjectId = projectId
-	local dataName = "WNDSubmitSchedule"
-	-- local fileName =FileInfo.getPath(dataName,"")
+	local dataName = "WNDSubmitSchedule/WNDSubmitSchedule"
+	local fileName =FileInfo.getPath(dataName,"")
 	--print("lc_wndprojectschedule.lua---"..fileName)
-	local files = FileInfo.deleteFiles(FileInfo.path,"*.data",dataName);
+	local files = FileInfo.deleteFiles(FileInfo.path.."WNDSubmitSchedule","*.data",dataName);
 	-- body
 end
 
@@ -556,14 +589,26 @@ local function init_logic()
 	-- NW.subscribe("ATTENCE.SC.GETWORK",on_work_init)
 	libunity.SetActive(Ref.SubMain.SubSupplies.root, false)
 	libunity.SetActive(Ref.SubMain.SubProduct.root, false)
+
+	local storeId = UI_DATA.WNDSubmitSchedule.storeId
 	local projectId = UI_DATA.WNDSubmitSchedule.projectId
+	
+	local WNDSubmitScheduleData = DY_DATA.WNDSubmitScheduleData
+	print("WNDSubmitScheduleData---xxxxxxx-----"..JSON:encode(WNDSubmitScheduleData))
+	if WNDSubmitScheduleData ==nil or next(WNDSubmitScheduleData)==nil then
+		print("发送请求----REPORTED.CS.GETPERSONALREP")
+		local nm = NW.msg("REPORTED.CS.GETPERSONALREP")
+		nm:writeU32(DY_DATA.User.id)
+		nm:writeU32(storeId)
+		NW.send(nm)
+	end
+
+
 	Project = DY_DATA.SchProjectList[projectId]
 	if Project == nil then print("StoreList 为空"..projectId) return end
 	UIMGR.get_photo(Ref.SubMain.SubContent.spIcon, Project.icon)
 	Ref.SubMain.SubContent.lbName.text = Project.name
 	Ref.SubMain.SubContent.lbClass.text = Project.type
-
-	local storeId = UI_DATA.WNDSubmitSchedule.storeId
 	if Project.StoreList == nil then print("StoreList 为空"..projectId) return end
 	local StoreList = Project.StoreList
 	Store = nil
@@ -581,16 +626,16 @@ local function init_logic()
 	nm:writeU32(DY_DATA.User.id)
 	NW.send(nm)
 
+	-- if not UI_DATA.WNDSubmitSchedule.DataInitStata then       -------UI_DATA.WNDSubmitSchedule.DataInitStata控制进度界面初始化第一次，在WNDSelectSchStore界面初始化此变量
+	-- 		print("  wndSubmitScheduleDataInit1---初始化数据-------------"..tostring(UI_DATA.WNDSubmitSchedule.DataInitStata))
+	-- 	local nm = NW.msg("REPORTED.CS.GETPERSONALREP")
+	-- 	nm:writeU32(DY_DATA.User.id)
+	-- 	nm:writeU32(storeId)
+	-- 	NW.send(nm)
+	-- end
 
-	local WNDSubmitScheduleData = DY_DATA.WNDSubmitScheduleData
-	print("WNDSubmitScheduleData--------"..JSON:encode(WNDSubmitScheduleData))
-	if WNDSubmitScheduleData ==nil or next(WNDSubmitScheduleData)==nil then
-		print("发送请求----REPORTED.CS.GETPERSONALREP")
-		local nm = NW.msg("REPORTED.CS.GETPERSONALREP")
-		nm:writeU32(DY_DATA.User.id)
-		nm:writeU32(storeId)
-		NW.send(nm)
-	end
+
+
 
 end
 

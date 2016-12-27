@@ -119,15 +119,15 @@ local function on_ui_init(NWStata)
 		Ent.lbVolume.text = "   " .. Sample.per 
 		Ent.lbNumber.text = "   ".. "次"
 	end)
-	ProductListForUpdate = UI_DATA.WNDSubmitSchedule.ProductListForetaste
+	ProductListForUpdate = DY_DATA.WNDSubmitScheduleData.ProductListFor
 	print("ProductListForUpdate in WNDSetForetaste is :" .. JSON:encode(ProductListForUpdate))
 	if ProductListForUpdate ~= nil and next(ProductListForUpdate) ~=nil then 
 		print("ProductListForUpdate in WNDSetForetaste is1 :" .. JSON:encode(ProductListForUpdate))
-		Ref.SubMain.Grp:dup(#SampleList, function (i, Ent, isNew)
-			local Sample = SampleList[i]
+		Ref.SubMain.Grp:dup(#ProductListForUpdate, function (i, Ent, isNew)
+			local ProductListFor = ProductListForUpdate[i]
 			-- Ent.lbName.text = Sample.name
-			Ent.lbVolume.text = "<size=36>" .. ProductListForUpdate[i].value .. "</size>" .. Sample.per
-			Ent.lbNumber.text = "<size=36>" .. ProductListForUpdate[i].number .. "</size>" .. "次"
+			Ent.lbVolume.text = "<size=36>" .. ProductListFor.value .. "</size>"
+			Ent.lbNumber.text = "<size=36>" .. ProductListFor.number .. "</size>" .. "次"
 		end)
 	end
 end

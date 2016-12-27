@@ -200,17 +200,17 @@ function FileInfo.getFileList(path,filter)
 end
 
 function FileInfo.deleteFiles(path,filter,fileName)
-	print("1"..fileName)
+	print("1--"..fileName)
 	local files ,Count = FileInfo.getFileList(path,filter)
 	local date = FileInfo.getTime()
 	fileName = FileInfo.path..fileName.."_D"..date
-	print("1"..fileName)
+	print("1-xx-"..fileName)
 	for i=0,Count - 1 do
 		local fileNameLoad = files[i]
 		fileNameLoad = string.gsub(fileNameLoad,"\\","/")
 		local pathSplit = fileNameLoad:split("_") --string.split(fileNameLoad,)
 		local fileNameLoadDate = pathSplit[1] .."_"..pathSplit[2]
-		print("2"..fileNameLoadDate)
+		print("2----"..fileNameLoadDate)
 		if fileNameLoadDate ~= fileName then
 			os.remove(fileNameLoad)
 		end

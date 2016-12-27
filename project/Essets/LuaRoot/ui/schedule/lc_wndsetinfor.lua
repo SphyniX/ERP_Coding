@@ -34,11 +34,12 @@ local function init_view()
 	Ref.SubMain.btnSave.onAction = on_submain_btnsave_click
 	Ref.SubTop.btnClear.onAction = on_subtop_btnclear_click
 	Ref.SubTop.btnBack.onAction = on_subtop_btnback_click
+
+	-- if DY_DATA.WNDSubmitSchedule.Infor ~= nil then
+	-- 	Ref.SubMain.inpInput.text = DY_DATA.WNDSubmitSchedule.Infor 
+	-- end
 	if DY_DATA.WNDSubmitScheduleData.Infor ~= nil then
 		Ref.SubMain.inpInput.text = DY_DATA.WNDSubmitScheduleData.Infor
-	end
-	if DY_DATA.WNDSubmitSchedule.Infor ~= nil then
-		Ref.SubMain.inpInput.text = DY_DATA.WNDSubmitSchedule.Infor 
 	end
 	--!*以上：自动注册的回调函数*--
 end
