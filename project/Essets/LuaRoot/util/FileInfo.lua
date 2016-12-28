@@ -200,12 +200,12 @@ function FileInfo.getFileList(path,filter)
 end
 
 function FileInfo.deleteFiles(path,filter,fileName)
-	print("1-fileName----xxxx-"..fileName)
+	-- print("1-fileName----xxxx-"..fileName)
 	local files ,Count = FileInfo.getFileList(path,filter)
-	print("1-xx---fine-----files-Count---"..tostring(JSON:encode(files)).."/"..tostring(Count))
+	-- print("1-xx---fine-----files-Count---"..tostring(JSON:encode(files)).."/"..tostring(Count))
 	local date = FileInfo.getTime()
 	fileName = FileInfo.path..fileName.."_D"..date
-	print("1-xx--------"..fileName)
+	-- print("1-xx--------"..fileName)
 
 	if files == nil then
 		print("1-xx---文件为空-")
@@ -213,15 +213,30 @@ function FileInfo.deleteFiles(path,filter,fileName)
 	end
 	print("1-xx---Count--读取成功-"..tostring(Count))
 	for i=0,Count - 1 do
-		print("1-xx---Count-文件删除-for------开始-")
+		-- print("1-xx---Count-文件删除-for------开始-")
 		local fileNameLoad = files[i]
 		fileNameLoad = string.gsub(fileNameLoad,"\\","/")
-		local pathSplit = fileNameLoad:split("_") --string.split(fileNameLoad,)
-		local fileNameLoadDate = pathSplit[1] .."_"..pathSplit[2]
-		print("2----"..fileNameLoadDate)
+		-- print("本地文件名------xxx--------"..fileNameLoad)
+		local index = fileNameLoad:utf8FindEnd("/")   --匹配最后一个字符索引
+		-- print("最后索引"..tostring(index))
+		local filePath = string.utf8Sub(fileNameLoad,1,index)
+		-- print("截取到最后一个字符"..filePath)
+		local fileNameTemp = string.utf8Sub(fileNameLoad,index + 1,fileNameLoad:utf8SelfLen())
+
+		local pathSplit = fileNameTemp:split("_") --string.split(fileNameLoad,)
+
+		-- print("文件个数----xxx-----pathSplit----"..#pathSplit)
+		-- for k,v in pairs(pathSplit) do
+		-- 	print("拆分文件名",k,v)
+		-- end
+		local fileNameLoadDate =filePath..pathSplit[1].."_"..pathSplit[2]
+
+
+		--print("拼接本地文件名---:------对比文件名-------xxx--------"..fileNameLoadDate.."==============="..fileName)
+		--print("2--xxx--"..fileNameLoadDate)
 		if fileNameLoadDate ~= fileName then
 			print("2-xxx-----lu删除文件方法--"..fileNameLoadDate)
-			os.remove(fileNameLoad)
+			pcall(os.remove(fileNameLoad))
 		end
 		
 	end

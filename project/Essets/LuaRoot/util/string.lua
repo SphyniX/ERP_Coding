@@ -186,6 +186,17 @@ function string.utf8Len(s)
         return nil
     end
 end
+--索引最后一个匹配字符索引
+function string.utf8FindEnd(s,name)
+    local index = 0 
+    for i=1,string.utf8SelfLen(s) do
+      local str = string.utf8Index(s,i)
+      if str == name then
+        index = index + 1
+      end
+    end
+    return index
+end
 
 
 --以下是不需要传入字符串的方法
@@ -232,6 +243,7 @@ function string:utf8SelfSub(n, le)
     end
 end 
 
+--获取索引的字符
 function string:utf8SelfIndex(n)
     if self ~= nil then
         if tostring(type(self)) == "string" then
@@ -261,7 +273,7 @@ function string:utf8SelfIndex(n)
         return nil
     end
 end
-
+--获取长度
 function string:utf8SelfLen()
     if self ~= nil then
         if tostring(type(self)) == "string" then 
@@ -278,4 +290,16 @@ function string:utf8SelfLen()
     else
         return nil
     end
+end
+
+--索引最后一个匹配字符索引
+function string:utf8FindEnd(name)
+    local index = 0 
+    for i=1,string.utf8SelfLen(self) do
+      local str = string.utf8Index(self,i)
+      if str == name then
+        index = i
+      end
+    end
+    return index
 end

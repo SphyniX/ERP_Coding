@@ -38,14 +38,14 @@ local function init_view()
 	-- if DY_DATA.WNDSubmitSchedule.Infor ~= nil then
 	-- 	Ref.SubMain.inpInput.text = DY_DATA.WNDSubmitSchedule.Infor 
 	-- end
-	if DY_DATA.WNDSubmitScheduleData.Infor ~= nil then
-		Ref.SubMain.inpInput.text = DY_DATA.WNDSubmitScheduleData.Infor
-	end
+
 	--!*以上：自动注册的回调函数*--
 end
 
 local function init_logic()
-	
+	if DY_DATA.WNDSubmitScheduleData.Infor ~= nil then
+		Ref.SubMain.inpInput.text = DY_DATA.WNDSubmitScheduleData.Infor
+	end
 end
 
 local function start(self)

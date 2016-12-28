@@ -917,9 +917,18 @@ public static class LibUGUI
         }
         else
         {
-            DirectoryInfo folder = new DirectoryInfo(path);
-            folder.Create();
-            folder = null;
+            try
+            {
+                DirectoryInfo folder = new DirectoryInfo(path);
+                folder.Create();
+                folder = null;
+            }
+            catch
+            {
+                Debug.LogWarning("Lua :  FileInfo.lua创建文件失败");
+            }
+            
+
         }
         return 1;
     }
@@ -956,7 +965,7 @@ public static class LibUGUI
         Debug.Log("lua调用c#IO类获取文件列表："+path);
         if (!folder.Exists)
         {
-            Debug.LogError("lua调用c#IO类获取文件列表---不存在：" + path);
+            Debug.LogWarning("lua调用c#IO类获取文件列表---不存在：" + path);
             return null;
         }
         foreach (FileInfo file in folder.GetFiles(filter))

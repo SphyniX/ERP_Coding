@@ -354,9 +354,9 @@ local function on_subtop_subsaveload_btnload_click(btn)
 	DY_DATA.WNDSubmitScheduleData.MaterList = LoadMaterList
 	UI_DATA.WNDSubmitSchedule.LoadPhotoListForSaveData = PhotoListForSaveData
 	UI_DATA.WNDSubmitSchedule.ComList = LoadComList
-	DY_DATA.WNDSubmitSchedule.Infor = LoadInfor
+	DY_DATA.WNDSubmitScheduleData.Infor = LoadInfor
 
-	-- print("加载本地数据"..JSON:encode(UI_DATA.WNDSubmitSchedule.ProductList))
+	--print("加载本地数据"..LoadInfor)
 	-- print("加载本地数据"..JSON:encode(UI_DATA.WNDSubmitSchedule.ProductListGift))
 
 	print("加载本地数据"..loadData.Infor.info)
