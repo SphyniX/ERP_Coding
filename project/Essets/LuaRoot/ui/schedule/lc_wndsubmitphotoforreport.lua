@@ -152,6 +152,61 @@ local function on_take_photo_call_back(image)
 end 
 
 
+local imagesindex = 2
+local function upload_allphoto_callback(Ret)
+	if tonumber(Ret.ret) == 1 then
+		_G.UI.Toast:make(nil, "成功上传图片"..tostring(imagesindex)):show()
+		if #Ref.SubPhoto.GrpPhoto.Ents >0 then
+			NowBtn = Ref.SubPhoto.GrpPhoto.Ents[imagesindex]
+			imagesindex = imagesindex + 1
+			if NowBtn ~= nil then
+				local tex = NowBtn.spPhoto
+				upload_localphoto_callback(images[imagesindex])
+			else
+				imagesindex = 1
+				return
+			end
+		end
+
+		-- libunity.SetActive(NowBtn.spIfsucc,true)
+		-- local PhotoForUpdate = {
+		-- 	id = PhotoList[NowNumber].id,
+		-- 	photo = Ret.photoid[1],
+		-- 	state = PhotoList[NowNumber].state,
+		-- }
+		-- print("PhotoForUpdate------------"..PhotoForUpdate.state)
+		-- local blTemp = false
+		-- if PhotoListForUpdate ~= nil then
+		-- 	if next(PhotoListForUpdate) ~= nil then 
+		-- 		for i=1,#PhotoListForUpdate  do
+		-- 			if PhotoListForUpdate[i].id == PhotoList[NowNumber].id then
+		-- 				PhotoListForUpdate[i] = PhotoForUpdate
+		-- 				_G.UI.Toast:make(nil, "更新成功"):show()
+		-- 				blTemp = true
+		-- 			end
+		-- 		end
+		-- 		if not blTemp then
+		-- 			table.insert(PhotoListForUpdate,PhotoForUpdate)	
+		-- 			_G.UI.Toast:make(nil, "添加成功"):show()
+		-- 		end
+		-- 	else
+		-- 		table.insert(PhotoListForUpdate,PhotoForUpdate)	
+		-- 		_G.UI.Toast:make(nil, "添加成功"):show()
+		-- 	end
+		-- end
+	else
+		imagesindex = 1
+		_G.UI.Toast:make(nil, "失败"):show()
+	end
+end
+local function upload_localphoto_callback(image)
+	LOGIN.try_uploadphotoforreport(DY_DATA.User.id,image,upload_allphoto_callback)
+end 
+local function uploadPic(img)
+
+	--Ref.SubPhoto.GrpPhoto.Ents[1]
+	-- body
+end
 
 
 local function on_subphoto_grpphoto_entphoto_click(btn)

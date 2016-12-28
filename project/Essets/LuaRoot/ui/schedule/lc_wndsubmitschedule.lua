@@ -32,31 +32,6 @@ local SubsaveLoadState
 
 --!*以下：自动生成的回调函数*--
 
-local function on_subtop_btnback_click(btn)
-	UIMGR.close_window(Ref.root)
-end
-
-local function on_subtop_btnbutton_click(btn)
-
-	local storeId = UI_DATA.WNDSubmitSchedule.storeId
-	local projectId = UI_DATA.WNDSubmitSchedule.projectId
-	local dataName = "WNDSubmitSchedule/WNDSubmitSchedule"
-	local name = "_U"..tostring(DY_DATA.User.id).."_P"..tostring(projectId).."_S"..tostring(storeId)
-	local path =FileInfo.getPath(dataName,name)
-	if FileInfo.fileState(path) then
-		libunity.SetActive(Ref.SubTop.SubsaveLoad.btnLoad, true)
-	else
-		libunity.SetActive(Ref.SubTop.SubsaveLoad.btnLoad, false)
-	end
-	if SubsaveLoadState then
-		SubsaveLoadState = false
-	else
-		SubsaveLoadState = true 
-	end
-
-	libunity.SetActive(Ref.SubTop.SubsaveLoad.root, SubsaveLoadState)
-end
-
 local function on_submain_subcontent_subinfolist_btnproduct_click(btn)
 	libunity.SetActive(Ref.SubMain.SubProduct.root, true)
 end
@@ -279,8 +254,28 @@ local function on_submain_subproduct_btnback_click(btn)
 end
 
 
---数据本地化--保存
-local function on_subtop_subsaveload_btnsave_click(btn)
+
+local function on_subtop_btnback_click(btn)
+	UIMGR.close_window(Ref.root)
+end
+
+local function on_subtop_btnbutton_click(btn)
+
+	local storeId = UI_DATA.WNDSubmitSchedule.storeId
+	local projectId = UI_DATA.WNDSubmitSchedule.projectId
+	local dataName = "WNDSubmitSchedule/WNDSubmitSchedule"
+	local name = "_U"..tostring(DY_DATA.User.id).."_P"..tostring(projectId).."_S"..tostring(storeId)
+	local path =FileInfo.getPath(dataName,name)
+	if SubsaveLoadState then
+		SubsaveLoadState = false
+	else
+		SubsaveLoadState = true 
+	end
+
+	libunity.SetActive(Ref.SubTop.SubsaveLoad.root, SubsaveLoadState)
+end
+
+local function saveData()       --数据本地化--保存
 	local ProductList = UI_DATA.WNDSubmitSchedule.ProductList
 	local ProductListInfo = UI_DATA.WNDSubmitSchedule.ProductListInfo
 	local ProductListForetaste = UI_DATA.WNDSubmitSchedule.ProductListForetaste
@@ -316,9 +311,24 @@ local function on_subtop_subsaveload_btnsave_click(btn)
 	libunity.SetActive(Ref.SubTop.SubsaveLoad.root, false)
 end
 
-
---本地数据加载
-local function on_subtop_subsaveload_btnload_click(btn)
+local function on_subtop_subsaveload_btnsave_click(btn)
+	local storeId = UI_DATA.WNDSubmitSchedule.storeId
+	local projectId = UI_DATA.WNDSubmitSchedule.projectId
+	local dataName = "WNDSubmitSchedule/WNDSubmitSchedule"
+	local name = "_U"..tostring(DY_DATA.User.id).."_P"..tostring(projectId).."_S"..tostring(storeId)
+	local path =FileInfo.getPath(dataName,name)
+	if FileInfo.Exists(path) then
+		libunity.SetActive(Ref.SubTempSavePopup.root, true)
+	else
+		saveData()
+	end
+end
+local function loadLoacalData()
+	local storeId = UI_DATA.WNDSubmitSchedule.storeId
+	local projectId = UI_DATA.WNDSubmitSchedule.projectId
+	local dataName = "WNDSubmitSchedule/WNDSubmitSchedule"
+	local name = "_U"..tostring(DY_DATA.User.id).."_P"..tostring(projectId).."_S"..tostring(storeId)
+	local path =FileInfo.getPath(dataName,name)
 	local TempProductList = UI_DATA.WNDSubmitSchedule.ProductList    
 	local TempProductListInfo = UI_DATA.WNDSubmitSchedule.ProductListInfo    --机制
 	local TempProductListForetaste = UI_DATA.WNDSubmitSchedule.ProductListForetaste   --体验品
@@ -329,11 +339,7 @@ local function on_subtop_subsaveload_btnload_click(btn)
 	local TempInfor = DY_DATA.WNDSubmitSchedule.Infor
 
 	--UI_DATA.WNDSubmitSchedule.loadState = false   --当本地加载时禁止初始化数据
-	local storeId = UI_DATA.WNDSubmitSchedule.storeId
-	local projectId = UI_DATA.WNDSubmitSchedule.projectId
-	local dataName = "WNDSubmitSchedule/WNDSubmitSchedule"
-	local name = "_U"..tostring(DY_DATA.User.id).."_P"..tostring(projectId).."_S"..tostring(storeId)
-	local path =FileInfo.getPath(dataName,name)
+
 	loadData = FileInfo.fileToTable(path)
 
 	LoadProductList = loadData.ProductList
@@ -362,7 +368,35 @@ local function on_subtop_subsaveload_btnload_click(btn)
 	print("加载本地数据"..loadData.Infor.info)
 
 	libunity.SetActive(Ref.SubTop.SubsaveLoad.root, false)
+	-- body
 end
+
+
+local function on_subtop_subsaveload_btnload_click(btn)     --本地数据加载
+
+	local storeId = UI_DATA.WNDSubmitSchedule.storeId
+	local projectId = UI_DATA.WNDSubmitSchedule.projectId
+	local dataName = "WNDSubmitSchedule/WNDSubmitSchedule"
+	local name = "_U"..tostring(DY_DATA.User.id).."_P"..tostring(projectId).."_S"..tostring(storeId)
+	local path =FileInfo.getPath(dataName,name)
+	if not FileInfo.Exists(path) then
+		_G.UI.Toast:make(nil,"没有暂存数据"):show()
+		return
+	end
+	loadLoacalData()
+
+
+
+end
+local function on_subtempsavepopup_btntempsava_click(btn)
+	saveData()
+	libunity.SetActive(Ref.SubTempSavePopup.root, false)
+end
+
+local function on_subtempsavepopup_btncancel_click(btn)
+	libunity.SetActive(Ref.SubTempSavePopup.root, false)
+end
+
 local function wndSubmitScheduleDataInit()
 
 	
@@ -560,10 +594,6 @@ local function on_store_init()
 end
 
 local function init_view()
-	Ref.SubTop.btnBack.onAction = on_subtop_btnback_click
-	Ref.SubTop.btnButton.onAction = on_subtop_btnbutton_click
-	Ref.SubTop.SubsaveLoad.btnSave.onAction = on_subtop_subsaveload_btnsave_click
-	Ref.SubTop.SubsaveLoad.btnLoad.onAction = on_subtop_subsaveload_btnload_click
 	Ref.SubMain.SubContent.SubInfoList.btnProduct.onAction = on_submain_subcontent_subinfolist_btnproduct_click
 	Ref.SubMain.SubContent.SubInfoList.btnCompeteProduct.onAction = on_submain_subcontent_subinfolist_btncompeteproduct_click
 	Ref.SubMain.SubContent.SubInfoList.btnSupplies.onAction = on_submain_subcontent_subinfolist_btnsupplies_click
@@ -577,10 +607,23 @@ local function init_view()
 	Ref.SubMain.SubProduct.btn4.onAction = on_submain_subproduct_btn4_click
 	Ref.SubMain.SubProduct.btn5.onAction = on_submain_subproduct_btn5_click
 	Ref.SubMain.SubProduct.btnBack.onAction = on_submain_subproduct_btnback_click
+	Ref.SubTop.btnBack.onAction = on_subtop_btnback_click
+	Ref.SubTop.btnButton.onAction = on_subtop_btnbutton_click
+	Ref.SubTop.SubsaveLoad.btnSave.onAction = on_subtop_subsaveload_btnsave_click
+	Ref.SubTop.SubsaveLoad.btnLoad.onAction = on_subtop_subsaveload_btnload_click
+	Ref.SubTempSavePopup.btnTempSava.onAction = on_subtempsavepopup_btntempsava_click
+	Ref.SubTempSavePopup.btnCancel.onAction = on_subtempsavepopup_btncancel_click
 	--!*以上：自动注册的回调函数*--
+end
+local function viewHide()
+	libunity.SetActive(Ref.SubTop.SubsaveLoad.root, false)
+	libunity.SetActive(Ref.SubTempSavePopup.root, false)
+	--Ref.SubTop.SubsaveLoad
+	-- body
 end
 
 local function init_logic()
+	viewHide()
 	UI_DATA.WNDSubmitSchedule.loadState = true
 
 	NW.subscribe("WORK.SC.GETSTORE", on_store_init)
@@ -625,33 +668,7 @@ local function init_logic()
 	nm:writeU32(storeId)
 	nm:writeU32(DY_DATA.User.id)
 	NW.send(nm)
-
--- 
-	-- 	local WNDSubmitScheduleData = DY_DATA.WNDSubmitScheduleData
-	-- print("WNDSubmitScheduleData---xxxxxxx-----"..JSON:encode(WNDSubmitScheduleData))
-	-- if WNDSubmitScheduleData ==nil or next(WNDSubmitScheduleData)==nil then
-	-- 	print("发送请求----REPORTED.CS.GETPERSONALREP")
-	-- 	local nm = NW.msg("REPORTED.CS.GETPERSONALREP")
-	-- 	nm:writeU32(DY_DATA.User.id)
-	-- 	nm:writeU32(storeId)
-	-- 	NW.send(nm)
-	-- end
-
-	-- if not UI_DATA.WNDSubmitSchedule.DataInitStata then       -------UI_DATA.WNDSubmitSchedule.DataInitStata控制进度界面初始化第一次，在WNDSelectSchStore界面初始化此变量
-	-- 		print("  wndSubmitScheduleDataInit1---初始化数据-------------"..tostring(UI_DATA.WNDSubmitSchedule.DataInitStata))
-	-- 	local nm = NW.msg("REPORTED.CS.GETPERSONALREP")
-	-- 	nm:writeU32(DY_DATA.User.id)
-	-- 	nm:writeU32(storeId)
-	-- 	NW.send(nm)
-	-- end
-
-
-
-
 end
-
-
-
 
 local function start(self)
 	if Ref == nil or Ref.root ~= self then

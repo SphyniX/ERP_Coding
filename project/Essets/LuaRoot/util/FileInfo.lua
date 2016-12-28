@@ -37,13 +37,15 @@ function FileInfo.fileWrite(path,content)
 	file = nil
 	--print("文件"..tostring(str))
 end
-
-function FileInfo.fileState(path)
+--判断文件是否存在
+function FileInfo.Exists(path)
 	local file = {}
-	file = io.open(path)
+	file = io.open(path,"r")
 	if file ~= nil then
+		print("文件存在")
 		return true
 	else
+		print("文件不存在")
 		return false
 	end
 	file:close()
@@ -186,7 +188,7 @@ end
 ------
 
 
-
+--获取目录所有文件
 function FileInfo.getFileList(path,filter)
 	print(path)
 	local files,Count  = libugui.GetFileList(path,filter)
