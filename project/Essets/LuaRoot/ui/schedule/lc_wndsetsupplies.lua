@@ -155,9 +155,9 @@ local function on_substate_btnback_click(btn)
 end
 
 local function on_btnsave_click(btn)
-	if not UI_DATA.WNDSubmitSchedule.WNDSetSuppliesNWStata then
-		_G.UI.Toast:make(nil, "网络请求失败，请重新登陆"):show()
-	end
+	-- if not UI_DATA.WNDSubmitSchedule.WNDSetSuppliesNWStata then
+	-- 	_G.UI.Toast:make(nil, "网络请求失败，请重新登陆"):show()
+	-- end
 	UI_DATA.WNDSubmitSchedule.WNDSetSuppliesNWStata = true
 
 	MaterListForUpdate = {}
@@ -199,26 +199,30 @@ local function on_ui_init(NWStata)
 	Ref.SubMain.Grp:dup(#MaterList, function (i, Ent, isNew)
 		Ent.lbName.text = MaterList[i].name
 	end)
-
+	--初始化数据
 	MaterListForUpdate = DY_DATA.WNDSubmitScheduleData.MaterList
 	print("MaterListForUpdate"..JSON:encode(MaterListForUpdate))
 	if MaterListForUpdate ~= nil and next(MaterListForUpdate) ~= nil then 
 		print("MaterListForUpdate"..JSON:encode(MaterListForUpdate))
-		Ref.SubMain.Grp:dup(#MaterListForUpdate, function (i, Ent, isNew)
+		for i=1,#Ref.SubMain.Grp.Ents do
+			local Ent = Ref.SubMain.Grp.Ents[i]
+			if MaterListForUpdate[i] == nil or Ent == nil then return end
 			Ent.lbState.text = MaterListForUpdate[i].state
 			Ent.lbPhoto.text = MaterListForUpdate[i].photo
 			Ent.inpInput.text = MaterListForUpdate[i].discribe
-		end)
+		end
 	end
-	MaterListForUpdate = UI_DATA.WNDSubmitSchedule.MaterList
+	local LoadMaterListForUpdate = UI_DATA.WNDSubmitSchedule.MaterList
 	print("MaterListForUpdate"..JSON:encode(MaterListForUpdate))
-	if MaterListForUpdate ~= nil and next(MaterListForUpdate) ~= nil then 
-		print("MaterListForUpdate"..JSON:encode(MaterListForUpdate))
-		Ref.SubMain.Grp:dup(#MaterListForUpdate, function (i, Ent, isNew)
-			Ent.lbState.text = MaterListForUpdate[i].state
-			Ent.lbPhoto.text = MaterListForUpdate[i].photo
-			Ent.inpInput.text = MaterListForUpdate[i].discribe
-		end)
+	if LoadMaterListForUpdate ~= nil and next(LoadMaterListForUpdate) ~= nil then 
+		print("MaterListForUpdate"..JSON:encode(LoadMaterListForUpdate))
+		for i=1,#Ref.SubMain.Grp.Ents do
+			local Ent = Ref.SubMain.Grp.Ents[i]
+			if LoadMaterListForUpdate[i] == nil or Ent == nil then return end
+			Ent.lbState.text = LoadMaterListForUpdate[i].state
+			Ent.lbPhoto.text = LoadMaterListForUpdate[i].photo
+			Ent.inpInput.text = LoadMaterListForUpdate[i].discribe
+		end
 	end
 end
 

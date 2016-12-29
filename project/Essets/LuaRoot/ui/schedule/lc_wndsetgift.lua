@@ -58,9 +58,9 @@ local function on_subset_btnback_click(btn)
 end
 
 local function on_btnsave_click(btn)
-	if not UI_DATA.WNDSubmitSchedule.ProductListGiftNWStata then
-		_G.UI.Toast:make(nil, "网络请求失败，请重新登陆"):show()
-	end
+	-- if not UI_DATA.WNDSubmitSchedule.ProductListGiftNWStata then
+	-- 	_G.UI.Toast:make(nil, "网络请求失败，请重新登陆"):show()
+	-- end
 	UI_DATA.WNDSubmitSchedule.ProductListGiftNWStata = true
 
 	ProductListForUpdate = {}
@@ -102,12 +102,16 @@ local function on_ui_init(NWStata)
 		Ent.lbVolume.text = "   " .. Gift.per
 
 	end)
+
+	--初始化数据
 	local ProductListGiftUpdate = UI_DATA.WNDSubmitSchedule.ProductListGiftUpdate
 	if ProductListGiftUpdate ~= nil then
-		Ref.SubMain.Grp:dup(#ProductListGiftUpdate, function (i, Ent, isNew)
+		for i=1,#Ref.SubMain.Grp.Ents do
+			local Ent = Ref.SubMain.Grp.Ents[i]
 			local Gift = ProductListGiftUpdate[i]	
+			if Gift == nil or Ent == nil then return end
 			Ent.lbVolume.text = Gift.number
-		end)
+		end
 	end
 	-- ProductListForUpdate = UI_DATA.WNDSubmitSchedule.ProductListGift
 	-- if ProductListForUpdate ~= nil then

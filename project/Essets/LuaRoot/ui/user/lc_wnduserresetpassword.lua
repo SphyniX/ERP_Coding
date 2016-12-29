@@ -106,7 +106,7 @@ local function init_view()
 	--!*以上：自动注册的回调函数*--
 end
 local function onSubPassword(input)
-	if #Ref.SubMain.SubPassword.inpPassword.text > 8 then
+	if #Ref.SubMain.SubPassword.inpPassword.text > 5 then
 		libunity.SetActive(Ref.SubMain.SubPassword.lbHint,false)
 		PasswordCtrl = true
 	else

@@ -22,11 +22,10 @@ local ProductListForUpdate
 
 local function on_subtop_btnclear_click(btn)
 
-
-	Ref.SubMain.Grp:dup(#ProductList, function (i, Ent, isNew)
+	for i=1,#Ref.SubMain.Grp.Ents do
 		
-		Ent.inpValue.text = nil
-	end)
+		Ref.SubMain.Grp.Ents[i].inpValue.text = nil
+	end
 
 
 end
@@ -36,9 +35,9 @@ local function on_subtop_btnback_click(btn)
 end
 
 local function on_btnsave_click(btn)
-	if not UI_DATA.WNDSubmitSchedule.WNDSetPromoteInfoNWStata then
-		_G.UI.Toast:make(nil, "网络请求失败，请重新登陆"):show()
-	end
+	-- if not UI_DATA.WNDSubmitSchedule.WNDSetPromoteInfoNWStata then
+	-- 	_G.UI.Toast:make(nil, "网络请求失败，请重新登陆"):show()
+	-- end
 	
 	ProductListForUpdate = {}
 	Ref.SubMain.Grp:dup(#ProductList, function (i, Ent, isNew)
@@ -57,12 +56,13 @@ local function on_submain_grp_btnsave_click(btn)
 end
 
 local function on_ui_init(NWStata)
-	UI_DATA.WNDSubmitSchedule.WNDSetPromoteInfoNWStata=NWStata
+	UI_DATA.WNDSubmitSchedule.WNDSetPromoteInfoNWStata = NWStata
 
 	local projectId = UI_DATA.WNDSubmitSchedule.projectId
 	local Project = DY_DATA.SchProjectList[projectId]
 
 	ProductList = Project.ProductList
+	print("ProductList-----促销机制--xxxx---"..JSON:encode(ProductList))
 	if ProductList == nil then
 		libunity.SetActive(Ref.SubMain.Grp.spNil, true)
 		return 
@@ -73,12 +73,16 @@ local function on_ui_init(NWStata)
 		Ent.lbName.text = Product.name
 		UIMGR.get_photo(Ent.spIcon, Product.icon)
 	end)
+
+	--初始化数据
 	ProductListForUpdate = UI_DATA.WNDSubmitSchedule.ProductListInfo
 	if ProductListForUpdate ~= nil then
-		Ref.SubMain.Grp:dup(#ProductListForUpdate, function (i, Ent, isNew)
+		for i=1,#Ref.SubMain.Grp.Ents do
+			local Ent = Ref.SubMain.Grp.Ents[i]
 			local Product = ProductListForUpdate[i]
+			if Product == nil or Ent == nil then return end
 			Ent.inpValue.text = Product.value
-		end)
+		end
 	end
 end
 
@@ -91,7 +95,7 @@ local function init_view()
 	--!*以上：自动注册的回调函数*--
 end
 local function on_ui_initBack()
-		on_ui_init(true)
+		on_ui_init(false)
 end
 local function init_logic()
 	NW.subscribe("REPORTED.SC.GETPRODUCT", on_ui_initBack)

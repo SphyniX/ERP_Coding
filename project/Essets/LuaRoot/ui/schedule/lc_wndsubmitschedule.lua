@@ -101,8 +101,13 @@ local function on_submain_subcontent_btnbutton_click(btn)
 		return
 	end
 
-	if TempPhotoListForUpDate ~= nil or WNDSubmitPhotoForReportNWStata then 
-		print("WNDSubmitSchedule.PhotoListForUpdate is :" .. JSON:encode(TempPhotoListForUpDate))
+	if TempPhotoListForUpDate ~= nil  or WNDSubmitPhotoForReportNWStata then 
+		if next(TempPhotoListForUpDate) ~= nil then
+			print("WNDSubmitSchedule.PhotoListForUpdate is----xxxx-- :" .. JSON:encode(TempPhotoListForUpDate))
+		else
+			_G.UI.Toast:make(nil,"请上传必传图片"):show()
+			return
+		end
 	else
 		_G.UI.Toast:make(nil,"请上传必传图片"):show()
 		return
@@ -338,7 +343,7 @@ local function loadLoacalData()
 	local TempMaterList = DY_DATA.WNDSubmitSchedule.MaterList     --物料
 	local TempInfor = DY_DATA.WNDSubmitSchedule.Infor
 
-	--UI_DATA.WNDSubmitSchedule.loadState = false   --当本地加载时禁止初始化数据
+	UI_DATA.WNDSubmitSchedule.loadState = true   --当本地加载时禁止初始化数据
 
 	loadData = FileInfo.fileToTable(path)
 
@@ -357,7 +362,7 @@ local function loadLoacalData()
 	--UI_DATA.WNDSubmitSchedule.MaterList = LoadMaterList
 	UI_DATA.WNDSubmitSchedule.ProductListForetaste = LoadProductListForetaste
 	UI_DATA.WNDSubmitSchedule.ProductListGift = LoadProductListGift
-	DY_DATA.WNDSubmitScheduleData.MaterList = LoadMaterList
+	DY_DATA.WNDSubmitSchedule.MaterList = LoadMaterList
 	UI_DATA.WNDSubmitSchedule.LoadPhotoListForSaveData = PhotoListForSaveData
 	UI_DATA.WNDSubmitSchedule.ComList = LoadComList
 	DY_DATA.WNDSubmitScheduleData.Infor = LoadInfor
@@ -475,7 +480,7 @@ local function wndSubmitScheduleDataInit()
 		    end
 		end
 
-		UI_DATA.WNDSubmitSchedule.MaterList = MaterListtUpdate
+		DY_DATA.WNDSubmitSchedule.MaterList = MaterListtUpdate
 	end
 
 	print("wndSubmitScheduleDataInit--UI_DATA.WNDSubmitSchedule.MaterList--物料---"..tostring(JSON:encode(DY_DATA.WNDSubmitScheduleData.MaterList)))
@@ -494,7 +499,7 @@ local function wndSubmitScheduleDataInit()
 		UI_DATA.WNDSubmitSchedule.SchedulePhotoListtUpdate = SchedulePhotoListtUpdate
 	end
 
-	print("wndSubmitScheduleDataInit--UI_DATA.WNDSubmitSchedule.SchedulePhotoListtUpdate---图片---"..tostring(JSON:encode(UI_DATA.WNDSubmitSchedule.SchedulePhotoListtUpdate1)))
+	print("wndSubmitScheduleDataInit--UI_DATA.WNDSubmitSchedule.SchedulePhotoListtUpdate---图片---"..tostring(JSON:encode(UI_DATA.WNDSubmitSchedule.SchedulePhotoListtUpdate)))
 
 
 	local ProductListGift = DY_DATA.WNDSubmitScheduleData.ProductListGift
@@ -523,7 +528,7 @@ local function wndSubmitScheduleDataInit()
 	        local number = For.number
 	        table.insert(ProductListForUpdate, {id = id, value =value, number = number})
 		end
-		UI_DATA.WNDSubmitSchedule.ProductListForUpdate = ProductListForUpdate
+		UI_DATA.WNDSubmitSchedule.ProductListForetaste = ProductListForUpdate
 	end
 
 	print("wndSubmitScheduleDataInit--UI_DATA.WNDSubmitSchedule.SchedulePhotoListtUpdate---体验品---"..tostring(JSON:encode(UI_DATA.WNDSubmitSchedule.ProductListForUpdate)))
@@ -624,7 +629,9 @@ end
 
 local function init_logic()
 	viewHide()
-	UI_DATA.WNDSubmitSchedule.loadState = true
+	UI_DATA.WNDSubmitSchedule.loadState = false
+	
+	print("UI_DATA.WNDSubmitSchedule.PhotoListForUpdate--xx==进度图片上传="..JSON:encode( UI_DATA.WNDSubmitSchedule.PhotoListForUpdate) )
 
 	NW.subscribe("WORK.SC.GETSTORE", on_store_init)
 	NW.subscribe("REPORTED.SC.GETSTOREINFOR",on_store_init)

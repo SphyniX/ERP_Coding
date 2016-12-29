@@ -114,13 +114,13 @@ local function init_logic()
 
 	NW.subscribe("ATTENCE.SC.GETATTENCE",on_ui_init)
 	local AttenceList = DY_DATA.Work.AttenceList
-	if AttenceList == nil then
+	-- if AttenceList == nil then
 		local nm = NW.msg("ATTENCE.CS.GETATTENCE")
 		nm:writeU32(DY_DATA.User.id)
 		nm:writeU32(1)
 		NW.send(nm)
 		return
-	end
+	-- end
 
 
 end

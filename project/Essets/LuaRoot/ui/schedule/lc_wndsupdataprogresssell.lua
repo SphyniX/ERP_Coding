@@ -47,6 +47,7 @@ end
 
 local function on_aggregate_init()
 	Aggregate = DY_DATA.StoreData.Aggregate
+	print("Aggregate----xxx----"..JSON:encode(Aggregate))
 	if Aggregate == nil then 
 		local nm = NW.msg("REPORTED.CS.GETSUPGETAGGREGATE")
 			nm:writeU32(StoreId)
@@ -75,7 +76,7 @@ local function on_proaggregate_init()
 			NW.send(nm)
 		return
 	end
-
+	print("ProAggregateList----xxx----"..JSON:encode(ProAggregateList))
 	if numberorvalue then
 		-- number --
 		Ref.SubSale.SubMask.GrpList:dup(#ProAggregateList, function ( i, Ent, isNew)
@@ -176,10 +177,8 @@ local function init_view()
 end
 
 local function init_logic()
-
-
-	
 	----init callback -- 
+
 	NW.subscribe("WORK.SC.GETSALES", on_salelist_init)
 	NW.subscribe("REPORTED.SC.GETSUPGETAGGREGATE", on_aggregate_init)
 

@@ -23,15 +23,16 @@ local function on_store_init(cityid)
 	if cityid == nil then cityid = 0 end
 
 	print("on_store_init")
-	local ProjectList = DY_DATA.get_attendance_list()
-	local Project
-	for i=1,#ProjectList do
-		if ProjectList[i].id == projectId then
-			Project =  ProjectList[i]
-		end
-	end
-	print(JSON:encode(Project))
-	local StoreList = Project.AttStoreList
+	-- local ProjectList = DY_DATA.get_attendance_list()
+	-- print("ProjectList is :" .. JSON:encode(ProjectList))
+	-- local Project
+	-- for i=1,#ProjectList do
+	-- 	if ProjectList[i].id == projectId then
+	-- 		Project =  ProjectList[i]
+	-- 	end
+	-- end
+	-- print(JSON:encode(Project))
+	local StoreList = DY_DATA.AttendanceList[projectId].AttStoreList
 	if StoreList == nil then return end
 	print(JSON:encode(StoreList))
 

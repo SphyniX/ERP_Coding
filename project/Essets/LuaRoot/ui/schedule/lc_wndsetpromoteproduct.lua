@@ -120,11 +120,16 @@ local function on_ui_init()
 		UIMGR.get_photo(Ent.spIcon, Product.icon)
 	end)
 	on_subtop_btnclear_click()
+	
+	--初始化数据
 	ProductListForUpdate = UI_DATA.WNDSubmitSchedule.ProductList
 	print("ProductListForUpdate is :" .. JSON:encode(ProductListForUpdate))
 	if ProductListForUpdate ~= nil then
-		Ref.SubMain.Grp:dup(#ProductList, function (i, Ent, isNew)
+		for i=1,#Ref.SubMain.Grp.Ents do
+			local Ent = Ref.SubMain.Grp.Ents[i]
 			local Product = ProductListForUpdate[i]
+
+			if ProductListForUpdate == nil or Ent == nil then return end
 			if Product.price == ""then 
 			Product.price = "   "
 			end
@@ -137,7 +142,7 @@ local function on_ui_init()
 			Ent.lbVolume.text = "<size=36>" .. Product.volume .. "</size>" .. ProductList[i].per
 			Ent.lbPrice.text = "<size=36>" .. Product.price .. "</size>" .. "元"
 			Ent.lbSale.text = "<size=36>" .. Product.sale .. "</size>" .. "元"
-		end)
+		end
 	end
 end
 

@@ -19,6 +19,7 @@ end
 local function init_data_list(Data, key, compare)
     local List = {}
     if Data then
+        -- print("ProjectList in P.get_project_list--xxxxxx-======-- is:" ..  JSON:encode(Data))
         for _,v in pairs(Data) do table.insert(List, v) end
         if compare then table.sort(List, compare) end
     end
@@ -66,7 +67,7 @@ function P.get_attendance_list(init)
 end
 
 function P.get_project_list(init)
-    print("ProjectList in P.get_project_list is:" ..  JSON:encode(P.ProjectList))
+   -- print("ProjectList in P.get_project_list--xxxxxx--- is:" ..JSON:encode(P.ProjectList))
     if init then
         return init_data_list(P.ProjectList, "ProList", function (a, b)
             return a.id < b.id

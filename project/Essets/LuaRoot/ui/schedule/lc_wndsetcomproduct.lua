@@ -26,9 +26,9 @@ local function on_submain_grp_ent_click(btn)
 end
 
 local function on_subtop_btnback_click(btn)
-	if not UI_DATA.WNDSubmitSchedule.WNDSetComProductNWStata then
-		_G.UI.Toast:make(nil, "网络请求失败，请重新登陆"):show()
-	end
+	-- if not UI_DATA.WNDSubmitSchedule.WNDSetComProductNWStata then
+	-- 	_G.UI.Toast:make(nil, "网络请求失败，请重新登陆"):show()
+	-- end
 	UI_DATA.WNDSubmitSchedule.WNDSetComProductNWStata = true
 
 	UIMGR.close_window(Ref.root)

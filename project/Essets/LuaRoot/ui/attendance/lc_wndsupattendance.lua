@@ -44,7 +44,7 @@ local on_project_init
 ---proj Select callback Func ----
 local function on_select_project(id,AttenceList)
 	-- print("Start Making Project :" .. AttenceList.id)
-	print("AttenceList is :" .. JSON:encode(AttenceList))
+	--print("AttenceList is :" .. JSON:encode(AttenceList))
 	projectId = id
 	print("______________________________projectid is : " .. projectId)
 	on_project_init()
@@ -163,6 +163,34 @@ local function on_subtop_btnbutton_click(btn)
 	UIMGR.create_window("UI/WNDSupPunchTabb")                          
 end
 
+local function on_submain_subproject_click(btn)
+	UI_DATA.WNDSelectProject.on_call_back = on_select_project
+	UIMGR.create_window("UI/WNDSelectProject")
+end
+
+local function on_submain_subpunch_btnbutton_click(btn)
+	if projectId == nil then
+		Ref.SubMain.SubProject.lbText.text = "请选择项目"
+		libunity.SetActive(Ref.SubPopup.root,true)
+		return
+	else
+		libunity.SetActive(Ref.SubPopup.root,false)
+	end
+	DY_DATA.WNDsupShopSelect.projectId = projectId
+	UIMGR.create_window("UI/WNDSupshopSelect")
+end
+
+local function on_submain_subunder_btnbutton_click(btn)
+	--UIMGR.create("UI/WNDAttUnder")						--zzg
+	UIMGR.create_window("UI/WNDSupAttUnder")
+end
+
+-- local function on_submain_subscroll_subcontent_subpunch_subinfo_subproject_click(btn)
+-- 	-- 巡店 选择项目
+-- 	UI_DATA.WNDSelectProject.on_call_back = on_select_project
+-- 	UIMGR.create_window("UI/WNDSupSelectProject")
+-- end
+
 local function on_subbtm_btnwork_click(btn)
 -- ##	UIMGR.WNDStack:pop()
 	UIMGR.create_window("UI/WNDSupWork")
@@ -183,26 +211,9 @@ local function on_subbtm_btnuser_click(btn)
 	UIMGR.create_window("UI/WNDSupUser")
 end
 
-local function on_submain_subproject_click(btn)
-	UI_DATA.WNDSelectProject.on_call_back = on_select_project
-	UIMGR.create_window("UI/WNDSelectProject")
+local function on_subpopup_btnclose_click(btn)
+	libunity.SetActive(Ref.SubPopup.root,false)
 end
-
-local function on_submain_subpunch_btnbutton_click(btn)
-	DY_DATA.WNDsupShopSelect.projectId = projectId
-	UIMGR.create_window("UI/WNDSupshopSelect")
-end
-
-local function on_submain_subunder_btnbutton_click(btn)
-	--UIMGR.create("UI/WNDAttUnder")						--zzg
-	UIMGR.create_window("UI/WNDSupAttUnder")
-end
-
--- local function on_submain_subscroll_subcontent_subpunch_subinfo_subproject_click(btn)
--- 	-- 巡店 选择项目
--- 	UI_DATA.WNDSelectProject.on_call_back = on_select_project
--- 	UIMGR.create_window("UI/WNDSupSelectProject")
--- end
 
 local function on_submain_subscroll_subcontent_subpunch_subinfo_substore_grp_entproject_btnbutton_click(btn)
 	-- 签到
@@ -334,13 +345,7 @@ end
 ---
 
 on_project_init = function ()
-	if projectId == nil then
-		Ref.SubMain.SubProject.lbText.text = "请选择项目"
-		libunity.SetActive(Ref.SubMain.SubPunch.btnButton,false)
-		return
-	else
-		libunity.SetActive(Ref.SubMain.SubPunch.btnButton,true)
-	end
+
 	AttendanceList = DY_DATA.get_attendance_list(false)
 	print("UI_DATA.AttendanceList is :" .. JSON:encode(AttendanceList))
 	local AttendanceProject
@@ -371,7 +376,8 @@ local function on_ui_init()
 	
 	if projectId == nil then
 		Ref.SubMain.SubProject.lbText.text = "请选择项目"
-		libunity.SetActive(Ref.SubMain.SubPunch.btnButton,false)
+		--libugui.SetActive(Sef.DubPopup.root,false)
+		--libunity.SetActive(Ref.SubMain.SubPunch.btnButton,false)
 		return
 	end
 
@@ -383,18 +389,20 @@ local function on_ui_init()
 end
 local function init_view()
 	Ref.SubTop.btnButton.onAction = on_subtop_btnbutton_click
+	Ref.SubMain.SubProject.btn.onAction = on_submain_subproject_click
+	Ref.SubMain.SubPunch.btnButton.onAction = on_submain_subpunch_btnbutton_click
+	Ref.SubMain.SubUnder.btnButton.onAction = on_submain_subunder_btnbutton_click
 	Ref.SubBtm.btnWork.onAction = on_subbtm_btnwork_click
 	Ref.SubBtm.btnSch.onAction = on_subbtm_btnsch_click
 	Ref.SubBtm.btnMsg.onAction = on_subbtm_btnmsg_click
 	Ref.SubBtm.btnUser.onAction = on_subbtm_btnuser_click
-	Ref.SubMain.SubProject.btn.onAction = on_submain_subproject_click
-	Ref.SubMain.SubPunch.btnButton.onAction = on_submain_subpunch_btnbutton_click
-	Ref.SubMain.SubUnder.btnButton.onAction = on_submain_subunder_btnbutton_click
+	Ref.SubPopup.btnClose.onAction = on_subpopup_btnclose_click
 	--!*以上：自动注册的回调函数*--
 end
 
 local function init_logic()
 	UI_DATA.WNDMsgHint.state = true
+	libunity.SetActive(Ref.SubPopup.root,false)
 	NW.subscribe("ATTENCE.SC.VERIFY", on_try_punch)
 	NW.subscribe("USER.SC.GETUSERINFOR", on_ui_init)
 	NW.subscribe("WORK.SC.GETSTORE", on_store_init)
@@ -434,7 +442,6 @@ local P = {
 	start = start,
 	update_view = update_view,
 	on_recycle = on_recycle,
-	update = update,
 }
 return P
 

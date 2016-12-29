@@ -22,13 +22,14 @@ local TempProjectList
 
 local function on_ui_init(brandid)
 	if brandid == nil then brandid = 0 end
-	ProjectList = DY_DATA.get_project_list()
+	ProjectList = DY_DATA.get_project_list(false)
 	if ProjectList == nil then 
 		print("ProjectList is nil")
 		libunity.SetActive(Ref.SubProject.spNil, true)
 		return 
 	end
 	TempProjectList = {}
+	print("ProjectList is ".. #ProjectList)
 	if brandid == 0 then
 		TempProjectList = ProjectList
 	else
@@ -39,7 +40,7 @@ local function on_ui_init(brandid)
 		end
 	end
 	libunity.SetActive(Ref.SubProject.spNil, #ProjectList == 0)
-	print("TempProjectList is "..#TempProjectList)
+	print("TempProjectList is ".. JSON:encode(TempProjectList))
 	Ref.SubProject.GrpProject:dup(#TempProjectList, function (i, Ent, isNew)
 		local Project = TempProjectList[i]
 		Ent.lbText.text = Project.name

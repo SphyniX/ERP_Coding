@@ -70,10 +70,10 @@ local function on_subset_btnback_click(btn)
 end
 
 local function on_btnsave_click(btn)
-	print("UI_DATA.WNDSubmitSchedule.ProductListForetasteNWStata"..tostring(UI_DATA.WNDSubmitSchedule.ProductListForetasteNWStata))
-	if not UI_DATA.WNDSubmitSchedule.ProductListForetasteNWStata then
-		_G.UI.Toast:make(nil, "网络请求失败，请重新登陆"):show()
-	end
+	-- print("UI_DATA.WNDSubmitSchedule.ProductListForetasteNWStata"..tostring(UI_DATA.WNDSubmitSchedule.ProductListForetasteNWStata))
+	-- if not UI_DATA.WNDSubmitSchedule.ProductListForetasteNWStata then
+	-- 	_G.UI.Toast:make(nil, "网络请求失败，请重新登陆"):show()
+	-- end
 	UI_DATA.WNDSubmitSchedule.ProductListForetasteNWStata = true
 
 	ProductListForUpdate = {}
@@ -123,12 +123,21 @@ local function on_ui_init(NWStata)
 	print("ProductListForUpdate in WNDSetForetaste is :" .. JSON:encode(ProductListForUpdate))
 	if ProductListForUpdate ~= nil and next(ProductListForUpdate) ~=nil then 
 		print("ProductListForUpdate in WNDSetForetaste is1 :" .. JSON:encode(ProductListForUpdate))
-		Ref.SubMain.Grp:dup(#ProductListForUpdate, function (i, Ent, isNew)
+		for i=1,#Ref.SubMain.Grp.Ents do
+			local Ent = Ref.SubMain.Grp.Ents[i]
 			local ProductListFor = ProductListForUpdate[i]
+			if ProductListFor == nil or Ent == nil or SampleList == nil then return end
 			-- Ent.lbName.text = Sample.name
-			Ent.lbVolume.text = "<size=36>" .. ProductListFor.value .. "</size>"
+			local Sample = SampleList[i]
+			Ent.lbVolume.text = "<size=36>" .. ProductListFor.value .. "</size>"..Sample.per
 			Ent.lbNumber.text = "<size=36>" .. ProductListFor.number .. "</size>" .. "次"
-		end)
+		end
+		-- Ref.SubMain.Grp:dup(#ProductListForUpdate, function (i, Ent, isNew)
+		-- 	local ProductListFor = ProductListForUpdate[i]
+		-- 	-- Ent.lbName.text = Sample.name
+		-- 	Ent.lbVolume.text = "<size=36>" .. ProductListFor.value .. "</size>"
+		-- 	Ent.lbNumber.text = "<size=36>" .. ProductListFor.number .. "</size>" .. "次"
+		-- end)
 	end
 end
 
@@ -145,7 +154,7 @@ local function init_view()
 	--!*以上：自动注册的回调函数*--
 end
 local function on_ui_initBack()
-		on_ui_init(true)
+		on_ui_init(false)
 end
 local function init_logic()
 
@@ -164,7 +173,7 @@ local function init_logic()
 		NW.send(nm)
 		return
 	end
-	on_ui_init(true)
+	on_ui_init(false)
 end
 
 local function start(self)

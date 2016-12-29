@@ -675,28 +675,28 @@ NW.regist("REPORTED.SC.GETSTOREINFOR", sc_reported_getstoreinfor)
 
 local function sc_reported_getproduct(nm)
     local n = tonumber(nm:readString())
+    local ProductList = {}
     for i=1,n do
         local projectId = tonumber(nm:readString())
         local Project = DY_DATA.SchProjectList[projectId]
+
+        Project.ProductList = ProductList
+        print("--------促销机制--------"..tostring(n))
         if Project ~= nil then
-            local ProductList = Project.ProductList
-            if ProductList == nil then
-                ProductList = {}
-                Project.ProductList = ProductList
-            end
 
             local Info = {
-            id = tonumber(nm:readString()),
-            projectId = projectId,
-            name = nm:readString(),
-            per = nm:readString(),
-        }
-        local icon = nm:readString()
-        Info.icon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
+                id = tonumber(nm:readString()),
+                projectId = projectId,
+                name = nm:readString(),
+                per = nm:readString(),
+            }
+            local icon = nm:readString()
+            Info.icon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
 
-        table.insert(ProductList, Info)
+            table.insert(ProductList, Info)
+        end
     end
-end
+    print("--------促销机制--------"..JSON:encode(ProductList))
 end
 NW.regist("REPORTED.SC.GETPRODUCT", sc_reported_getproduct)
 
@@ -1276,6 +1276,7 @@ local function sc_work_getproject(nm)
     else    
         local List = DY_DATA.ProjectList
         local n = tonumber(nm:readString())
+        print("<color=#EEB422>Length of n is" .. n .. "</color>")
         print("<color=#EEB422>Length of List is" .. #List .. "</color>")
         for i=1,n do
             local idstring = nm:readString()
@@ -1289,13 +1290,15 @@ local function sc_work_getproject(nm)
             List[id].icon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
             List[id].type = nm:readString()
         end
-        DY_DATA.AttendanceList = List
         DY_DATA.ProjectList = List
+        DY_DATA.AttendanceList = List
+        
         DY_DATA.SchProjectList = List
-        DY_DATA.get_project_list(true)
-        DY_DATA.get_attendance_list(true)
-        DY_DATA.get_schproject_list(true)
-        print("AttendanceList is :" .. JSON:encode(DY_DATA.AttendanceList))
+        -- DY_DATA.get_project_list(true)
+        -- DY_DATA.get_attendance_list(true)
+        -- DY_DATA.get_schproject_list(true)
+        print("ProjectList is :" .. #DY_DATA.get_project_list(false))
+        print(JSON:encode(DY_DATA.get_project_list(false)))
         print(JSON:encode(DY_DATA.get_attendance_list(false)))
         print(JSON:encode(DY_DATA.get_schproject_list(false)))
     end
@@ -1361,6 +1364,7 @@ local function sc_work_getstore(nm)
             print("LifoList is    DY_DATA.User.limit == 1--2--" .. JSON:encode(SchStoreList))
         else
             print("LifoList is    DY_DATA.User.limit == 2----" .. JSON:encode(InfoList))
+        
             local AttProject = DY_DATA.AttendanceList[projectId]
             local Project = DY_DATA.ProjectList[projectId]
             local SchProject = DY_DATA.SchProjectList[projectId]

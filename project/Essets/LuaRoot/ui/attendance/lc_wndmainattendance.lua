@@ -137,7 +137,7 @@ local function on_ringout_back()
 			end
 		end
 	else
-		_G.UI.Toast:make(nil, "打卡异常，无法进行"):show()
+		_G.UI.Toast:make(nil, "未上报进度"):show()
 	end
 end
 
@@ -159,7 +159,7 @@ local function on_submain_subatton_btnbutton_click(btn)
 	local workstate = DY_DATA.User.workstate -- 1 下班， 2， 上班中， 3 离岗
 	if workstate == 1 then
 		if projectId == nil then 
-			_G.UI.Toast:make(nil, "请选择项目"):show()	
+			libunity.SetActive(Ref.SubPopup.root,true)
 			return
 		end
 
@@ -221,7 +221,9 @@ local function on_subbtm_btnuser_click(btn)
 	UIMGR.create_window("UI/WNDMainUser")
 end
 
-
+local function on_subpopup_btnclose_click(btn)
+	libunity.SetActive(Ref.SubPopup.root,false)
+end
 
 
 
@@ -236,6 +238,7 @@ local function init_view()
 	Ref.SubBtm.btnSch.onAction = on_subbtm_btnsch_click
 	Ref.SubBtm.btnMsg.onAction = on_subbtm_btnmsg_click
 	Ref.SubBtm.btnUser.onAction = on_subbtm_btnuser_click
+	Ref.SubPopup.btnClose.onAction = on_subpopup_btnclose_click
 	--!*以上：自动注册的回调函数*--
 end
 
@@ -268,6 +271,8 @@ end
 
 local function init_logic()
 	UI_DATA.WNDMsgHint.state = true
+	libunity.SetActive(Ref.SubPopup.root,false)
+
 	on_msg_init()
 	print("Test DY_DATA.ProjectList is :"  .. JSON:encode(DY_DATA.ProjectList))
 	DY_DATA.Work.NowTime = nil
