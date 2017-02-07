@@ -44,6 +44,12 @@ public static class LibAsset {
         return 1;
     }
 
+    /// <summary>
+    /// 返回Resources资源下的资源的version文件
+    /// 获取本地Application.dataPath + "/Issets/PersistentData/AssetBundles/+"filelist.bytes"的版本信息:var json = TinyJSON.JSON.Load(text);
+    /// </summary>
+    /// <param name="lua"></param>
+    /// <returns></returns>
 	[MonoPInvokeCallback(typeof(LuaCSFunction))]
 	static int GetVersion(ILuaState lua)
 	{

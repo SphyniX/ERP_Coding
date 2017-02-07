@@ -35,8 +35,8 @@ local SubsaveLoadState
 local function on_submain_subcontent_subinfolist_btnproduct_click(btn)
 	libunity.SetActive(Ref.SubMain.SubProduct.root, true)
 end
-
-local function on_submain_subcontent_subinfolist_btncompeteproduct_click(btn)
+--竞品
+local function on_submain_subcontent_subinfolist_btncompeteproduct_click(btn)        ---竞品
 	--UI_DATA.WNDSubmitSchedule.WNDSetComProductNWStata=false
 	UIMGR.create_window("UI/WNDSetComProduct")
 end
@@ -45,7 +45,7 @@ local function on_submain_subcontent_subinfolist_btnsupplies_click(btn)
 	--UI_DATA.WNDSubmitSchedule.WNDSetSuppliesNWStata=false
 	libunity.SetActive(Ref.SubMain.SubSupplies.root, true)
 end
-
+--信息
 local function on_submain_subcontent_subinfolist_btninfo_click(btn)
 	--UI_DATA.WNDSubmitSchedule.WNDSetInforNWStata=false
 	UIMGR.create_window("UI/WNDSetInfor")
@@ -72,14 +72,14 @@ local function on_submain_subcontent_btnbutton_click(btn)
 	local TempInfor = DY_DATA.WNDSubmitSchedule.Infor
 	if TempProductList ~= nil then
 		print("----------------------------------------"..11)
-		if TempProductListInfo ~= nil or WNDSetPromoteInfoNWStata then
+		if TempProductListInfo ~= nil then
 			print("----------------------------------------"..12)
 			ProductListWithProductAndInfo = {}
 			for i=1,#TempProductList do
 				local id = tonumber(TempProductList[i].id)
 				local price = tonumber(TempProductList[i].price)
 				local volume = tonumber(TempProductList[i].volume)
-				local value = tonumber(TempProductListInfo[i].value)
+				local value = TempProductListInfo[i].value
 				table.insert(ProductListWithProductAndInfo,{id = id , price = price , volume = volume , value = value})
 			end
 		else
@@ -91,7 +91,7 @@ local function on_submain_subcontent_btnbutton_click(btn)
 		return 
 	end
 	if ProductListWithProductAndInfo ~= nil then
-		print("WNDSubmitSchedule.ProductListWithProductAndInfo is :" .. JSON:encode(ProductListWithProductAndInfo))
+		print("WNDSubmitSchedule.ProductListWithProductAndInfo-产品-- is :" .. JSON:encode(ProductListWithProductAndInfo))
 	end
 
 	if TempProductListForetaste ~= nil or WNDSetForetasteNWStata then
@@ -101,7 +101,7 @@ local function on_submain_subcontent_btnbutton_click(btn)
 		return
 	end
 
-	if TempPhotoListForUpDate ~= nil  or WNDSubmitPhotoForReportNWStata then 
+	if TempPhotoListForUpDate ~= nil then 
 		if next(TempPhotoListForUpDate) ~= nil then
 			print("WNDSubmitSchedule.PhotoListForUpdate is----xxxx-- :" .. JSON:encode(TempPhotoListForUpDate))
 		else
@@ -167,7 +167,7 @@ local function on_submain_subcontent_btnbutton_click(btn)
 		nm:writeU32(#TempComList)
 		for _,v in ipairs(TempComList) do
 			nm:writeU32(v.id == "" and 0 or tonumber(v.id))
-			nm:writeString(v.price)
+			nm:writeString(tostring(v.price))
 			nm:writeString(v.info)
 			nm:writeString(v.name)
 			-- print(JSON:encode(v))
@@ -208,7 +208,7 @@ local function on_submain_subcontent_btnbutton_click(btn)
 end
 
 
-local function on_submain_subsupplies_btn1_click(btn)
+local function on_submain_subsupplies_btn1_click(btn)       ----物料
 	
 	libunity.SetActive(Ref.SubMain.SubSupplies.root, false)
 	UIMGR.create_window("UI/WNDSetSupplies")
@@ -280,26 +280,26 @@ local function on_subtop_btnbutton_click(btn)
 	libunity.SetActive(Ref.SubTop.SubsaveLoad.root, SubsaveLoadState)
 end
 
-local function saveData()       --数据本地化--保存
-	local ProductList = UI_DATA.WNDSubmitSchedule.ProductList
-	local ProductListInfo = UI_DATA.WNDSubmitSchedule.ProductListInfo
-	local ProductListForetaste = UI_DATA.WNDSubmitSchedule.ProductListForetaste
-	local PhotoListForSaveData = UI_DATA.WNDSubmitSchedule.PhotoListForSaveData
-	local ProductListGift = UI_DATA.WNDSubmitSchedule.ProductListGift
-	local ComList = UI_DATA.WNDSubmitSchedule.ComList
-	local MaterList = DY_DATA.WNDSubmitSchedule.MaterList
+local function saveData()      													------------------------数据本地化--保存
+	local ProductList = UI_DATA.WNDSubmitSchedule.ProductList  					--产品
+	local ProductListInfo = UI_DATA.WNDSubmitSchedule.ProductListInfo 			--促销机制
+	local ProductListForetaste = UI_DATA.WNDSubmitSchedule.ProductListForetaste      --UI_DATA.WNDSubmitSchedule.PhotoListForUpdate   --体验品
+	local PhotoListForSaveData = UI_DATA.WNDSubmitSchedule.PhotoListForSaveData   --进度图片列表
+	local ProductListGift = UI_DATA.WNDSubmitSchedule.ProductListGift 		--赠品	
+	local ComList = UI_DATA.WNDSubmitSchedule.ComList 				--竞品
+	local MaterList = DY_DATA.WNDSubmitSchedule.MaterList          ---物料
 	local Infor = DY_DATA.WNDSubmitSchedule.Infor
-	print("保存"..JSON:encode(ProductList))
 	dataAll = {
-		ProductList = ProductList,
-		ProductListInfo = ProductListInfo,
-		MaterList = MaterList,
-		ComList = ComList,
-		PhotoListForSaveData = PhotoListForSaveData,
-		ProductListGift = ProductListGift,
-		ProductListForetaste = ProductListForetaste,
+		ProductList = ProductList or {},
+		ProductListInfo = ProductListInfo or {},
+		MaterList = MaterList  or {},
+		ComList = ComList  or {},
+		PhotoListForSaveData = PhotoListForSaveData  or {},
+		ProductListGift = ProductListGift  or {},
+		ProductListForetaste = ProductListForetaste  or {},
 		Infor ={info = Infor or ""}
 	}
+	print("保存"..JSON:encode(dataAll))
 	local storeId = UI_DATA.WNDSubmitSchedule.storeId
 	local projectId = UI_DATA.WNDSubmitSchedule.projectId
 	local dataName = "WNDSubmitSchedule/WNDSubmitSchedule"
@@ -328,7 +328,7 @@ local function on_subtop_subsaveload_btnsave_click(btn)
 		saveData()
 	end
 end
-local function loadLoacalData()
+local function loadLoacalData()												------------------------------------------本地数据加载
 	local storeId = UI_DATA.WNDSubmitSchedule.storeId
 	local projectId = UI_DATA.WNDSubmitSchedule.projectId
 	local dataName = "WNDSubmitSchedule/WNDSubmitSchedule"
@@ -343,11 +343,11 @@ local function loadLoacalData()
 	local TempMaterList = DY_DATA.WNDSubmitSchedule.MaterList     --物料
 	local TempInfor = DY_DATA.WNDSubmitSchedule.Infor
 
-	UI_DATA.WNDSubmitSchedule.loadState = true   --当本地加载时禁止初始化数据
+	UI_DATA.WNDSubmitSchedule.loadState = true   --控制进度图片列表显示
 
 	loadData = FileInfo.fileToTable(path)
 
-	LoadProductList = loadData.ProductList
+	LoadProductList = loadData.ProductList 
 	LoadProductListInfo = loadData.ProductListInfo
 	LoadProductListForetaste =loadData.ProductListForetaste    
 	PhotoListForSaveData = loadData.PhotoListForSaveData  
@@ -377,7 +377,7 @@ local function loadLoacalData()
 end
 
 
-local function on_subtop_subsaveload_btnload_click(btn)     --本地数据加载
+local function on_subtop_subsaveload_btnload_click(btn)     ------------------------------------------本地数据加载
 
 	local storeId = UI_DATA.WNDSubmitSchedule.storeId
 	local projectId = UI_DATA.WNDSubmitSchedule.projectId
@@ -410,7 +410,7 @@ local function wndSubmitScheduleDataInit()
 	print("  wndSubmitScheduleDataInit----------------"..tostring(UI_DATA.WNDSubmitSchedule.DataInitStata))
 	
 	if UI_DATA.WNDSubmitSchedule.DataInitStata then       -------UI_DATA.WNDSubmitSchedule.DataInitStata控制进度界面初始化第一次，在WNDSelectSchStore界面初始化此变量
-			print("  wndSubmitScheduleDataInit1---1-------------"..tostring(UI_DATA.WNDSubmitSchedule.DataInitStata))
+			print("  wndSubmitScheduleDataInit1---退出数据初始化------------"..tostring(UI_DATA.WNDSubmitSchedule.DataInitStata))
 		return
 	end
 
@@ -430,7 +430,8 @@ local function wndSubmitScheduleDataInit()
 				ProductListUpdate.price = tonumber(ProductList[i].price) or 0
 				ProductListUpdate.volume = tonumber(ProductList[i].volume) or 0
 				ProductListUpdate.sale = ProductListUpdate.price * ProductListUpdate.volume
-				ProductListInfoUpdate.value = tonumber(ProductList[i].value) or 0
+				ProductListInfoUpdate.value = ProductList[i].value or ""
+				if ProductListInfoUpdate.value == "nil" then ProductListInfoUpdate.value = "" end
 				table.insert(tempProductLis,ProductListUpdate)
 				table.insert(tempProductListInfo,ProductListInfoUpdate)
 

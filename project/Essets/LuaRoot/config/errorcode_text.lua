@@ -53,4 +53,5 @@ return {
 	{OP="Default",ID=3007,Info=" 促销员时间重叠",},
 	
 	{OP="Default",ID=10000,Info="大量错误",},
+	{OP="Default",ID=10001,Info="血崩",},
 }

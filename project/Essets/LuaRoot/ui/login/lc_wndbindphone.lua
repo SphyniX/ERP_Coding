@@ -18,12 +18,15 @@ local type
 local function on_get_verifyed(Ret)
 	if Ret.ret == 1 then
 		UIMGR.create_window("UI/WNDVerifyPhone")
+	else
+		_G.UI.Toast:make(nil,"手机号输入错误"):show()
 	end
 end
 --!*以下：自动生成的回调函数*--
 
 local function on_submain_btnenter_click(btn)
 	local phone = Ref.SubMain.SubPhone.inpPhone.text
+	if UI_DATA.WNDRegist.UserInfo == nil then UI_DATA.WNDRegist.UserInfo = {} end
 	local UserInfo = UI_DATA.WNDRegist.UserInfo
 	UserInfo.phone = phone
 	

@@ -77,6 +77,7 @@ local function on_ui_init()
 	Ref.SubProject.GrpProject:dup(#ProjectList, function (i, Ent, isNew)
 		local Project = ProjectList[i]
 		Ent.lbText.text = Project.name
+		libugui.GetSetResourcesPic(Ent.spIcon,"default",nil)
 		UIMGR.get_photo(Ent.spIcon, Project.icon)
 		local clr = i % 3
 		libunity.SetActive(Ent.spRed, clr == 1)

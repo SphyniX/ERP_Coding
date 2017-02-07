@@ -157,7 +157,9 @@ public static class AssetPacker
 		}
 		Log("Compress {0} files success.\n => {1}", files.Length, CodeRoot);
     }
-
+    /// <summary>
+    /// 生成资源包
+    /// </summary>
     static public void PackAssets()
     {
         AssetDatabase.RemoveUnusedAssetBundleNames();

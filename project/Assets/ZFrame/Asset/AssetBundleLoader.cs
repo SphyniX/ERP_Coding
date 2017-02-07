@@ -7,6 +7,9 @@ using System.IO;
 
 namespace ZFrame.Asset
 {
+    /// <summary>
+    /// 资源路径封装，实现AssetLoader的 PerformTask方法，此方法是加载lua脚本资源包（script.unity3d和config.unity3d）
+    /// </summary>
 	public sealed class AssetBundleLoader : AssetLoader
 	{
 		private static AssetBundleLoader m_Inst;
@@ -16,9 +19,16 @@ namespace ZFrame.Asset
 		{
 			m_Inst = this;
 		}
-
+        /// <summary>
+        /// 获取路径： m_persistentDataPath =Application.dataPath + "/Issets/PersistentData"（编辑器），
+        /// m_persistentDataPath = Application.persistentDataPath（移动平台）
+        /// </summary>
 		static string m_persistentDataPath;
-		static public string persistentDataPath { get { 
+        /// <summary>
+        /// 获取路径： m_persistentDataPath =Application.dataPath + "/Issets/PersistentData"（编辑器），
+        /// m_persistentDataPath = Application.persistentDataPath（移动平台）
+        /// </summary>
+        static public string persistentDataPath { get { 
 				if (m_persistentDataPath == null) {
 #if UNITY_EDITOR || UNITY_STANDALONE
 					m_persistentDataPath = Path.GetDirectoryName(Application.dataPath) + "/Issets/PersistentData";
@@ -29,7 +39,15 @@ namespace ZFrame.Asset
 				return m_persistentDataPath;
 			}
 		}
-		static string m_streamingAssetPath;
+        /// <summary>
+        /// 获取资源路径，Application.dataPath  + "/Issets/StreamingAssets"（编辑器），
+        /// m_streamingAssetPath = Application.streamingAssetsPath;（移动平台）
+        /// </summary>
+        static string m_streamingAssetPath;
+        /// <summary>
+        /// 获取资源路径，Application.dataPath  + "/Issets/StreamingAssets"（编辑器），
+        /// m_streamingAssetPath = Application.streamingAssetsPath;（移动平台）
+        /// </summary>
 		static public string streamingAssetsPath { get { 
 				if (m_streamingAssetPath == null) {
 #if UNITY_EDITOR
@@ -49,7 +67,12 @@ namespace ZFrame.Asset
 		public const string ASSETBUNDLE_FOLDER = "AssetBundles";
 		public const string FILE_LIST = "filelist.bytes";
 		static string m_bundleRoot;
-		static public string bundleRootPath {
+        /// <summary>
+        /// 获取路径： m_persistentDataPath =Application.dataPath + "/Issets/PersistentData/AssetBundles"（编辑器），
+        /// m_persistentDataPath = Application.persistentDataPath/AssetBundles（移动平台）
+        /// </summary>
+
+        static public string bundleRootPath {
 			get {
 				if (m_bundleRoot == null) {
 					m_bundleRoot = Path.Combine(persistentDataPath, ASSETBUNDLE_FOLDER);
@@ -59,6 +82,10 @@ namespace ZFrame.Asset
 		}
 
 		static string m_streamingRoot;
+        /// <summary>
+        /// 获取资源路径，Application.dataPath  + "/Issets/StreamingAssets/AssetBundles"（编辑器），
+        /// m_streamingAssetPath = Application.streamingAssetsPath/AssetBundles;（移动平台）
+        /// </summary>
 		static public string streamingRootPath {
 			get {
 				if (m_streamingRoot == null) {
@@ -68,7 +95,11 @@ namespace ZFrame.Asset
 			}
 		}
 
-		private class AssetBundleRef : AbstractAssetBundleRef
+        /// <summary>
+        /// 主要和lua脚本加载有关
+        /// 抽象的AssetBundle引用，管理已加载的AssetBundle  实现
+        /// </summary>
+        private class AssetBundleRef : AbstractAssetBundleRef
 		{
 			private AssetBundle m_Assetbundle;
 
@@ -76,6 +107,13 @@ namespace ZFrame.Asset
 	        {
                 Init(assetbundleName, assetbundle, allowUnload);
 	        }
+
+            /// <summary>
+            /// 初始化资源包属性，资源包名字assetbundleName、资源包AssetBundle、是否强制卸载allowUnload
+            /// </summary>
+            /// <param name="assetbundleName">资源包名字</param>
+            /// <param name="assetbundle">资源包AssetBundle</param>
+            /// <param name="allowUnload">是否强制卸载</param>
             public void Init(string assetbundleName, AssetBundle assetbundle, bool allowUnload)
 	        {
 				this.m_Assetbundle = assetbundle;
@@ -87,6 +125,9 @@ namespace ZFrame.Asset
                 return m_Assetbundle == null;
 	        }
 
+            /// <summary>
+            /// 卸载资源
+            /// </summary>
 			protected override void UnloadAssets()
 			{
 				if (m_Assetbundle) {
@@ -94,6 +135,12 @@ namespace ZFrame.Asset
 				}
 			}
 
+            /// <summary>
+            /// 加载资源
+            /// </summary>
+            /// <param name="objName"></param>
+            /// <param name="type"></param>
+            /// <returns></returns>
 			public override Object Load(string objName, System.Type type)
 	        {
                 return m_Assetbundle && type != null ? m_Assetbundle.LoadAsset(objName, type) : null;
@@ -110,7 +157,12 @@ namespace ZFrame.Asset
 		};
 
 		public Slider progressView;
-
+        /// <summary>
+        /// www加载脚本资源包
+        /// </summary>
+        /// <param name="task"></param>
+        /// <param name="output"></param>
+        /// <returns></returns>
 		protected override IEnumerator PerformTask(AsyncLoadingTask task, ABRefOut output)
 		{
 			string suitPath = "";

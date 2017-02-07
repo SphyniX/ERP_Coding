@@ -40,13 +40,21 @@ local function on_btnsave_click(btn)
 	-- end
 	
 	ProductListForUpdate = {}
+	local ProductListInfoState = false
 	Ref.SubMain.Grp:dup(#ProductList, function (i, Ent, isNew)
 		local id = ProductList[i].id
 		local value = Ent.inpValue.text
+		if string.gsub(value," ","") ~= "" then
+			ProductListInfoState = true
+		end
 		table.insert(ProductListForUpdate,{id = id ,value =value})
 
 		end)
-	UI_DATA.WNDSubmitSchedule.ProductListInfo = ProductListForUpdate
+	if not ProductListInfoState then
+		UI_DATA.WNDSubmitSchedule.ProductListInfo = nil
+	else
+		UI_DATA.WNDSubmitSchedule.ProductListInfo = ProductListForUpdate
+	end
 	UIMGR.close_window(Ref.root)
 end
 

@@ -82,41 +82,88 @@ public class SDKMgr : MonoSingleton<SDKMgr> {
     IEnumerator LoadTexture(UITexture tex, string name, ZFrame.Asset.DelegateObjectLoaded onLoaded)
     {
         //注解1
-		Debug.Log ("Starting Load Image!");
 
         string path = get_image_path(name);
-//		Debug.Log (path);
-//		if (File.Exists (path)) {
-			WWW www = new WWW (path);
-		int i = 0;
-			while (!www.isDone) {
-			if (i > 100) {
-				break;
-				}
-			i++;
-			}
-			yield return www;
-		
-			if (www.error == null) {
-				tex.enabled = true;
-				tex.texture = www.texture;
-				onLoaded (www.texture, true);
-				Debug.Log ("Loaded Image!");
-			} else {
-				onLoaded (null, false);
-			}
-//		} else {
-//			Debug.Log ("File is not Exist!");
-//		}
+        Debug.Log("Starting Load Image!--Path:" + path);
+        //WWW www = new WWW(path);
+        //int i = 0;
+        //while (!www.isDone)
+        //{
+        //    if (i > 100)
+        //    {
+        //        break;
+        //    }
+        //    i++;
+        //}
+        //yield return www;
+        //if (www.error == null)
+        //{
+        //    tex.enabled = true;
+        //    tex.texture = www.texture;
+        //    onLoaded(www.texture, true);
+        //    Debug.Log("SDKMgr.LoadTexture()----xxxx-----Loaded Image!");
+        //}
+        //else
+        //{
+        //    onLoaded(null, false);
+        //}
+        //		Debug.Log (path);
+#if UNITY_IPHONE
+              if (File.Exists (path)) {
+                WWW www = new WWW (path);
+        		int i = 0;
+        			while (!www.isDone) {
+        			if (i > 100) {
+        				break;
+        				}
+        			i++;
+        			}
+        			yield return www;
+
+        			if (www.error == null) {
+        				tex.enabled = true;
+        				tex.texture = www.texture;
+        				onLoaded (www.texture, true);
+        				Debug.Log ("Loaded Image!");
+        			} else {
+        				onLoaded (null, false);
+        			}
+        		} else {
+        			Debug.Log ("SDKMgr.LoadTexture()----xxxx-----File is not Exist!");
+        		}
+#else
+        WWW www = new WWW(path);
+        int i = 0;
+        while (!www.isDone)
+        {
+            if (i > 100)
+            {
+                break;
+            }
+            i++;
+        }
+        yield return www;
+        if (www.error == null)
+        {
+            tex.enabled = true;
+            tex.texture = www.texture;
+            onLoaded(www.texture, true);
+            Debug.Log("SDKMgr.LoadTexture()----xxxx-----Loaded Image!");
+        }
+        else
+        {
+            onLoaded(null, false);
+        }
+#endif
     }
 
     static public string get_image_path(string name) {
-        
-		Debug.Log ("file:/" + imageRootPath + "/" + name);
-#if UNITY_IOS
-	    return "file://" + Application.persistentDataPath + "/" + name;
-#else 
-		return "file://" + imageRootPath + "/" + name;
+
+        Debug.Log("SDKMgr.get_image_path()---xx---file://" + imageRootPath + "/" + name);
+#if UNITY_IPHONE
+	    return "file://" + Application.persistentDataPath + "/Image/" + name;
+#else
+        return "file://" + imageRootPath + "/" + name;
 #endif
     }
 

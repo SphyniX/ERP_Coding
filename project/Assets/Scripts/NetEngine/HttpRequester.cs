@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
+using UnityEngine;
 using System.IO;
 
 namespace ZFrame.NetEngine
@@ -10,7 +11,7 @@ namespace ZFrame.NetEngine
     public class HttpRequester
     {
 
-        static int BYTE_LEN = 1024;
+        static int BYTE_LEN = 1024*5;
 
         public delegate void ProcessDelegate(HttpRequester httpReq, long current, long total);
         public delegate void RespDelegate(HttpRequester httpReq, string resp, System.Exception e);
@@ -21,8 +22,8 @@ namespace ZFrame.NetEngine
         public string rspFile;
         float mprog;
         public float progress { get { return mprog; } }
-		public long current { get; private set; }
-		public long total { get; private set; }
+        public long current { get; private set; }
+        public long total { get; private set; }
         private bool m_IsDone;
         public bool isDone { get { return progress == 1f && m_IsDone; } }
         public object error;
@@ -44,47 +45,57 @@ namespace ZFrame.NetEngine
             storageSiz = 1024 * 1024 * 100;
 
             mprog = 0;
-			current = 0;
-			total = 1;
+            current = 0;
+            total = 1;
             m_IsDone = false;
             error = null;
         }
 
         public void Start()
         {
-            LogMgr.I("{0} {1}?{2}", reqMethod, reqUri, reqPara);
-            switch (reqMethod) {
+            LogMgr.I("HttpRequester.start（）----{0} {1}?{2}", reqMethod, reqUri, reqPara);
+            switch (reqMethod)
+            {
                 case "GET":
                     wrq = (HttpWebRequest)WebRequest.Create(reqUri + "?" + reqPara);
                     break;
-                case "POST": {
+                case "POST":
+                    {
                         wrq = (HttpWebRequest)WebRequest.Create(reqUri);
                         wrq.Method = "POST";
                         wrq.ContentType = "application/x-www-form-urlencoded";
 
-                        if (reqPara != null) {
+                        if (reqPara != null)
+                        {
                             byte[] SomeBytes = Encoding.UTF8.GetBytes(reqPara);
                             Stream newStream = wrq.GetRequestStream();
                             newStream.Write(SomeBytes, 0, SomeBytes.Length);
                             newStream.Close();
                             wrq.ContentLength = reqPara.Length;
-                        } else {
+                        }
+                        else
+                        {
                             wrq.ContentLength = 0;
                         }
-                    } break;
-                case "GETF": {
+                    }
+                    break;
+                case "GETF":
+                    {
                         wrq = (HttpWebRequest)HttpWebRequest.Create(reqUri);
                         wrq.AddRange(System.Int32.Parse(reqPara));
-                    } break;
+                    }
+                    break;
                 default:
                     return;
             }
             result = wrq.BeginGetResponse(new AsyncCallback(f_processHttpResponseAsync), wrq);
+
         }
 
         public void Stop()
         {
-            if (wrq != null) {
+            if (wrq != null)
+            {
                 wrq = null;
             }
         }
@@ -99,79 +110,120 @@ namespace ZFrame.NetEngine
             HttpWebRequest req = iar.AsyncState as HttpWebRequest;
 
             FileStream fStream = null;
-            try {
+            try
+            {
                 HttpWebResponse response = req.EndGetResponse(iar) as HttpWebResponse;
                 Stream responseStream = response.GetResponseStream();
                 if (response.ContentLength / 1000 / 1000 > storageSiz)
                     throw new System.IO.IOException(string.Format("Disk Full ({0} / {1})", response.ContentLength / 1000 / 1000, storageSiz));
-
-				total = response.ContentLength;
-                if (reqMethod == "GETF") {
-                    if (File.Exists(rspFile)) {
+                total = response.ContentLength;
+                if (reqMethod == "GETF")
+                {
+                    if (!Directory.Exists(Path.GetDirectoryName(rspFile)))
+                    {
+                        Directory.CreateDirectory(Path.GetDirectoryName(rspFile));
+                    }
+                    Debug.LogFormat("HttpRequester.f_processHttpResponseAsync--创建成功");
+                    if (File.Exists(rspFile))
+                    {
                         fStream = File.OpenWrite(rspFile);
                         fStream.Seek(0, SeekOrigin.End);
-                    } else {
+                    }
+                    else
+                    {
                         fStream = new System.IO.FileStream(rspFile, System.IO.FileMode.Create);
+                        if (File.Exists(rspFile))
+                        {
+                            Debug.LogFormat("HttpRequester.f_processHttpResponseAsync()----文件不存在--创建文件---成功,path:{0}", rspFile);
+                        }
+                        else
+                        {
+                            Debug.LogFormat("HttpRequester.f_processHttpResponseAsync()----文件不存在--创建文件---失败,path:{0}", rspFile);
+                        }
                     }
                     total += System.Int32.Parse(reqPara);
                 }
-
+                int forCount = 0;
                 byte[] read = new byte[BYTE_LEN];
-                for (; ; ) {
+                for (;;)
+                {
+                    forCount++;
                     int count = responseStream.Read(read, 0, BYTE_LEN);
-                    if (count > 0) {
-                        if (wrq == null) {
+                    Debug.LogFormat("HttpRequester.f_processHttpResponseAsync()--XX--写入流{0}",count);
+                    if (count > 0)
+                    {
+                        if (wrq == null)
+                        {
                             throw new System.Net.WebException("Request Canceled", WebExceptionStatus.RequestCanceled);
                         }
-                        if (fStream == null) {
+                        if (fStream == null)
+                        {
+
                             string str = System.Text.Encoding.UTF8.GetString(read);
                             rsb.Append(str);
-							current = rsb.Length;
+                            current = rsb.Length;
                             if (onProcess != null) onProcess(this, rsb.Length, total);
-                        } else {
+                        }
+                        else
+                        {
+
                             fStream.Write(read, 0, count);
-							current = fStream.Length;
+                            current = fStream.Length;
                             if (onProcess != null) onProcess(this, fStream.Length, total);
                         }
-						mprog = current / (float)total;
-                    } else {
+                        mprog = current * 1.0f / total;
+                    }
+                    else
+                    {
                         break;
                     }
                 }
-
-                if (fStream.Length != total) {
+                if (fStream.Length != total)
+                {
                     throw new System.Net.WebException("Request Unfinished", WebExceptionStatus.RequestCanceled);
                 }
-                if (responseStream != null) {
+                if (responseStream != null)
+                {
                     responseStream.Dispose();
                 }
                 response.Close();
-            } catch (WebException e) {
+            }
+            catch (WebException e)
+            {
                 HttpWebResponse resp = e.Response as HttpWebResponse;
-                if (resp != null && resp.StatusCode == HttpStatusCode.RequestedRangeNotSatisfiable) {
-                    LogMgr.I("File {0} is done.", rspFile);
+                if (resp != null && resp.StatusCode == HttpStatusCode.RequestedRangeNotSatisfiable)  //HttpStatusCode.RequestedRangeNotSatisfiable:等效于 HTTP 416 状态。 RequestedRangeNotSatisfiable 指示从资源请求的数据范围不能返回，或者因为范围的开始处，然后该资源的开头或范围的末尾后在资源的结尾。
+                {
                     rsb.Append(rspFile);
-					current = total;
+                    current = total;
                     mprog = 1;
-                } else {//if (e.Status != WebExceptionStatus.RequestCanceled) {
-                    error = (int)resp.StatusCode;
+                }
+                else
+                {//if (e.Status != WebExceptionStatus.RequestCanceled) {
+                    error = (int)resp.StatusCode;        //NotFound	等效于 HTTP 状态 404。 NotFound 指示所请求的资源不存在的服务器上。
                     if (onResponse != null) onResponse(this, null, e);
                     return;
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 req.Abort();
                 error = e.Message;
                 if (onResponse != null) onResponse(this, null, e);
-            } finally {
+            }
+            finally
+            {
                 // GetResponse Stop
-                if (fStream != null) {
+                if (fStream != null)
+                {
                     fStream.Close();
                 }
             }
 
             // GetResponse Success
-            if (fStream != null) {
+            if (fStream != null)
+            {
                 rsb.Append(fStream.Name);
+                fStream.Close();
             }
             if (onResponse != null) onResponse(this, rsb.ToString(), null);
 

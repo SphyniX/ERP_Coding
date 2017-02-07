@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -88,7 +88,7 @@ namespace Assets.Editor.Utils
         public static string getVerInfo()
         {
             //return getBranch()+"_"+getGitVersion();
-            return "1.0.3.2";
+            return "1.0.3.3";
         }
     }
 }

@@ -82,7 +82,20 @@ local function on_submain_btnsave_click(btn)
 	if UI_DATA.WNDSubmitSchedule.ComList == nil then
 		UI_DATA.WNDSubmitSchedule.ComList = {}
 	end
-	table.insert(UI_DATA.WNDSubmitSchedule.ComList,ComListForUpdate)
+	local ComListBl = false
+	for i=1,#UI_DATA.WNDSubmitSchedule.ComList do
+		print("id------xxx------"..tostring(UI_DATA.WNDSubmitSchedule.ComList[i].id).."/"..tostring(ComListForUpdate.id))
+		if tonumber(UI_DATA.WNDSubmitSchedule.ComList[i].id) == tonumber(ComListForUpdate.id) then
+			UI_DATA.WNDSubmitSchedule.ComList[i] = ComListForUpdate
+			print("插入成功----xxxx----")
+			ComListBl = true
+		end
+	end
+	print("数据状态------xxxx----"..tostring(ComListBl))
+	if not ComListBl then
+		table.insert(UI_DATA.WNDSubmitSchedule.ComList,ComListForUpdate)
+	end
+	print("竞品数据---xxxxx----"..JSON:encode(UI_DATA.WNDSubmitSchedule.ComList))
 	Ref.SubMain.inpPrice.text = nil
 	Ref.SubMain.inInfo.text = nil
 	UIMGR.close_window(Ref.root)
@@ -158,6 +171,7 @@ local function init_view()
 end
 
 local function init_logic()
+	libugui.GetSetResourcesPic(Ref.SubMain.spTexImg,"default",nil)
 	Ref.SubTop.lbText.text = UI_DATA.WNDSetComPhoto.name
 end
 

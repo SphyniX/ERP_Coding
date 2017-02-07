@@ -1,7 +1,7 @@
 local ipairs, pairs, setmetatable, table
     = ipairs, pairs, setmetatable, table
 local JSON = JSON
-
+--zzg  ----队列
 local OBJDEF = { }
 OBJDEF.__index = OBJDEF
 OBJDEF.__tostring = function (self)

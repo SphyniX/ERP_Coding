@@ -5,11 +5,11 @@ local function on_app_launch()
 end
 
 local function on_app_pause(paused)
-    print("on_app_pause", paused)
+    print("framework/application.lua---xx--on_app_pause()", paused)
 end
 
 local function on_app_focus(focused)
-   print("on_app_focus", focused)
+   print("framework/application.lua---xx---on_app_focus", focused)
 end
 
 local function on_sys_message(message)

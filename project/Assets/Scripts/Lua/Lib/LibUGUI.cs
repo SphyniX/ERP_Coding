@@ -70,6 +70,11 @@ public static class LibUGUI
             new NameFuncPair("GetFileList", GetFileList),
             new NameFuncPair("CreateDirectory", CreateDirectory),
             new NameFuncPair("DeleteAllFile", DeleteAllFile),
+            new NameFuncPair("DeleteDirectory", DeleteDirectory),
+            new NameFuncPair("CopyDirectory", CopyDirectory),
+
+            new NameFuncPair("GetSetResourcesPic", GetSetResourcesPic),
+            new NameFuncPair("GetSetAssetsPic", GetSetAssetsPic),
 
         };
 
@@ -876,6 +881,9 @@ public static class LibUGUI
         }
         return 0;
     }
+
+
+    //-----------------zzg
     [MonoPInvokeCallback(typeof(LuaCSFunction))]
     private static int GetFileList(ILuaState lua)
     {
@@ -962,10 +970,10 @@ public static class LibUGUI
         
         List<string> fileList = new List<string>();
         DirectoryInfo folder = new DirectoryInfo(path);
-        Debug.Log("lua调用c#IO类获取文件列表："+path);
+        Debug.LogFormat("lua调用c#IO类获取文件列表：" +path);
         if (!folder.Exists)
         {
-            Debug.LogWarning("lua调用c#IO类获取文件列表---不存在：" + path);
+            Debug.LogFormat("lua调用c#IO类获取文件列表---不存在：" + path);
             return null;
         }
         foreach (FileInfo file in folder.GetFiles(filter))
@@ -977,5 +985,216 @@ public static class LibUGUI
         return fileList;
 
     }
+    [MonoPInvokeCallback(typeof(LuaCSFunction))]
+    private static int DeleteDirectory(ILuaState lua)
+    {
+
+        string path = lua.ChkString(1);
+        if (string.IsNullOrEmpty(path))
+        {
+            lua.PushNil();
+        }
+        else
+        {
+            try
+            {
+                DirectoryInfo folder = new DirectoryInfo(path);
+                if (folder.Exists) folder.Delete(true);
+                folder = null;
+                Debug.LogWarning("Lua :  FileInfo.lua删除文件夹成功Path:"+path);
+            }
+            catch
+            {
+                Debug.LogWarning("Lua :  FileInfo.lua删除文件夹失败Path: "+path);
+            }
+
+
+        }
+        return 1;
+
+    }
+    [MonoPInvokeCallback(typeof(LuaCSFunction))]
+    private static int CopyDirectory(ILuaState lua)
+    {
+
+        string path = lua.ChkString(1);
+        string toPath = lua.ChkString(2);
+        if (string.IsNullOrEmpty(path) || string.IsNullOrEmpty(toPath))
+        {
+            lua.PushNil();
+        }
+        else
+        {
+            try
+            {
+                DirectoryInfo folder = new DirectoryInfo(path);
+
+                if (folder.Exists) copyDirectoryFun(path,toPath);
+                folder = null;
+                Debug.LogWarning("Lua :  FileInfo.lua复制文件夹成功Path:" + path);
+            }
+            catch
+            {
+                Debug.LogWarning("Lua :  FileInfo.lua复制文件夹失败Path: " + path);
+            }
+
+
+        }
+        return 1;
+
+    }
+
+    /// <summary>
+    /// 递归拷贝所有子目录。
+    /// </summary>
+    /// <param >源目录</param>
+    /// <param >目的目录</param>
+    private static void copyDirectoryFun(string sPath, string toPath)
+    {
+        string[] directories = System.IO.Directory.GetDirectories(sPath);
+        if (!System.IO.Directory.Exists(toPath))
+            System.IO.Directory.CreateDirectory(toPath);
+        System.IO.DirectoryInfo dir = new System.IO.DirectoryInfo(sPath);
+        System.IO.DirectoryInfo[] dirs = dir.GetDirectories();
+        CopyFileFun(dir, toPath);
+        if (dirs.Length > 0)
+        {
+            foreach (System.IO.DirectoryInfo temDirectoryInfo in dirs)
+            {
+                string sourceDirectoryFullName = temDirectoryInfo.FullName;
+                string destDirectoryFullName = sourceDirectoryFullName.Replace(sPath, toPath);
+                if (!System.IO.Directory.Exists(destDirectoryFullName))
+                {
+                    System.IO.Directory.CreateDirectory(destDirectoryFullName);
+                }
+                CopyFileFun(temDirectoryInfo, destDirectoryFullName);
+                copyDirectoryFun(sourceDirectoryFullName, destDirectoryFullName);
+            }
+        }
+
+    }
+
+    /// <summary>
+    /// 拷贝目录下的所有文件到目的目录。
+    /// </summary>
+    /// <param >源路径</param>
+    /// <param >目的路径</param>
+    private static void CopyFileFun(System.IO.DirectoryInfo path, string desPath)
+    {
+        string sourcePath = path.FullName;
+        System.IO.FileInfo[] files = path.GetFiles();
+        foreach (System.IO.FileInfo file in files)
+        {
+            string sourceFileFullName = file.FullName;
+            string destFileFullName = sourceFileFullName.Replace(sourcePath, desPath);
+            file.CopyTo(destFileFullName, true);
+        }
+    }
+    [MonoPInvokeCallback(typeof(LuaCSFunction))]
+    private static int GetSetResourcesPic(ILuaState lua)
+    {
+        var tex = LibUnity.FindCom<UITexture>(lua);
+        string PicNmae = lua.ChkString(2);
+        var funcRef = lua.ToLuaFunction(3);
+        ZFrame.Asset.DelegateObjectLoaded onLoaded = null;
+        if (funcRef != null)
+        {
+            onLoaded = (o, p) => {
+                LogMgr.D("LibUGUI.GetSetResourcesPic()--loaded {0}, {1}", o, p);
+                funcRef.Invoke(o, p);
+                funcRef.Dispose();
+                var disposer = p as System.IDisposable;
+                if (disposer != null) disposer.Dispose();
+            };
+        }
+        Debug.Log("LibUGUI.GetSetResourcesPic()--图片名字" + tex.name + tex.gameObject.activeSelf.ToString());
+        if (!string.IsNullOrEmpty(PicNmae))
+        {
+            Texture st = Resources.Load<Texture>(PicNmae);
+
+            if (tex != null)
+            {
+                if (st)
+                {
+                    tex.texture = st;
+                    tex.enabled = true;
+                    Debug.Log("LibUGUI.GetSetResourcesPic()--图片显示成功" + tex.name + tex.gameObject.activeSelf.ToString());
+                    lua.PushAnyObject(tex);
+                }
+                Debug.Log("LibUGUI.GetSetResourcesPic()--UITexture组件存在");
+            }
+            else
+            {
+                lua.PushAnyObject(st);
+                Debug.Log("LibUGUI.GetSetResourcesPic()--UITexture组件不存在");
+            }
+        }
+        return 1;
+    }
+
+    /// <summary>
+    /// 设置任意资源     ----未启用。。。。。。
+    /// </summary>
+    /// <param name="lua"></param>
+    /// <returns></returns>
+    [MonoPInvokeCallback(typeof(LuaCSFunction))]
+    private static int GetSetResourcesAsset(ILuaState lua)
+    {
+        var tex = LibUnity.FindCom<UITexture>(lua);
+        string ResourcesAssetNmae = lua.ChkString(2);
+        var funcRef = lua.ToLuaFunction(3);
+        ZFrame.Asset.DelegateObjectLoaded onLoaded = null;
+        if (funcRef != null)
+        {
+            onLoaded = (o, p) => {
+                LogMgr.D("GetSetResourcesAsset--loaded {0}, {1}", o, p);
+                funcRef.Invoke(o, p);
+                funcRef.Dispose();
+                var disposer = p as System.IDisposable;
+                if (disposer != null) disposer.Dispose();
+            };
+        }
+
+        if (!string.IsNullOrEmpty(ResourcesAssetNmae) && !string.IsNullOrEmpty(ResourcesAssetNmae))
+        {
+           
+        }
+        return 1;
+    }
+
+    [MonoPInvokeCallback(typeof(LuaCSFunction))]
+    private static int GetSetAssetsPic(ILuaState lua)
+    {
+        var tex = LibUnity.FindCom<UITexture>(lua);
+        string PicNmae = lua.ChkString(2);
+        var funcRef = lua.ToLuaFunction(3);
+        ZFrame.Asset.DelegateObjectLoaded onLoaded = null;
+        if (funcRef != null)
+        {
+            onLoaded = (o, p) => {
+                LogMgr.D("GetSetResourcesPic--loaded {0}, {1}", o, p);
+                funcRef.Invoke(o, p);
+                funcRef.Dispose();
+                var disposer = p as System.IDisposable;
+                if (disposer != null) disposer.Dispose();
+            };
+        }
+
+        if (!string.IsNullOrEmpty(PicNmae))
+        {
+            if (tex != null)
+            {
+                tex.texturePath = PicNmae;
+                tex.enabled = true;
+            }
+            else
+            {
+                Debug.Log("GetSetResourcesPic--UITexture组件不存在");
+            }
+        }
+        return 1;
+    }
 
 }
+
+        

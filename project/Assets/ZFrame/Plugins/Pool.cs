@@ -20,7 +20,10 @@ public class Pool<T> where T : new()
         m_ActionOnRelease = actionOnRelease;
         m_Limit = limit;
     }
-
+    /// <summary>
+    /// 获取一个资源加载的空任务
+    /// </summary>
+    /// <returns></returns>
     public T Get()
     {        
         lock(m_Stack) {

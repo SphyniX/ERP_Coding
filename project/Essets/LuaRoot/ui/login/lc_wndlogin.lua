@@ -24,12 +24,13 @@ local debug_account = "45207"
 local debug_password = "45207"
 
 local function on_get_version(needUpdate)
+	print("ui/login/lc_wndlogin.lua---xxx--on_get_version------x-----"..tostring(needUpdate))
 	if needUpdate then return end
 	LOGIN.enter_server(address, port)
 end
 
 local function on_logined(Ret)
-	libunity.LogD("{0}",JSON:encode(Ret))
+	libunity.LogD("ui/login/lc_wndlogin.lua--xx--on_logined()--xxxxx---{0}",JSON:encode(Ret))     --输出：ui/login/lc_wndlogin.lua--xxxxx---{"ret":1,"id":75,"address":"106.14.17.160","port":6666}
 	local LOGIN = MERequire "libmgr/login.lua"
 	local DY_DATA = MERequire "datamgr/dydata.lua"
 	DY_DATA.User = {
@@ -55,9 +56,7 @@ end
 
 local function on_btnenter_click(btn)
 	print("lc_wndlogin------> on_btnenter_click")
-	--UIMGR.create_window("UI/WNDLaunch11")
-	--UIMGR.create_window("UI/testpanel")
-
+	--UIMGR.create_window("UI/CamareTool")
 
 	local inpAccount = Ref.SubAccount.inpAccount.text
 	local inpPassword = Ref.SubPassword.inpPassword.text
@@ -68,7 +67,7 @@ local function on_btnenter_click(btn)
 		return
 	end
 
-	local isSave = Ref.tglRemamber.value
+	local isSave = Ref.tglRemamber.value			--是否显示密码
 	local LoginedAcc = {acc = inpAccount, pass = isSave and inpPassword or nil}
 	UI_DATA.save_account(LoginedAcc)
 
@@ -108,10 +107,10 @@ local function init_logic()
 	local LFL
 	if filelist == nil then
 		LFL = {
-			version = libasset.GetVersion(),
+			version = libasset.GetVersion(), --    /// 返回Resources资源下的资源的version文件/// 获取本地Application.dataPath + "/Issets/PersistentData/AssetBundles/+"filelist.bytes"的版本信息:var json = TinyJSON.JSON.Load(text);
 		}
 	else
-		LFL = JSON:decode(filelist)
+	LFL = JSON:decode(filelist)
 	end
 	UI_DATA.WNDLogin.LocalFileList = LFL
 	Ref.lbVersion.text = string.format( "Version : %s" ,LFL.version)

@@ -10,6 +10,10 @@ namespace ZFrame.Asset
 
 	public sealed class AssetsSimulate : AssetLoader
 	{
+        /// <summary>
+        /// 主要和资源包加载有关
+        /// 抽象的AssetBundle引用，管理已加载的AssetBundle   （AbstractAssetBundleRef）抽象类 实现
+        /// </summary>
 	    private class SimAssetBundle : AbstractAssetBundleRef
 	    {
 			private class SimAsset
@@ -69,7 +73,12 @@ namespace ZFrame.Asset
 			{
 				return !loaded;
 			}
-
+            /// <summary>
+            /// 加载资源（gameobject）
+            /// </summary>
+            /// <param name="assetName"></param>
+            /// <param name="type"></param>
+            /// <returns></returns>
 	        public override Object Load(string assetName, System.Type type)
 	        {
 				SimAsset asset;
@@ -84,7 +93,9 @@ namespace ZFrame.Asset
 				yield return null;
 				output.loadedObj = Load(assetName, type);
 			}
-
+            /// <summary>
+            /// 卸载资源
+            /// </summary>
 			protected override void UnloadAssets()
 			{
 				foreach (var asset in m_AllAssets.Values) {
@@ -137,7 +148,7 @@ namespace ZFrame.Asset
 	        //*/
 	    }
         /// <summary>
-        /// 
+        /// 从磁盘载入资源
         /// </summary>
         /// <param name="task"></param>
         /// <param name="output"></param>

@@ -59,6 +59,7 @@ local function on_ui_init()
 	Ref.SubStore.GrpStore:dup(#StoreList, function ( i, Ent, isNew)
 		local Store = StoreList[i]
 		Ent.lbName.text = Store.name
+		libugui.GetSetResourcesPic(Ent.spIcon,"default",nil)
 		UIMGR.get_photo(Ent.spIcon, Store.icon)
 		-- local clr = i % 3
 		-- libunity.SetActive(Ent.spRed, clr == 1)

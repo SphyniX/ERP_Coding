@@ -2,7 +2,7 @@
 local libasset = require"libasset.cs"
 local libugui = require "libugui.cs"
 
-local path = libasset.PersistentDataPath().."/"
+local path = libasset.PersistentDataPath().."/"        --C:\Users\cks\Desktop\zzg\ERPWork1125\project\Issets\PersistentData
 FileInfo = {path = path,filter = filter}
 
 function FileInfo.createDirectory(path)
@@ -124,7 +124,7 @@ function FileInfo.dataAddAndAmend(path,name,tbl)
 		return nil
 	end
 	if tblTemp ~= nil and type(tblTemp) == "table" then
-		if next(tbl) ~= nil then
+		if tbl ~= nil then
 		tblTemp[name] =  tbl
 		end 
 	else
@@ -245,9 +245,17 @@ function FileInfo.deleteFiles(path,filter,fileName)
 end
 
 
-function FileInfo.deleteAllFile(path)
+function FileInfo.deleteDirectory(path)
+	libugui.DeleteDirectory(path)
+end
+function FileInfo.copyDirectory(path,toPath)
+	libugui.CopyDirectory(path,toPath)
+end
+
+function FileInfo.deleteAllFile(path,filter)
 	libugui.DeleteAllFile(path)
 end
+
 
 
 

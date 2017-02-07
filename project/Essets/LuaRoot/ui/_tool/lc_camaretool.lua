@@ -14,7 +14,8 @@ local Ref
 --!*以下：自动生成的回调函数*--
 
 local function on_submain_btnbutton_click(btn)
-	FileInfo.fileWrite(FileInfo.path.."asdassad/te.txt","wwwwww")
+	--FileInfo.fileWrite(FileInfo.path.."asdassad/te.txt","wwwwww")
+
 	-- if _G.CamareToolClass ~= nil then
 	-- 	_G.CamareToolClass.pictrueSelect(2)
 	-- else
@@ -25,7 +26,8 @@ end
 
 local function on_submain_btncamare_click(btn)
 
-	FileInfo.createDirectory(FileInfo.path.."test1/ddd");
+	--FileInfo.createDirectory(FileInfo.path.."test1/ddd");
+
 		-- 	if _G.CamareToolClass ~= nil then
 		-- 	_G.CamareToolClass.pictrueSelect(1)
 		-- else
@@ -40,7 +42,8 @@ local function init_view()
 end
 
 local function init_logic()
-	
+	--libugui.GetSetResourcesPic(Ref.spTex,"default1",nil)
+	--libugui.GetSetAssetsPic(Ref.spTex,"UI/default1",nil)
 end
 
 local function start(self)

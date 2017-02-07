@@ -54,6 +54,7 @@ namespace ZFrame
 
         private void OnSystemMessage(string message)
         {
+            LogMgr.D(" c#--xxx--AppController.OnSystemMessage()");
             if (m_Tb != null) m_Tb.CallFunc(SYS_MESSAGE, 0, message);
         }
 
@@ -63,11 +64,13 @@ namespace ZFrame
         /// </summary>
         private void OnApplicationPause(bool paused)
         {
+            LogMgr.D(" c#--xxx--AppController.OnApplicationPause()");
             if (m_Tb != null) m_Tb.CallFunc(APP_PAUSE, 0, paused);
         }
 
         private void OnApplicationFocus(bool focused)
         {
+            LogMgr.D(" c#--xxx--AppController.OnApplicationFocus()");
             if (m_Tb != null) m_Tb.CallFunc(APP_FOCUS, 0, focused);
         }
 

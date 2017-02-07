@@ -25,7 +25,9 @@ namespace ZFrame.Asset
         }
 
         private static VersionInfo s_AppVer, s_AssetVer;
-
+        /// <summary>
+        /// 加载Resources资源下的资源的version文件
+        /// </summary>
         public static VersionInfo AppVersion
         {
             get
@@ -80,7 +82,10 @@ namespace ZFrame.Asset
             }
             return verInf;
         }
-
+        /// <summary>
+        /// 返回Resources资源下的资源的version文件
+        /// </summary>
+        /// <returns></returns>
 		public static VersionInfo LoadAppVersion()
         {			
 #if UNITY_EDITOR
@@ -108,7 +113,13 @@ namespace ZFrame.Asset
             LogMgr.W("非编辑器模式无法修改应用版本号");
 #endif
         }
-
+        /// <summary>
+        /// 获取本地Application.dataPath + "/Issets/PersistentData/AssetBundles/+"filelist.bytes"的版本信息:var json = TinyJSON.JSON.Load(text);
+        /// s_AssetVer.version = json["version"];
+        /// s_AssetVer.timeCreated = json["timeCreated"];
+        /// s_AssetVer.whoCreated = json["whoCreated"];	
+        /// </summary>
+        /// <returns></returns>
         public static VersionInfo LoadAssetVersion()
         {
 #if UNITY_EDITOR

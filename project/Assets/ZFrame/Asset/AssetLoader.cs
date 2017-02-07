@@ -47,11 +47,25 @@ namespace ZFrame.Asset
 		/// </summary>
 		public float lastLoaded { get; set; }
 
+        /// <summary>
+        /// 卸载资源
+        /// </summary>
 		protected abstract void UnloadAssets();
 		public abstract bool IsEmpty();
+
+        /// <summary>
+        /// 从资源包里加载资源（gameObject）
+        /// </summary>
+        /// <param name="assetName">要加载的资源（gameObject）的名字</param>
+        /// <param name="type">资源类型</param>
+        /// <returns></returns>
 		public abstract Object Load(string assetName, System.Type type);
 		public abstract IEnumerator LoadAsync(string assetName, System.Type type, ObjectOut output);
-
+        
+        /// <summary>
+        /// 强行卸载资源
+        /// </summary>
+        /// <param name="forced"></param>
 		public void Unload(bool forced = false)
 		{
 			if (allowUnload || forced) {
@@ -84,10 +98,25 @@ namespace ZFrame.Asset
             /// 资源包参数
             /// </summary>
 			public string assetbundleName { get; private set; }
+
+            /// <summary>
+            /// 资源包加载完后要执行的操作（回调）
+            /// </summary>
 			public DelegateAssetBundleLoaded onABLoaded { get; private set; }
+            /// <summary>
+            /// 是否强制卸载
+            /// </summary>
 			public bool allowUnload { get; private set; }
 			public bool needMD5 { get; private set; }
 			public AsyncLoadingTask() { }
+
+            /// <summary>
+            /// 设置要加载assetbundle（.unity3d）的名字、是否强制卸载、加载完后的回调、md5
+            /// </summary>
+            /// <param name="assetbundleName">设置要加载assetbundle（.unity3d）的名字</param>
+            /// <param name="allowUnload">是否强制卸载</param>
+            /// <param name="onLoaded">加载资源包完后的回调</param>
+            /// <param name="needMD5">md5</param>
 			public void SetBundle(string assetbundleName, bool allowUnload, DelegateAssetBundleLoaded onLoaded, bool needMD5)
 			{
 				this.assetbundleName = assetbundleName;
@@ -101,9 +130,21 @@ namespace ZFrame.Asset
             /// </summary>
 			public System.Type type;
 			public string assetName { get; private set; }
+
+            /// <summary>
+            /// 加载资源（gameObject）完后的回调
+            /// </summary>
 			public DelegateObjectLoaded onObjectLoaded { get; private set; }
 			public object param { get; private set; }
-			public void SetAsset(System.Type type, string assetName, DelegateObjectLoaded onLoaded, object param)
+
+            /// <summary>
+            /// 设置要加载assetbundle里要加载的资源的类型type、资源名字（prefab as type）、加载完后的回调、param
+            /// </summary>
+            /// <param name="type">加载assetbundle里要加载的资源的类型type</param>
+            /// <param name="assetName">资源名字（prefab as type）</param>
+            /// <param name="onLoaded">加载资源（gameObject）完后的回调</param>
+            /// <param name="param"></param>
+            public void SetAsset(System.Type type, string assetName, DelegateObjectLoaded onLoaded, object param)
 			{
 				this.type = type;
 				this.assetName = assetName;
@@ -115,7 +156,9 @@ namespace ZFrame.Asset
             /// 是否强制从原始资源加载
             /// </summary>
 			public bool forcedStreaming;
-
+            /// <summary>
+            /// 初始化资源包名字assetbundleName = null; 完成资源包加载时的回调onABLoaded = null;资源包的资源名字assetName = null;完成资源（gameObject）加载时的回调onObjectLoaded = null;
+            /// </summary>
 			public void Reset()
 			{
 				assetbundleName = null;
@@ -131,12 +174,23 @@ namespace ZFrame.Asset
 			}
 		}
 
+        /// <summary>
+        /// 存储管理已加载的AssetBundle，资源包/资源加载任务
+        /// </summary>
 		protected class ABRefOut
 		{
+            /// <summary>
+            /// 抽象的AssetBundle引用，管理已加载的AssetBundle
+            /// </summary>
 			public AbstractAssetBundleRef abRef;            
 			public string md5;
-			public AssetsTransfer transfer;
-
+            /// <summary>
+            /// 资源包/资源加载任务
+            /// </summary>
+            public AssetsTransfer transfer;
+            /// <summary>
+            /// 存储管理已加载的AssetBundle，资源包/资源加载任务 初始化
+            /// </summary>
             public void Reset()
             {
                 abRef = null;                
@@ -167,6 +221,12 @@ namespace ZFrame.Asset
 		}
 		
 		public const string ASSET_EXT = ".unity3d";
+        /// <summary>
+        /// 将path 拆分成资源名字和预设（prefab）名字
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="assetbundleName"></param>
+        /// <param name="assetName"></param>
 		public static void GetAssetpath(string path, out string assetbundleName, out string assetName)
 		{
             //Debug.Log("<color=#aa00aa>AssetLoader.cs资源名字" + path + "</color>");

@@ -101,7 +101,12 @@ public class AssetsMgr : MonoSingleton<AssetsMgr>
         }
     }
 
-    // streamingRootPath中的lua脚本加载完成
+    /// <summary>
+    ///streamingRootPath中的lua脚本加载完成
+    /// </summary>
+    /// <param name="abf"></param>
+    /// <param name="md5"></param>
+    /// <returns></returns>
     private Coroutine OnStreamingLuaLoaded(AbstractAssetBundleRef abf, string md5)
     {
         // 更新streamingRootPath中lua脚本的md5
@@ -147,7 +152,8 @@ public class AssetsMgr : MonoSingleton<AssetsMgr>
             LogMgr.I("First using lua to {0} at {1}", streamingMD5, streamingDate);
         }
 
-        //加载UIRoot
+        //加载config.unity资源包,加载完成后回调OnAssetsLaunched  加载UIRoot
+        //AssetBundleLoader.Instance.BundleTask(LUA_CONFIG, false, null);
         AssetBundleLoader.Instance.BundleTask(LUA_CONFIG, false, OnAssetsLaunched);
         return null;
     }

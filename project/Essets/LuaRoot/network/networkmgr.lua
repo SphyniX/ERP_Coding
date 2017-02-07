@@ -136,7 +136,7 @@ function P.on_www(tag, resp, isDone, err)
 end
 
 function P.on_download( url, current, totalm, err)
-    print( url, current, totalm, err)
+    print( "network/networkmgr.lua--xx--P.on_download()--url, current, totalm, er:",url, current, totalm, err)
 
     local cbf = DownloadCbf[url]
     if not err then
@@ -289,10 +289,11 @@ end
 function P.connect(host, port, connected, disconnected)
     if connected == nil then
         libunity.LogW("TCP连接回调为空!")
+        print("networkmgr ====P.connect   ----建立连接失败")
         _G.UI.Waiting.hide()        
         return
     end
-
+    print("networkmgr ====P.connect   ----建立连接")
     GameCli:connect(host, port, 10)    
     onConnected = connected
     onDisconnected = disconnected or default_on_disconnect

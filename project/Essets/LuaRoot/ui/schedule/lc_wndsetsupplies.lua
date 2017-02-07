@@ -24,7 +24,6 @@ local MaterListForUpdate
 local Imagelist = {}
 local InfoList = {}
 local on_photo_init
-local NeedChange = true
 
 local function on_set_reason_callback(reason)
 	if reasonIndex == nil then return end
@@ -71,15 +70,14 @@ local function set_photo(index)
    	UIMGR.create_window("UI/WNDSubmitPhoto")
 end
 
-local function on_set_state_callback(state)
-	NeedChange = false
-	print("on_set_state_callback stateIndex is :" .. stateIndex)
+local function on_set_state_callback(statecallback)
+	print("on_set_state_callback stateIndex is :" .. stateIndex.."/"..tostring(statecallback))
 	if stateIndex == nil then return end
-	Ref.SubMain.Grp:dup(#MaterList, function (i, Ent, isNew)
-		if i == stateIndex then 
-			Ent.lbState.text = state
+	for i=1,#Ref.SubMain.Grp.Ents do
+		if i == tonumber(stateIndex) then 
+			Ref.SubMain.Grp.Ents[i].lbState.text = statecallback
 		end
-	end)
+	end
 	libunity.SetActive(Ref.SubState.root, false)
 	
 		-- local id = MaterList[reasonIndex].id
@@ -91,8 +89,9 @@ end
 
 local function on_submain_grp_ent_btnstate_click(btn)
 	stateIndex = tonumber(btn.transform.parent.name:sub(4))
-	Ref.SubMain.Grp:dup(#MaterList, function (i, Ent, isNew)
+	for i=1,#Ref.SubMain.Grp.Ents do
 		if i == stateIndex then 
+			local Ent = Ref.SubMain.Grp.Ents[i]
 			if Ent.lbState.text == "完好" then
 				Ref.SubState.tglGood.isOn = true
 				Ref.SubState.tglGood:SetInteractable(false)
@@ -112,8 +111,7 @@ local function on_submain_grp_ent_btnstate_click(btn)
 				Ref.SubState.tglBad:SetInteractable(true)
 			end
 		end
-	end)
-	NeedChange = true
+	end
 	libunity.SetActive(Ref.SubState.root, true)
 end
 
@@ -136,15 +134,17 @@ local function on_subtop_btnback_click(btn)
 
 end
 
-local function on_substate_tglgood_change(tgl)
-	if NeedChange then
+local function on_substate_tglgood_change(tgl)        ---弹窗“完好”按钮
+	print("完好按钮")
+	if tgl.isOn then
 		on_set_state_callback("完好")
 	end
 	
 end
 
-local function on_substate_tglbad_change(tg2)
-	if NeedChange then
+local function on_substate_tglbad_change(tg2)			---弹窗“反馈问题”按钮
+	print("需维修/补货按钮"..tostring(tg2.isOn))
+	if tg2.isOn then
 		on_set_state_callback("需维修/补货")
 	end
 

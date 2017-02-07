@@ -17,6 +17,8 @@ public static class LibCSharpIO
 			new NameFuncPair("DeleteFile", DeleteFile),
             new NameFuncPair("MoveFile", MoveFile),
             new NameFuncPair("CreateDir", CreateDir),
+
+
         };
 
         lua.L_Register(LIB_NAME, define);
@@ -67,19 +69,41 @@ public static class LibCSharpIO
             if (overWrite) {
                 System.IO.File.Delete(dst);
             } else {
-                return 0;
+                //return 1;
             }            
         }
-        System.IO.File.Move(src, dst);
-        return 0;
+        if (System.IO.File.Exists(src))
+        {
+            System.IO.File.Move(src, dst);
+            if (System.IO.File.Exists(dst))
+            {
+                lua.PushBoolean(true);
+            }
+            else
+            {
+                lua.PushBoolean(false);
+            }
+        }
+        else
+        {
+            lua.PushBoolean(false);
+        }
+        return 1;
     }
 
 	[MonoPInvokeCallback(typeof(LuaCSFunction))]
     static int CreateDir(ILuaState lua)
     {
         string path = lua.ChkString(1);
-        SystemTools.NeedDirectory(path);
-        return 0;
+        if (string.IsNullOrEmpty(path))
+        {
+            lua.PushNil();
+        }
+        else
+        {
+            SystemTools.NeedDirectory(path);
+        }
+        return 1;
     }
 
 }

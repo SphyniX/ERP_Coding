@@ -80,10 +80,12 @@ namespace ZFrame
         // Use this for initialization
         private void Start()
         {
-			DG.Tweening.DOTween.Init();
-
+            DG.Tweening.DOTween.Init();
             CLZF2.Decrypt(null, AssetsMgr.VER + AssetsMgr.Instance.resHeight);
             LuaScriptMgr.OnScriptsFinish();
+
+            //var cachedTransform = canvases[0].transform;
+            //cachedTransform.GetChild(0).gameObject.SetActive(false);
 #if UNITY_EDITOR || UNITY_STANDALONE
             //编辑器工具管理类
             LogMgr.D("加载编辑器工具...");

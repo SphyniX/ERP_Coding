@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Collections;
+using UnityEngine;
 
 namespace LuaInterface
 {
@@ -147,9 +148,15 @@ namespace LuaInterface
             LuaDLL.lua_settop(L, oldTop);
             return func;
         }
-
+        /// <summary>
+        /// 调用lua全局的方法
+        /// </summary>
+        /// <param name="field"></param>
+        /// <param name="nResult"></param>
+        /// <param name="Args"></param>
         public void CallFunc(string field, int nResult, params object[] Args)
         {
+            Debug.LogFormat("LuaTable.CallFunc()---xx---field:{0}---xx--nResult:", field, nResult);
             IntPtr L = _Interpreter.L;
             L.GetRef(_Reference);
             L.GetField(-1, field);
@@ -159,12 +166,13 @@ namespace LuaInterface
                 var b = LuaDLL.lua_gettop(L);
                 LuaDLL.lua_pushstdcallcfunction(L, _Interpreter.tracebackFunction);
                 LuaDLL.lua_insert(L, b);
-
+                Debug.LogFormat("LuaTable.CallFunc()---xx---b:{0}", b.ToString());
                 int nArg = 0;
                 if (Args != null) {
                     nArg = Args.Length;
                     for (int i = 0; i < Args.Length; ++i) {
                         L.PushAnyObject(Args[i]);
+                        Debug.LogFormat("LuaTable.CallFunc()---xx---Args");
                     }
                 }
 

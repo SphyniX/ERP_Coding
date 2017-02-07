@@ -24,6 +24,7 @@ local NowBtn
 local NowNumber
 local localPictures
 local uploadLocalphotoCallback
+local uploadAllPhotoCallBack
 --!*以下：自动生成的回调函数*--
 local function on_upload_photo_callback(Ret)
 		print("on_upload_photo_callbackPhotoForUpdate------------")
@@ -129,6 +130,7 @@ local function on_subphoto_grpphoto_entphoto_click(btn)
 end
 
 local function on_subtop_btnback_click(btn)
+
 	UIMGR.close_window(Ref.root)
 end
 
@@ -151,6 +153,10 @@ local function on_btnsave_click(btn)
 			nowtrue = nowtrue + 1
 		end
 	end
+	-- if DY_DATA.User.limit == 1 then
+	-- 	UI_DATA.WNDSubmitSchedule.PhotoListForUpdateSave = PhotoListForUpdate
+	-- 	print("UI_DATA.WNDSubmitSchedule.PhotoListForUpdate-----------xxxx---"..JSON:encode( UI_DATA.WNDSubmitSchedule.PhotoListForUpdateSave))
+	-- end
 	print("need/nowtrue"..tostring(need).."/"..tostring(nowtrue))
 	if need ~= nowtrue then 
 		_G.UI.Toast:make(nil, "必打图片缺少，请检查！"):show()
@@ -178,29 +184,39 @@ end
 
 
 local imagesindex = 1
-local function upload_allphoto_callback(Ret)
+local  function upload_allphoto_callback(Ret)
 
 	if tonumber(Ret.ret) == 1 then
 		_G.UI.Toast:make(nil, "成功上传图片"..tostring(imagesindex)):show()
 		print("imagesindex--------"..tostring(imagesindex))
 		--imagesindex = imagesindex + 1
 
-		libunity.SetActive(Ref.SubPhoto.GrpPhoto.Ents[imagesindex].spIfsucc,true)
-		local loadPhotoList = UI_DATA.WNDSubmitSchedule.LoadPhotoListForSaveData
-		local PhotoForUpdate = {
-			id = loadPhotoList[imagesindex].id,
-			photo = Ret.photoid[1],
-			state = loadPhotoList[imagesindex].state,
-		}
-		table.insert(PhotoListForUpdate,PhotoForUpdate)
-		-- PhotoListForUpdate[imagesindex].id = loadPhotoList[imagesindex].id
-		-- PhotoListForUpdate[imagesindex].photo = Ret.photoid[1]
-		-- PhotoListForUpdate[imagesindex].state = loadPhotoList[imagesindex].state
 
+		if imagesindex <= #localPictures then
+			PhotoListForSaveData[imagesindex].PicPath = UI_DATA.WNDSubmitSchedule.LoadPhotoListForSaveData[imagesindex].PicPath
+			UI_DATA.WNDSubmitSchedule.PhotoListForSaveData = PhotoListForSaveData
+			libunity.SetActive(Ref.SubPhoto.GrpPhoto.Ents[imagesindex].spIfsucc,true)
+
+			local loadPhotoList = UI_DATA.WNDSubmitSchedule.LoadPhotoListForSaveData
+			local PhotoForUpdate = {
+				id = loadPhotoList[imagesindex].id,
+				photo = Ret.photoid[1],
+				state = loadPhotoList[imagesindex].state,
+			}
+			table.insert(PhotoListForUpdate,PhotoForUpdate)
+		end
 		imagesindex = imagesindex + 1
 		if localPictures ~= nil and #localPictures >0 then
 			if localPictures[imagesindex] ~= nil then
-				uploadLocalphotoCallback(localPictures[imagesindex])
+				if localPictures[imagesindex] then
+					uploadLocalphotoCallback(localPictures[imagesindex])
+				else
+					imagesindex = imagesindex + 1
+					--local Ret = {}
+					Ret.ret = 1
+					uploadAllPhotoCallBack(Ret)
+					return
+				end
 
 
 			else
@@ -212,44 +228,27 @@ local function upload_allphoto_callback(Ret)
 			_G.UI.Toast:make(nil, "没有可上传图片"..tostring(imagesindex)):show()
 		end
 
-
-
-
-		-- print("PhotoForUpdate------------"..PhotoForUpdate.state)
-		-- local blTemp = false
-		-- if PhotoListForUpdate ~= nil then
-		-- 	if next(PhotoListForUpdate) ~= nil then 
-		-- 		for i=1,#PhotoListForUpdate  do
-		-- 			if PhotoListForUpdate[i].id == PhotoList[NowNumber].id then
-		-- 				PhotoListForUpdate[i] = PhotoForUpdate
-		-- 				_G.UI.Toast:make(nil, "更新成功"):show()
-		-- 				blTemp = true
-		-- 			end
-		-- 		end
-		-- 		if not blTemp then
-		-- 			table.insert(PhotoListForUpdate,PhotoForUpdate)	
-		-- 			_G.UI.Toast:make(nil, "添加成功"):show()
-		-- 		end
-		-- 	else
-		-- 		table.insert(PhotoListForUpdate,PhotoForUpdate)	
-		-- 		_G.UI.Toast:make(nil, "添加成功"):show()
-		-- 	end
-		-- end
 	else
 		imagesindex = 1
 		_G.UI.Toast:make(nil, "上传失败"):show()
 	end
 end
 local function upload_localphoto_callback(image)
-	LOGIN.try_uploadphotoforreport(DY_DATA.User.id,image,upload_allphoto_callback)
+	LOGIN.try_uploadphotoforreport(DY_DATA.User.id,image,uploadAllPhotoCallBack)
 end 
-local function on_btnload_click(btn)
+local function on_btnload_click(btn)     								 -------------------------图片加载按钮
 		--upload_localphoto_callback(localPictures[1])
 		imagesindex = 1
 		if localPictures ~= nil and #localPictures > 0 then
-			if localPictures[imagesindex] then
-				PhotoListForUpdate = {}
-				upload_localphoto_callback(localPictures[imagesindex])
+			for i=1,#localPictures do
+				if localPictures[i] then
+					PhotoListForUpdate = {}
+					upload_localphoto_callback(localPictures[i])
+					imagesindex = i
+					break
+				else
+					--imagesindex = i
+				end
 			end
 			--imagesindex = 2
 		end
@@ -266,22 +265,6 @@ local function on_ui_init(NWStata)
 	else
 		projectId = UI_DATA.WNDSupStoreData.projectId
 	end
-	--UIMGR.get_photo(tex, Com.icon)
-	-- PhotoListInit = DY_DATA.WNDSubmitScheduleData.SchedulePhoto
-	-- print("PhotoList in WNDSubmitPhotoForReport is " .. JSON:encode(PhotoList))
-	-- Ref.SubPhoto.GrpPhoto:dup(#PhotoList, function (i, Ent, isNew)
-	-- 	local Photo = PhotoList[i]
-
-	-- 	if Photo.state == 1 then 
-	-- 		Ent.lbTitle.text = Photo.name
-	-- 		print("Photo.icon----------"..tostring(Photo.icon))
-	-- 		UIMGR.get_photo(Ent.spIcon, Photo.icon)
-	-- 	else
-	-- 		libunity.SetActive(Ent.spState,false)
-	-- 	end
-	-- 	libunity.SetActive(Ent.spIfsucc,false)
-	-- end)
-
 	PhotoListForSaveData = {}
 	PhotoList = DY_DATA.SchProjectList[projectId].SellPhoto
 	Ref.SubPhoto.GrpPhoto:dup(#PhotoList, function (i, Ent, isNew)
@@ -303,20 +286,20 @@ local function on_ui_init(NWStata)
 	print("图片SchedulePhotoListtUpdate---图片---"..tostring(JSON:encode(UI_DATA.WNDSubmitSchedule.SchedulePhotoListtUpdate)))
 	if SchedulePhotoListtUpdate ~= nil then
 		if SchedulePhotoListtUpdate ~= nil and next(SchedulePhotoListtUpdate) ~= nil then
-			
-			for i=1,#Ref.SubPhoto.GrpPhoto.Ents do
-				local Ent = Ref.SubPhoto.GrpPhoto.Ents[i]
-				local Photo = SchedulePhotoListtUpdate[i]
-				if Ent == nil or Photo ==nil then return end
-				print("图片Id"..tostring(Photo.PhotoId))
-				UIMGR.get_photo(Ent.spPhoto, Photo.PhotoId)
+			for i=1,#SchedulePhotoListtUpdate do
+				for j=1,#Ref.SubPhoto.GrpPhoto.Ents do
+					local Ent = Ref.SubPhoto.GrpPhoto.Ents[j]
+					local Photo = SchedulePhotoListtUpdate[i]
+					if Ent == nil then return end
+					print("图片id"..tostring(PhotoList[j].id).."/"..tostring(Photo.productPhotoid))
+
+					if tostring(PhotoList[j].id) == tostring(Photo.productPhotoid) then
+						print("插入成功 图片Id"..tostring(Photo.PhotoId))
+						UIMGR.get_photo(Ent.spPhoto, Photo.PhotoId)
+					end
+				end
 			end
-			-- Ref.SubPhoto.GrpPhoto:dup(#SchedulePhotoListtUpdate, function (i, Ent, isNew)
-			-- local Photo = SchedulePhotoListtUpdate[i]
-			-- print("图片Id"..Photo.productPhotoid)
-			-- 	UIMGR.get_photo(Ent.spPhoto, Photo.productPhotoid)
-			-- 		--libunity.SetActive(Ent.spState,false)
-			-- end)
+
 		end
 	end
 
@@ -346,14 +329,24 @@ local function on_ui_init(NWStata)
 			if Photo.PicPath ~= nil then
 							print("PhotoList in WNDSubmitPhotoForReport is3 " .. JSON:encode(Photo.PicPath))
 				local tex = Ent.spPhoto
-				libugui.SetPhoto( tex, Photo.PicPath, function (o, p)
+					print("图片路径：Photo.PicPath"..tostring(Photo.PicPath))
+					libugui.SetPhoto( tex, tostring(Photo.PicPath), function (o, p)
 					if p then
-						if localPictures ==nil then localPictures = {} end
+						if localPictures == nil then localPictures = {} end
 						localPictures[i] = o
 						--on_take_photo_call_back(o)
+						print("图片加载成功")
 						_G.UI.Toast:make(nil,"图片加载成功"):show()
+
 					end
+
 				end)
+			else
+						--localPictures[i] = p
+				print("图片加载不存在或者失败")
+				if localPictures == nil then localPictures = {} end
+				localPictures[i] = false
+				_G.UI.Toast:make(nil,"图片加载不存在或者失败"):show()
 			end
 		end
 	end
@@ -378,18 +371,12 @@ end
 
 local function init_logic()
 	uploadLocalphotoCallback = upload_localphoto_callback
-	-- if DY_DATA.User.limit == 1 then
-	-- 		libunity.SetActive(Ref.)
+	uploadAllPhotoCallBack = upload_allphoto_callback
+	libunity.SetActive(Ref.btnLoad,UI_DATA.WNDSubmitSchedule.loadState and DY_DATA.User.limit == 1)    ---控制进度图片列表是否显示
 
-	-- end
-	if UI_DATA.WNDSubmitSchedule.loadState == true then 
-		libunity.SetActive(Ref.btnLoad,true)
-	else
-		libunity.SetActive(Ref.btnLoad,false)
-	end 
 
-	NW.subscribe("WORK.SC.GETSELLPHOTO",on_ui_initBack)
-	NW.subscribe("WORK.SC.GETSUPPHOTO",on_ui_init)
+	NW.subscribe("WORK.SC.GETSELLPHOTO",on_ui_initBack)					 ---获取促销员图片列表
+	NW.subscribe("WORK.SC.GETSUPPHOTO",on_ui_init)							---获取督导图片列表
 	if PhotoListForUpdate == nil then
 		PhotoListForUpdate = {}
 	end
@@ -439,8 +426,8 @@ local function update_view()
 end
 
 local function on_recycle()
-	NW.unsubscribe("WORK.SC.GETSELLPHOTO",on_ui_init)
-	NW.unsubscribe("WORK.SC.GETSUPPHOTO",on_ui_init)
+	NW.unsubscribe("WORK.SC.GETSELLPHOTO",on_ui_init)   
+	NW.unsubscribe("WORK.SC.GETSUPPHOTO",on_ui_init)			
 end
 
 local P = {

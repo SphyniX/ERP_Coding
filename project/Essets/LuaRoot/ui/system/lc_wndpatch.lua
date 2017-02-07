@@ -27,12 +27,12 @@ local appUrl, on_app_download
 local appName = "Richer.apk"
 
 local failCount
-local function on_download_fail(err, cbf_retry)
-	print("on_download_fail")
-	if err == 404 then
 
+--将会重复3次唤醒coroDL协程下载失败任务
+local function on_download_fail(err, cbf_retry)
+	if err == 404 then     --404表示资源不存在服务器
 	else
-		failCount = failCount + 1
+		failCount = failCount + 1				---文件下载失败后尝试重复下载的次数
 		if failCount == 3 then
 			_G.UI.MessageBox:make(nil, string.format(TEXT.fmtDownloadException, tostring(err)), true)
 				:set_event(function ()				
@@ -70,56 +70,55 @@ on_app_download = function(url, current, totalm, err)
 	else
 		local progress = current / totalm
 		-- Ref.lbTip.text = string.format("%d/%d", current, totalm)
-		Ref.lbTip.text = (math.floor(progress * 10000) / 100).."%"
-		Ref.srbScroll.size = progress
+		Ref.lbTip.text = (math.floor(progress * 10000) / 100).."%"   -----进度条数值设置
+		Ref.srbScroll.size = progress						--进度条设置
 		if progress == 1 then
 			-- 提示安装
-
 			_G.UI.MessageBox:make("更新完成", "更新完成，确认安装", true)
 				:set_event(function ( ... )
 						libsystem.CallApiReturn("com.rongygame.util.XSysUtil", "installApp", patchRoot..appName)
 						libunity.AppQuit()
 			end):show()
-			print("提示安装")
 		end
 	end
 end
 
--- 资源下载管理
+-- 资源下载管理---任务下载完回调
 local coroDL, LocalFileList, RemoteFileList, UpdateFileList
-local totalSiz, currSiz, currPatch
+local totalSiz, currSiz, currPatch   --  --currSiz：以下在文件的总大小，totalSiz--需要下载文件的总大小，currPatch--记录以下载的文件名及信息
+
+------
 local function on_download(url, current, totalm, err)
 	-- print("dl : "..url)
 	if true then
 
 		local progress = (current + currSiz) / totalSiz
-		Ref.lbTip.text = (math.floor(progress * 10000) / 100).."%"
-		Ref.srbScroll.size = progress
-		
+		Ref.lbTip.text = (math.floor(progress * 10000) / 100).."%"    --设置编辑器下进度数值
+		Ref.srbScroll.size = progress       --设置编辑器下进度
 		if current == totalm then
 			-- 记录已下载文件
 			UpdateFileList.Assets[currPatch.name] = currPatch.Info
-			print(JSON:encode(UpdateFileList))
 			libcsharpio.WriteAllText(patchRoot.."filelist.bytes", JSON:encode(UpdateFileList))
-			-- 更新总大小
+			-- 更新已下载文件和不需要下载的文件的总大小
 			currSiz = currSiz + currPatch.Info.siz
 			-- 继续下一个下载任务
+			
 			if coroutine.status(coroDL) == "suspended" then
 				-- 唤醒并通知协程内部，下载成功，继续下一个
 				failCount = 0
-				coroutine.resume(coroDL, "next")
+				--libunity.LogD("ui/system/lc_wndpatch.lua---xxx---on_download() --xx--唤醒并通知协程内部，下载成功，继续下一个:{0}--xx--currPatch:peek(){1}",coroutine.status(coroDL),JSON:encode( currPatch:peek()))
+				coroutine.resume(coroDL,"next")
 			end
 		end
 	else
-		on_download_fail(err, function ()
-			coroutine.resume(coroDL, "retry")
+		on_download_fail(err, function ()      					--将会重复3次唤醒coroDL协程下载失败任务
+			coroutine.resume(coroDL,"retry")
 		end)
 	end	
 end
 
 local function coro_download(Queue)
-	local resUrl = UI_DATA.WNDPatch.resUrl
-	print("while start:"..Queue:count())
+	local resUrl = UI_DATA.WNDPatch.resUrl    ---网络路径---初始化函数：libmgr/login.lua---x--------on_get_version_back(resp, isDone, err)
 	while Queue:count() > 0 do
 		currPatch = Queue:peek()
 		local url = resUrl .. currPatch.name
@@ -134,16 +133,15 @@ local function coro_download(Queue)
 		end
 	end
 	-- 下载完成，安装所有文件
-	
 	for k,v in pairs(UpdateFileList.Assets) do		
 		if libcsharpio.MoveFile(patchRoot..k, bundleRoot..k, true) then
 			LocalFileList.Assets[k] = v
 		end
 	end
+
 	LocalFileList.version = UpdateFileList.version
 	libcsharpio.WriteAllText(bundleRoot.."filelist.bytes", JSON:encode(LocalFileList))
 	libcsharpio.DeleteFile(patchRoot.."filelist.bytes")
-
 	libunity.Delete("/AssetsMgr")
 	libunity.Delete("/UIROOT")
 	libunity.NewLevel("ZERO")
@@ -162,11 +160,10 @@ end
 
 local function init_logic()
 	libcsharpio.CreateDir(patchRoot)
-	libcsharpio.CreateDir(patchRoot.."lua/")
+	
 	
 	if UI_DATA.WNDPatch.appUrl then
 		local os = libsystem.GetOS()
-		print("os is "..os)
 		if os == "Android" then
 			appUrl = UI_DATA.WNDPatch.appUrl
 			UI_DATA.WNDPatch.appUrl = nil
@@ -177,7 +174,6 @@ local function init_logic()
 			}
 			libsystem.SubmitGameData("com.rongygame.sdk.SDKApi", "OnGameMessageReturn", Param)
 		else
-			print("PC download APK!")
 		end
 	else
 		-- 或者资源
@@ -200,29 +196,32 @@ local function init_logic()
 
 		local LocalAssets, RemoteAssets, UpdateAssets 
 			= LocalFileList.Assets, RemoteFileList.Assets, UpdateFileList.Assets
-		local QuePatch = _G.DEF.Queue:new()
-		totalSiz, currSiz = 0, 0
+		local QuePatch = _G.DEF.Queue:new()     ---datamgr\object\queue.lua
+		totalSiz, currSiz = 0, 0					--totalSiz记录所有文件的总大小----记录不需要下载文件的总大小
 		for k,v in pairs(RemoteAssets) do
 			local LocalF = UpdateAssets[k]
-			if LocalF and LocalF.md5 == v.md5 then 
+			if LocalF and LocalF.md5 == v.md5 then --如果更新文件存在且md5相同，--计算不需要下载的文件的总大小
 				-- 已下载的文件
-				currSiz = currSiz + LocalF.siz
+				currSiz = currSiz + LocalF.siz  --计算不需要下载的文件的总大小
 				totalSiz = totalSiz + LocalF.siz
 			else
 				-- 是否需要下载
-				LocalF = LocalAssets[k]
+				LocalF = LocalAssets[k]     --记录网络所有资源
 			end
-			if LocalF == nil or LocalF.md5 ~= v.md5 then
+			if LocalF == nil or LocalF.md5 ~= v.md5 then --如果本地文件不存在，或者md5不一样，将要下载的文件压入栈中
+				--if true or k == "ui.unity3d" or k == "lua/script.unity3d" then
+				--if k == "ui.unity3d"  or k == "lua/script.unity3d" or k == "config.unity3d" then
 				QuePatch:enqueue({name = k, Info = v})
-				totalSiz = totalSiz + v.siz
+				totalSiz = totalSiz + v.siz 		----计算需要下载的文件的总大小
+				--end
 			end
 		end
-
+		print("开始下载")
 		Ref.lbTip.text = "0%"
 		Ref.srbScroll.size = 0
 		failCount = 0
-		coroDL = coroutine.create(coro_download)		
-		coroutine.resume(coroDL, QuePatch, totalSiz)
+		coroDL = coroutine.create(coro_download)		--创建协程
+		coroutine.resume(coroDL, QuePatch, totalSiz)     --启动协程，传入参数
 	end
 end
 

@@ -84,7 +84,7 @@ local function on_login_back(resp, isDone, err)
         print("网络连接失败")
         return
     end
-    libunity.LogD("Login_Callback: {0}",resp)
+    libunity.LogD("libmgr/login.lua--xx--Login_Callback()----xxxxx--1尝试登陆-: {0}",resp)
     -- 尝试删除apk文件
     local patchRoot = _G.ENV.app_persistentdata_path .. "/Updates/"
     libcsharpio.CreateDir(patchRoot)
@@ -111,7 +111,7 @@ local function on_login_back(resp, isDone, err)
 end
 function P.try_login(acc, pass, on_call_back)
     on_wnd_logined = on_call_back
-
+    print("libmgr/login.lua----xxx----P.try_login -----xxx---")
     local CMD5 = import("CMD5")
     -- P.LogicedAcc = { acc = acc, pass = CMD5.MD5String(pass)}
     P.LogicedAcc = { acc = acc, pass = pass}
@@ -394,7 +394,9 @@ end
 --     NW.http_post("LDPHOTO", P.HTTPSet.getqrcodeInterface(), "", HttpParams, "", on_getqrcode_back)
 -- end
 function P.on_filelist_get(resp, isDone, err)
+    libunity.LogD("libmgr/login.lua---xxx--创建热更新下载界面---P.on_filelist_get() ---xxx字符串结果--resp:{0}--xxx--isDone:{1}",resp,tostring(isDone))
     if isDone and err == nil then
+         libunity.LogD("libmgr/login.lua---xxx--创建热更新下载界面---P.on_filelist_get() ---xxx---获取网络filelist.bytes文件数据--初始化UI_DATA.WNDPatch.FileList--xxx---UI_DATA.WNDPatch.FileList = JSON:decode(resp):{0}",resp)
         UI_DATA.WNDPatch.FileList = JSON:decode(resp)
         local UIMGR = MERequire "ui/uimgr"
         UIMGR.create_window("UI/WNDPatch")
@@ -418,7 +420,7 @@ local function on_get_version_back(resp, isDone, err)
         end
         return 0, nil
     end
-    libunity.LogD("on_get_version_back :{0}",resp)
+    libunity.LogD("libmgr/login.lua---xxx---on_get_version_back :{0}",resp)
     local Ret = JSON:decode(resp)
     local maxVer = Ret.maxversion
     local apkAddress = Ret.apkaddress
@@ -431,20 +433,22 @@ local function on_get_version_back(resp, isDone, err)
     local isOld, lev = chk_version(MaxVer, LocVer)
     print(isOld, lev)
     isOld = isOld > 0
-    if isOld then
+    if isOld then                   ---------------------------AssetBundles包资源热更新
         libunity.LogD("有新版本，需要更新")
         if lev == 4 then
             libunity.LogD("资源更新")
             UI_DATA.WNDPatch.maxVer = maxVer
             UI_DATA.WNDPatch.resUrl = bagAddress
+            libunity.LogD("libmgr/login.lua---xxx---on_get_version_back()----xxxx----热更新--xxx--UI_DATA.WNDPatch.maxVer:{0}--xx--UI_DATA.WNDPatch.resUrl:{1}",UI_DATA.WNDPatch.maxVer,UI_DATA.WNDPatch.resUrl)
             NW.http_get("PATCH", bagAddress.."filelist.bytes", "", P.on_filelist_get)
         else
-            libunity.LogD("整包更新")
+            libunity.LogD("libmgr/login.lua---xxx---on_get_version_back----xxxx----整包更新")
             UI_DATA.WNDPatch.appUrl = apkAddress
             local UIMGR = MERequire "ui/uimgr"
             UIMGR.create_window("UI/WNDPatch")
         end
-    else
+    else          
+        print("libmgr/login.lua---xxx---on_get_version_back----xxxx----删除andriod的apk")                          
         local LoginedAcc = P.LoginedAcc
         -- 尝试删除apk文件
         local patchRoot = _G.ENV.app_persistentdata_path .. "/Updates/"
@@ -454,6 +458,7 @@ local function on_get_version_back(resp, isDone, err)
     if on_wnd_version then on_wnd_version(isOld) end
 end
 function P.try_getversion(address, port, on_call_back)
+    print("libmgr/login.lua----xxx--P.try_getversion")
     on_wnd_version = on_call_back
     NW.http_get("GETVERSION", P.HTTPSet.getversionInterface(), "", on_get_version_back)
     _G.UI.Waiting.show()
@@ -506,11 +511,11 @@ local function on_enter_login()
 end
 
 function P.enter_server(ip, port)
+    print("P.enter_server------xxxx----")
     if _G.Debug then
         local UIMGR = MERequire "ui/uimgr.lua"
         UIMGR.create_window("UI/WNDMain")
     else
-        -- print("connect")
         NW.connect(ip, port, on_enter_login)
         _G.UI.Waiting.show(TEXT.tipConnecting)
     end

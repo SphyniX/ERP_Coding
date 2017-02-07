@@ -11,7 +11,7 @@ public class AssetsPackerWindow : EditorWindow {
     [MenuItem("Custom/资源打包...")]
     static void OpenWindow()
     {
-		EditorWindow.GetWindowWithRect(typeof(AssetsPackerWindow), new Rect(10, 10, 220, 400), true, "资源打包");
+		EditorWindow.GetWindowWithRect(typeof(AssetsPackerWindow), new Rect(10, 10, 220, 800), true, "资源打包");
     }
 
 	private Vector2 BtnSizeLV1 = new Vector2(200, 50);
@@ -115,6 +115,62 @@ public class AssetsPackerWindow : EditorWindow {
 			AssetPacker.ClearEditorStreamingAssets();
 		}
 	}
+    
+     private void GetVersion()
+    {
+        string filePath = Path.Combine(Application.dataPath, "RefAssets/version.txt");
+        string[] text = File.ReadAllLines(filePath);
+        string[] vers = text[0].Split('.');
+        ver1 = int.Parse(vers[0]);
+        ver2 = int.Parse(vers[1]);
+        ver3 = int.Parse(vers[2]);
+        ver4 = int.Parse(vers[3]);
+    }
+    private void AlterVersion()
+    {
+        string filePath = Path.Combine(Application.dataPath, "RefAssets/version.txt");
+        fileRead(filePath,1);
+        
+
+
+    }
+    public void fileRead(string filePath,int textIndex)
+    {
+        string[] text = File.ReadAllLines(filePath);
+        string line = string.Join(".", new string[]{ver1.ToString(),ver2.ToString(), ver3.ToString(), ver4.ToString() });
+        text[0] = line;
+        fileWrite(filePath,text);
+        string filePathCs = Path.Combine(Application.dataPath, "Editor/Utils/GitTools.cs");
+        string[] CsText = File.ReadAllLines(filePathCs);
+        Debug.Log(CsText[3]);
+        bool bl = false;
+        for (int i = 0; i< CsText.Length;i++)
+        {
+            if (CsText[i].Replace(" ", "") == "publicstaticstringgetVerInfo()")
+            {
+                Debug.Log(CsText[i]);
+                bl = true;
+
+            }
+            string temp = CsText[i].Replace(" ", "");
+            if (temp.Length > 5)
+            {
+                if (bl && CsText[i].Replace(" ", "").Substring(0, 6) == "return")
+                {
+
+                    Debug.Log(CsText[i]);
+                    CsText[i] = "            return \"" + line+"\";";
+                }
+            }
+        }
+        fileWrite(filePathCs, CsText);
+
+    }
+    public void fileWrite(string filePath, string[] content)
+    {
+        File.WriteAllLines(filePath,content);
+    }
+
 
     private void EncryptLua()
     {
@@ -134,8 +190,16 @@ public class AssetsPackerWindow : EditorWindow {
 		vertOffset += (int)size.y;
 		vertOffset += 5;
 	}
-
-	private void HORI_Btn(ref int horiOffset, int vertOffset, Vector2 size, string title, System.Action funcPack)
+    private void VERT_Text(ref int vertOffset, int horiOffset, Vector2 size,ref int text)
+    {
+        string str = text.ToString();
+        text = int.Parse( GUI.TextField(
+            new Rect(horiOffset, vertOffset, size.x, size.y),
+            text.ToString()));
+        vertOffset += (int)size.y;
+        vertOffset += 5;
+    }
+    private void HORI_Btn(ref int horiOffset, int vertOffset, Vector2 size, string title, System.Action funcPack)
 	{
 		if (GUI.Button(new Rect(horiOffset, vertOffset, size.x, size.y), title, CustomEditorStyles.richTextBtn)) {
 			funcPack.Invoke();
@@ -144,7 +208,15 @@ public class AssetsPackerWindow : EditorWindow {
 		horiOffset += (int)size.x;
 		horiOffset += 5;
 	}
+    int ver1 = 0;
+    int ver2 = 0;
+    int ver3 = 0;
+    int ver4 = 0;
+    public void Start()
+    {
 
+        //string text = File.ReadAllText();
+    }
     public void OnGUI()
     {
 		int vertOffset = 10;
@@ -153,7 +225,12 @@ public class AssetsPackerWindow : EditorWindow {
 		VERT_Btn(ref vertOffset, 20, BtnSizeLV2, "<size=20>2. 生成资源包*</size>", "先加密Lua脚本\n再打包有变化的资源\n最后重新生成filelist文件", PackAssets);
 		VERT_Btn(ref vertOffset, 20, BtnSizeLV2, "<size=20>3. 更新资源包*</size>", "把生成的所有资源包拷贝到StreamingAssets目录", UpdateAssets);
 		VERT_Btn(ref vertOffset, 20, BtnSizeLV2, "<size=20>4. 生成应用*</size>", "使用已生成的资源包，直接执行生成应用", BuildApp);
-
+        VERT_Btn(ref vertOffset, 0, BtnSizeLV2, "<size=20>获取版本号</size>", "设置版本号，之后自动修改", GetVersion);
+        VERT_Text(ref vertOffset, 0, BtnSizeLV2, ref ver1);
+        VERT_Text(ref vertOffset, 0, BtnSizeLV2, ref ver2);
+        VERT_Text(ref vertOffset, 0, BtnSizeLV2, ref ver3);
+        VERT_Text(ref vertOffset, 0, BtnSizeLV2, ref ver4);
+        VERT_Btn(ref vertOffset, 0, BtnSizeLV2, "<size=20>修改版本号</size>", "设置版本号，之后自动修改", AlterVersion);
         vertOffset += 30;
 		GUI.Label(new Rect(0, vertOffset, BtnSizeLV2.x, BtnSizeLV2.y), "编辑器/调试专用：", CustomEditorStyles.richText);
         vertOffset += 20;

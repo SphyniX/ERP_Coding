@@ -99,7 +99,7 @@ public static class LibNetwork {
 
         var httpHandler = NetworkMgr.Instance.GetHttpHandler("HTTP");
         if (httpHandler) httpHandler.StartGet(tag, url, param, timeout);
-
+        Debug.LogFormat("HttpGet()---xxx---tag:{0}-----xxx--url:{1}", tag, url);
         return 0;
 	}
 
@@ -153,7 +153,7 @@ public static class LibNetwork {
         var httpHandler = NetworkMgr.Instance.GetHttpHandler("HTTP");
         if (httpHandler) {
             httpHandler.StartPost(tag, url, param, wf, headers, timeout);
-            NetworkMgr.Log("WWW Post: {0}\n{1}", url + "?" + param, KeyValue2Param(joPost));
+            Debug.LogFormat("HttpPost()--xxx-- :WWW Post: tag:{0}--xx--param:{1}--xx--KeyValue2Param:{2}---xx--wf:{3}", url + "?" + tag,param, KeyValue2Param(joPost), wf.ToString());
         }
         return 0;
 	}
@@ -245,7 +245,11 @@ public static class LibNetwork {
         }
         return 0;
     }
-
+    /// <summary>
+    /// 下载文件
+    /// </summary>
+    /// <param name="lua"></param>
+    /// <returns></returns>
 	[MonoPInvokeCallback(typeof(LuaCSFunction))]
     static int HttpDownload(ILuaState lua)
 	{

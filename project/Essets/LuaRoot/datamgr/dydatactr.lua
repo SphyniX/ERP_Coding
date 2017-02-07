@@ -997,7 +997,7 @@ local function sc_reported_getpersonalrep ( nm )
     for i=1,n do
         local SchedulePhotoListUpdate = {}
         local icon = nm:readString()
-        SchedulePhotoListUpdate.productIcon = icon ~= nil and icon ~= "nil" and icon..".png" or nil
+        SchedulePhotoListUpdate.productIcon = icon   --- ~= nil and icon ~= "nil" and icon..".png" or nil
 
         icon = nm:readString()
         SchedulePhotoListUpdate.PhotoIcon = icon ~= nil and icon ~= "nil" and icon..".png" or nil

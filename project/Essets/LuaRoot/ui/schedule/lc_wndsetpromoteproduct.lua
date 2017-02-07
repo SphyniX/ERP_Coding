@@ -42,9 +42,9 @@ local function on_subtop_btnclear_click(btn)
 	Ref.SubMain.Grp:dup(#ProductList, function (i, Ent, isNew)
 		local Product = ProductList[i]
 		Ent.lbName.text = Product.name
-		Ent.lbVolume.text = "   " .. ProductList[i].per
-		Ent.lbPrice.text = "   " .. "元"
-		Ent.lbSale.text = "   " .. "元"
+		Ent.lbVolume.text = "0" .. ProductList[i].per
+		Ent.lbPrice.text = "0" .. "元"
+		Ent.lbSale.text = "0" .. "元"
 	end)
 end
 
@@ -80,21 +80,24 @@ end
 local function on_btnsave_click(btn)
 	ProductListForUpdate = {}
 	print("产品iD"..JSON:encode(ProductList))
+	local dataState = false
 	Ref.SubMain.Grp:dup(#ProductList, function (i, Ent, isNew)
 		local price = stringTypeCtrl(Ent.lbPrice.text)
 		local volume = stringTypeCtrl(Ent.lbVolume.text)
 		local sale = stringTypeCtrl(Ent.lbSale.text)
 		local value = ""
-		if price == "   "then 
-			price = ""
-		end
-		if volume == "   "then 
-			volume = ""
+		price = string.gsub(price," ","")
+		volume = string.gsub(volume," ","")
+		if price ~= "0" and volume ~= "0" then 
+			dataState = true
 		end
 		local id = ProductList[i].id
 		print("id------------------"..tostring(id)..""..tostring(i))
 		table.insert(ProductListForUpdate,{id = id , price = price , volume = volume , sale = sale})
 	end)
+	if not dataState then
+		ProductListForUpdate = nil
+	end
 	UI_DATA.WNDSubmitSchedule.ProductList = ProductListForUpdate
 	print("产品"..JSON:encode(ProductListForUpdate))
 	UIMGR.close_window(Ref.root)
@@ -131,13 +134,13 @@ local function on_ui_init()
 
 			if ProductListForUpdate == nil or Ent == nil then return end
 			if Product.price == ""then 
-			Product.price = "   "
+			Product.price = "0"
 			end
 			if Product.volume == ""then 
-				Product.volume = "   "
+				Product.volume = "0"
 			end
 			if Product.sale == ""then 
-				Product.sale = "   "
+				Product.sale = "0"
 			end
 			Ent.lbVolume.text = "<size=36>" .. Product.volume .. "</size>" .. ProductList[i].per
 			Ent.lbPrice.text = "<size=36>" .. Product.price .. "</size>" .. "元"

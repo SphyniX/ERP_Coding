@@ -97,13 +97,15 @@ namespace ZFrame
                 }
             }
         }
-        
+
         /*************************************************
          * Prepare Lua Scripts. <IMPORTANT>
          *************************************************/
 
-        // Lua脚本全部准备就绪
-		public static void OnScriptsFinish()
+        /// <summary>
+        /// Lua脚本全部准备就绪
+        /// </summary>
+        public static void OnScriptsFinish()
         {
 			Debug.Log ("Finished All Lua Scripts!");
             var txt = Resources.Load<TextAsset>("luacoding");
